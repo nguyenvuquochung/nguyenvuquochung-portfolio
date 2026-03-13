@@ -1,5 +1,6 @@
 ﻿function goToPage7() {
   if (currentPage === 7) return;
+  if (window.resetAllPages) resetAllPages();
   currentPage = 7;
   if (window.pushRoute) pushRoute('/contact');
   if (window.updateSideNav) updateSideNav(7);
