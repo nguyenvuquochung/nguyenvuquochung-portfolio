@@ -79,9 +79,7 @@ function chooseLang(lang) {
     launchParticles();
     document.body.classList.add('words-active');
     if (window.showSideNav) showSideNav();
-    // Navigate to initial URL path if not home
-    const initPath = location.pathname;
-    if (initPath && initPath !== '/') setTimeout(() => navigateToPath(initPath), 200);
+    history.replaceState({}, '', '/');
   }, 950);
 }
 
