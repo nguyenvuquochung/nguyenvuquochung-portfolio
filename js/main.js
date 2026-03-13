@@ -391,10 +391,20 @@ function launchParticles() {
         vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
         dragging: false, velHistory: [], _click: true, scattered: false };
       el.addEventListener('mousedown', e => onDown(e, p));
-      el.addEventListener('touchstart', e => {
-        const t = e.touches[0];
-        onDown({clientX:t.clientX, clientY:t.clientY, preventDefault:()=>e.preventDefault(), stopPropagation:()=>e.stopPropagation()}, p);
-      }, {passive:false});
+      el.addEventListener('touchend', e => {
+        if (window.innerWidth > 768) return;
+        if (currentPage !== 1 || isTransitioning) return;
+        e.preventDefault(); e.stopPropagation();
+        lockNav(1500);
+        const navMap = {
+          'PRODUCTION':         () => scatterWords(() => goToPage3()),
+          'DIRECTOR':           () => scatterWords(() => goToPage4()),
+          'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
+          'EDITOR':             () => scatterWords(() => goToPage6()),
+        };
+        if (navMap[p.role.label]) navMap[p.role.label]();
+        else showToast('\u2192 ' + p.role.label);
+      });
       addHC(el);
       applyRW(p);
       placed.push(p);
@@ -425,10 +435,20 @@ function spawnParticle(role) {
     dragging:false, velHistory:[], _click:true, scattered:false };
 
   el.addEventListener('mousedown', e => onDown(e,p));
-  el.addEventListener('touchstart', e => {
-    const t = e.touches[0];
-    onDown({clientX:t.clientX, clientY:t.clientY, preventDefault:()=>e.preventDefault(), stopPropagation:()=>e.stopPropagation()}, p);
-  }, {passive:false});
+  el.addEventListener('touchend', e => {
+    if (window.innerWidth > 768) return;
+    if (currentPage !== 1 || isTransitioning) return;
+    e.preventDefault(); e.stopPropagation();
+    lockNav(1500);
+    const navMap = {
+      'PRODUCTION':         () => scatterWords(() => goToPage3()),
+      'DIRECTOR':           () => scatterWords(() => goToPage4()),
+      'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
+      'EDITOR':             () => scatterWords(() => goToPage6()),
+    };
+    if (navMap[p.role.label]) navMap[p.role.label]();
+    else showToast('\u2192 ' + p.role.label);
+  });
   addHC(el);
   requestAnimationFrame(()=>{ el.classList.add('visible'); applyRW(p); });
   particles.push(p);

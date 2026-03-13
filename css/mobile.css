@@ -31,37 +31,21 @@
   /* ── P2-PORTRAIT-FIXED — hide on mobile (columns go full-width) */
   #p2-portrait-fixed { display: none !important; }
 
-  /* ── PAGE 2 (ABOUT) — single scrollable column ─────────────── */
-  #p2 { overflow-y: auto; }
+  /* ── PAGE 2 (ABOUT) — single column, custom section order ── */
+  /* Flatten both columns so .p2s sections become direct flex children of #p2 */
+  #p2 { display: flex; flex-direction: column; overflow-y: auto; }
+  #p2-left, #p2-right { display: contents; }
 
-  .p2-col {
-    position: relative !important;
-    left: auto !important;
-    right: auto !important;
-    top: auto !important;
-    bottom: auto !important;
-    width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding: 20px 6vw 32px !important;
-  }
-
-  /* Override the slide-in initial offset so columns show correctly */
-  #p2-left,
-  #p2-left.in {
+  /* Keep sections visible regardless of JS animation state on the parent element */
+  #p2-sec-about, #p2-sec-films, #p2-sec-sw, #p2-sec-exp {
     opacity: 1 !important;
-    transform: none !important;
-    pointer-events: all !important;
-    text-align: left !important;
-    padding-top: calc(7vh + 24px) !important;
+    pointer-events: auto !important;
   }
-  #p2-right,
-  #p2-right.in {
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: all !important;
-    text-align: left !important;
-  }
+  /* Mobile order: About Me → Filmography & Awards → Software → Expertise */
+  #p2-sec-about { order: 1; padding: calc(7vh + 24px) 6vw 20px; text-align: left; }
+  #p2-sec-films { order: 2; padding: 0 6vw 20px; text-align: left; }
+  #p2-sec-sw    { order: 3; padding: 0 6vw 20px; text-align: left; }
+  #p2-sec-exp   { order: 4; padding: 0 6vw 32px; text-align: left; }
 
   /* p2 text adjustments */
   .p2-lbl { font-size: clamp(18px, 5vw, 24px); }
@@ -124,6 +108,13 @@
     text-align: left;
   }
 
+  /* Facebook / Instagram: explicitly tappable on iOS (cursor:none from body can block taps) */
+  .p7-cval {
+    cursor: pointer !important;
+    pointer-events: all !important;
+    -webkit-tap-highlight-color: rgba(245,242,238,.1);
+  }
+
   /* ── PAGES 3-6 — page titles: allow wrapping ─────────────── */
   #p3-title, #p4-title, #p5-title, #p6-title {
     white-space: normal;
@@ -156,15 +147,24 @@
   }
 
   /* ── SIDE NAV ─────────────────────────────────────────────── */
-  #menu-panel { width: min(85vw, 300px); }
+  #menu-panel {
+    width: min(85vw, 300px);
+    justify-content: flex-start;
+    padding-top: calc(7vh + 20px);
+    overflow-y: auto;
+  }
 
-  /* Project sub-lists: use focus-within so touch tap reveals list */
-  .snav-role-wrap:focus-within .snav-proj-list {
-    max-height: 300px;
-    opacity: 1;
+  /* Always show project sub-lists on mobile — panel scrolls to reveal all */
+  .snav-proj-list {
+    max-height: none !important;
+    opacity: 1 !important;
   }
   .snav-sub { cursor: pointer; }
   .snav-proj { cursor: pointer; }
+
+  /* ── BURGER MENU — raised inside top letterbox bar so it never overlaps page titles ── */
+  #side-nav { top: 1.5vh; }
+  #snav-burger { cursor: pointer; }
 
   /* ── TOAST ────────────────────────────────────────────────── */
   #toast {
