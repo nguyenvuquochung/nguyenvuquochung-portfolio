@@ -40,6 +40,12 @@ window.addEventListener('popstate', () => {
   else navigateToPath(p);
 });
 
+/* BFCache restore — browser Back/Forward may resurrect a stale page state.
+   Force a clean reload so My Projects (p1) is always the landing.        */
+window.addEventListener('pageshow', function (e) {
+  if (e.persisted) location.reload();
+});
+
 /* ══ STATE ═══════════════════════════════════ */
 let currentLang = 'en';
 let portraitSrc = null;
