@@ -18,7 +18,7 @@
     ],
     stills:[],
     bts:[],
-    video:'https://www.facebook.com/watch/?v=1793765978212269',
+    video:'https://www.youtube.com/watch?v=4hfUn5yGVwI',
     img:null,
   },
   {

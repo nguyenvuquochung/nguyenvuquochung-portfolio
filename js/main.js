@@ -213,11 +213,14 @@ function goToProjectPage(id, fromPage) {
       ? proj.about.map(p => `<p>${p}</p>`).join('')
       : `<p>${proj.desc}</p>`;
 
-  // VIDEO LINK
+  // VIDEO EMBED
   const videoSection = document.getElementById('proj-section-video');
   const videoWrap    = document.getElementById('proj-video-wrap');
   if (proj.video) {
-    videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; Watch Video</a>`;
+    let embedUrl = proj.video;
+    const ytMatch = proj.video.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
+    if (ytMatch) embedUrl = 'https://www.youtube.com/embed/' + ytMatch[1];
+    videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
     videoSection.style.display = '';
   } else {
     videoSection.style.display = 'none';
