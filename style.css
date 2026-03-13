@@ -131,7 +131,7 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
   font-family:'Montserrat',sans-serif;font-weight:800;
   font-size:clamp(13px,1.65vw,19px);letter-spacing:.22em;text-transform:uppercase;
   pointer-events:all;white-space:nowrap;
-  z-index:15;           /* above #p1 (z:10) so words receive mouse events */
+  z-index:5;            /* below portrait scene (z:30) so words never cover portrait */
   /* NO transform transition — physics/drag update transform every rAF tick */
   transition:opacity .4s;
   opacity:0;
@@ -139,7 +139,7 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
 .rw.visible{opacity:var(--op);}
 .rw:hover{text-shadow:0 0 18px currentColor,0 0 40px currentColor;}
 .rw.is-dragging{
-  z-index:35 !important;  /* above #p1-scene (z:30) while dragging */
+  z-index:8 !important;   /* still below #p1-scene (z:30) even while dragging */
   opacity:1 !important;
   text-shadow:0 0 24px currentColor,0 0 52px currentColor;}
 
