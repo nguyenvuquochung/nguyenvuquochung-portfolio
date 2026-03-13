@@ -10,7 +10,6 @@
     document.getElementById('p2-portrait-ph2').style.display  = 'none';
   }
   document.getElementById('p1').classList.add('slide-out');
-  document.getElementById('p2').classList.add('slide-in');
   document.getElementById('p7').classList.add('slide-in');
   document.getElementById('p7-left').scrollTop  = 0;
   document.getElementById('p7-right').scrollTop = 0;
@@ -29,7 +28,6 @@ function goToPage1FromP7() {
   if (window.pushRoute) pushRoute('/');
   if (window.updateSideNav) updateSideNav(1);
   document.getElementById('p1').classList.remove('slide-out');
-  document.getElementById('p2').classList.remove('slide-in');
   document.getElementById('p7').classList.remove('slide-in');
   setTimeout(() => {
     document.getElementById('p2-portrait-fixed').classList.remove('in');
