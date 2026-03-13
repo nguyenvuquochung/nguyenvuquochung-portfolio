@@ -298,6 +298,12 @@ function closeProjectPage() {
     document.getElementById('proj-divider').classList.remove('in');
     document.getElementById('proj-body').classList.remove('in');
   }, 720);
+
+  // If not already on parent role page, navigate there
+  if (currentPage !== _projFromPage) {
+    const goFn = { 3: goToPage3, 4: goToPage4, 5: goToPage5, 6: goToPage6 };
+    if (goFn[_projFromPage]) goFn[_projFromPage]();
+  }
 }
 
 
