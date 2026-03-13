@@ -372,8 +372,9 @@ function safeSpawnNoOverlap(placed, w, h) {
 
 function launchParticles() {
   const placed = [];
+  const mobileCount = window.innerWidth <= 768 ? 5 : COUNT;
   ROLES.forEach(role => {
-    for (let i = 0; i < COUNT; i++) {
+    for (let i = 0; i < mobileCount; i++) {
       const el = document.createElement('span');
       el.className = 'rw';
       el.textContent = role.label;
@@ -390,6 +391,10 @@ function launchParticles() {
         vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
         dragging: false, velHistory: [], _click: true, scattered: false };
       el.addEventListener('mousedown', e => onDown(e, p));
+      el.addEventListener('touchstart', e => {
+        const t = e.touches[0];
+        onDown({clientX:t.clientX, clientY:t.clientY, preventDefault:()=>e.preventDefault(), stopPropagation:()=>e.stopPropagation()}, p);
+      }, {passive:false});
       addHC(el);
       applyRW(p);
       placed.push(p);
@@ -420,6 +425,10 @@ function spawnParticle(role) {
     dragging:false, velHistory:[], _click:true, scattered:false };
 
   el.addEventListener('mousedown', e => onDown(e,p));
+  el.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    onDown({clientX:t.clientX, clientY:t.clientY, preventDefault:()=>e.preventDefault(), stopPropagation:()=>e.stopPropagation()}, p);
+  }, {passive:false});
   addHC(el);
   requestAnimationFrame(()=>{ el.classList.add('visible'); applyRW(p); });
   particles.push(p);
@@ -466,6 +475,41 @@ document.addEventListener('mouseup', () => {
   p.el.classList.remove('is-dragging');
   activeDrag = null;
   $cur.classList.remove('dg'); $cur.classList.remove('h');
+  setTimeout(()=>{ p._click=true; }, 80);
+});
+
+document.addEventListener('touchmove', e => {
+  if (!activeDrag) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  const p = activeDrag;
+  p.x = Math.max(0, Math.min(t.clientX - p._gx, window.innerWidth  - p.w));
+  p.y = Math.max(0, Math.min(t.clientY - p._gy, window.innerHeight - p.h));
+  applyRW(p);
+  p.velHistory.push({x:t.clientX, y:t.clientY, t:performance.now()});
+  if (p.velHistory.length > VEL_SMP) p.velHistory.shift();
+  p._click = false;
+}, {passive:false});
+
+document.addEventListener('touchend', () => {
+  if (!activeDrag) return;
+  const p = activeDrag;
+  let tvx=0, tvy=0;
+  const h = p.velHistory;
+  if (h.length >= 2) {
+    const newest=h[h.length-1], oldest=h[0];
+    const dt = Math.max(newest.t - oldest.t, 8);
+    tvx = ((newest.x - oldest.x) / dt) * 16 * 0.06;
+    tvy = ((newest.y - oldest.y) / dt) * 16 * 0.06;
+  }
+  const spd = Math.hypot(tvx, tvy);
+  if (spd > 2.5)  { tvx *= 2.5/spd; tvy *= 2.5/spd; }
+  if (spd < 0.12) { tvx=(Math.random()-.5)*.4; tvy=(Math.random()-.5)*.4; }
+  p.vx=tvx; p.vy=tvy;
+  p.el.style.transition = 'none';
+  p.dragging = false; p.velHistory = [];
+  p.el.classList.remove('is-dragging');
+  activeDrag = null;
   setTimeout(()=>{ p._click=true; }, 80);
 });
 

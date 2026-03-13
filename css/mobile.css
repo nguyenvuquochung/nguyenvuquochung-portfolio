@@ -1,0 +1,175 @@
+/* ================================================================
+   MOBILE OVERRIDES  —  max-width: 768px
+   All overrides for touch / narrow screens go here.
+================================================================ */
+@media (max-width: 768px) {
+
+  /* ── CURSOR — hide custom cursor on touch devices ─────────── */
+  body { cursor: auto; }
+  #cursor { display: none; }
+
+  /* Restore cursor: pointer on all interactive elements */
+  .lang-btn, .rw, .snav-item, .snav-sub, .snav-proj,
+  #snav-burger, #proj-back, #p2-portrait-fixed,
+  .p3-card, .p4-card, .p5-card, .p6-card,
+  .p7-cval, a, button { cursor: pointer; }
+
+  /* ── FLOATING WORDS — smaller on mobile ───────────────────── */
+  .rw {
+    font-size: 10px;
+    letter-spacing: .16em;
+  }
+
+  /* ── LANGUAGE SCREEN — bigger tap targets ─────────────────── */
+  .lang-btn { padding: 18px 30px; }
+
+  /* ── PAGE 1 — shrink portrait variable ───────────────────── */
+  :root { --pw: clamp(140px, 56vw, 220px); }
+  #p1-name-block h1 { font-size: clamp(16px, 5vw, 22px); letter-spacing: .18em; }
+  #p1-hint { font-size: 9px; }
+
+  /* ── P2-PORTRAIT-FIXED — hide on mobile (columns go full-width) */
+  #p2-portrait-fixed { display: none !important; }
+
+  /* ── PAGE 2 (ABOUT) — single scrollable column ─────────────── */
+  #p2 { overflow-y: auto; }
+
+  .p2-col {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 20px 6vw 32px !important;
+  }
+
+  /* Override the slide-in initial offset so columns show correctly */
+  #p2-left,
+  #p2-left.in {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+    text-align: left !important;
+    padding-top: calc(7vh + 24px) !important;
+  }
+  #p2-right,
+  #p2-right.in {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+    text-align: left !important;
+  }
+
+  /* p2 text adjustments */
+  .p2-lbl { font-size: clamp(18px, 5vw, 24px); }
+  .p2-about { font-size: clamp(14px, 4vw, 17px); }
+
+  /* Fix quote border for single-column */
+  .p2-quote {
+    border-right: none;
+    border-top: 1px solid rgba(245,242,238,.15);
+    text-align: left;
+    padding: 15px 0;
+  }
+  #p2-right .p2-quote {
+    border-left: none;
+  }
+  /* Software table text-align fix */
+  #p2-left .p2-swn,
+  #p2-left .p2-swd { text-align: left; }
+
+  /* ── PAGE 7 (CONTACT) — single scrollable column ─────────── */
+  #p7 { overflow-y: auto; }
+
+  #p7-left,
+  #p7-left.in {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: calc(7vh + 24px) 6vw 20px !important;
+    text-align: left !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+  }
+  #p7-right,
+  #p7-right.in {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 6vw 32px !important;
+    text-align: left !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: all !important;
+  }
+
+  .p7-quote {
+    border-right: none;
+    border-top: 1px solid rgba(245,242,238,.15);
+    padding: 15px 0;
+    text-align: left;
+  }
+
+  /* ── PAGES 3-6 — page titles: allow wrapping ─────────────── */
+  #p3-title, #p4-title, #p5-title, #p6-title {
+    white-space: normal;
+    font-size: clamp(22px, 6vw, 34px);
+    letter-spacing: .18em;
+  }
+
+  /* ── PROJECT OVERLAY ──────────────────────────────────────── */
+  #proj-scroll {
+    padding: calc(7vh + 70px) 5vw calc(env(safe-area-inset-bottom, 0px) + 48px);
+  }
+  #proj-back {
+    cursor: pointer;
+    right: 4vw;
+    font-size: 9px;
+    padding: 10px 16px;
+  }
+  #proj-title {
+    font-size: clamp(22px, 6vw, 34px);
+    letter-spacing: .12em;
+  }
+  .proj-credit-row {
+    flex-direction: column;
+    gap: 3px;
+  }
+  .proj-credit-value { text-align: left; }
+  .proj-img-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  /* ── SIDE NAV ─────────────────────────────────────────────── */
+  #menu-panel { width: min(85vw, 300px); }
+
+  /* Project sub-lists: use focus-within so touch tap reveals list */
+  .snav-role-wrap:focus-within .snav-proj-list {
+    max-height: 300px;
+    opacity: 1;
+  }
+  .snav-sub { cursor: pointer; }
+  .snav-proj { cursor: pointer; }
+
+  /* ── TOAST ────────────────────────────────────────────────── */
+  #toast {
+    font-size: 9px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8vh);
+  }
+
+} /* end @media (max-width: 768px) */
