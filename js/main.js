@@ -710,5 +710,6 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
 
   // Cursor hover on all interactive nav elements
   document.querySelectorAll('.snav-item, .snav-sub, .snav-proj, #snav-burger').forEach(el => addHC(el));
+  document.querySelectorAll('a.p7-cval, .p7-cval[href]').forEach(el => addHC(el));
 })();
 

@@ -414,6 +414,8 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
   line-height:1.4;
   text-decoration:none;
   transition:color .25s;
+  pointer-events:all;
+  cursor:pointer;
 }
 a.p7-cval:hover { color:var(--white); }
 
