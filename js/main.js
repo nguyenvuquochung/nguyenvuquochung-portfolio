@@ -1,5 +1,8 @@
 ﻿'use strict';
 
+/* Reset URL to / immediately on any reload */
+if (location.pathname !== '/') history.replaceState({}, '', '/');
+
 /* ══ CURSOR ══════════════════════════════════ */
 const $cur = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
@@ -338,12 +341,51 @@ function safeSpawn() {
   return {x,y};
 }
 
+function safeSpawnNoOverlap(placed, w, h) {
+  const pad = 14;
+  let x, y, t = 0;
+  do {
+    x = 30 + Math.random() * Math.max(10, window.innerWidth  - 60 - w);
+    y = window.innerHeight * .08 + Math.random() * Math.max(10, window.innerHeight * .84 - h);
+    t++;
+    if (t > 100) break;
+    const ok = placed.every(p =>
+      x + w + pad < p.x || x > p.x + p.w + pad ||
+      y + h + pad < p.y || y > p.y + p.h + pad
+    );
+    if (ok) break;
+  } while (true);
+  return { x, y };
+}
+
 function launchParticles() {
-  let d = 0;
+  const placed = [];
   ROLES.forEach(role => {
-    for (let i=0;i<COUNT;i++) { setTimeout(()=>spawnParticle(role), d); d+=95; }
+    for (let i = 0; i < COUNT; i++) {
+      const el = document.createElement('span');
+      el.className = 'rw';
+      el.textContent = role.label;
+      el.style.color = role.color;
+      const op = 0.55 + Math.random() * .40;
+      el.style.setProperty('--op', op);
+      document.body.appendChild(el);
+      const w = el.offsetWidth || 120, h = el.offsetHeight || 22;
+      const pos = safeSpawnNoOverlap(placed, w, h);
+      const spd = 0.22 + Math.random() * .38;
+      const ang = Math.random() * Math.PI * 2;
+      const p = { el, role, op, w, h,
+        x: pos.x, y: pos.y,
+        vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+        dragging: false, velHistory: [], _click: true, scattered: false };
+      el.addEventListener('mousedown', e => onDown(e, p));
+      addHC(el);
+      applyRW(p);
+      placed.push(p);
+      particles.push(p);
+    }
   });
-  if (!loopStarted) { loopStarted=true; physicsRunning=true; requestAnimationFrame(loop); }
+  requestAnimationFrame(() => particles.forEach(p => p.el.classList.add('visible')));
+  if (!loopStarted) { loopStarted = true; physicsRunning = true; requestAnimationFrame(loop); }
 }
 
 function spawnParticle(role) {
