@@ -38,7 +38,7 @@ function renderP4() {
   const projects = window._P4 || P4_PROJECTS;
   const grid = document.getElementById('p4-grid');
   grid.innerHTML = projects.map(proj => `
-    <div class="p4-card" onclick="goToProjectPage('${proj.id}')">
+    <div class="p4-card" onclick="goToProjectPage('${proj.id}',4)">
       <div class="p4-card-img-wrap">
         ${proj.img
           ? `<img src="${proj.img}" alt="${proj.title}"/>
@@ -62,7 +62,9 @@ function renderP4() {
 
 function goToPage4() {
   if (currentPage === 4) return;
+  if (window.resetAllPages) resetAllPages();
   currentPage = 4;
+  if (window.pushRoute) pushRoute('/director');
   if (window.updateSideNav) updateSideNav(4);
   renderP4();
   document.getElementById('p1').classList.add('slide-out');
@@ -80,6 +82,7 @@ function goToPage4() {
 function goToPage1FromP4() {
   if (currentPage !== 4) return;
   currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p4').classList.remove('slide-in');
   setTimeout(() => {

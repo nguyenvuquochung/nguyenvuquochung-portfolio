@@ -1,6 +1,7 @@
 ﻿function goToPage7() {
   if (currentPage === 7) return;
   currentPage = 7;
+  if (window.pushRoute) pushRoute('/contact');
   if (window.updateSideNav) updateSideNav(7);
   if (portraitSrc) {
     document.getElementById('p2-portrait-img2').src = portraitSrc;
@@ -23,6 +24,7 @@
 function goToPage1FromP7() {
   if (currentPage !== 7) return;
   currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
   if (window.updateSideNav) updateSideNav(1);
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p7').classList.remove('slide-in');

@@ -39,7 +39,7 @@ function renderP3() {
   const projects = window._P3 || P3_PROJECTS;
   const grid = document.getElementById('p3-grid');
   grid.innerHTML = projects.map(proj => `
-    <div class="p3-card" onclick="goToProjectPage('${proj.id}')">
+    <div class="p3-card" onclick="goToProjectPage('${proj.id}',3)">
       <div class="p3-card-img-wrap">
         ${proj.img
           ? `<img src="${proj.img}" alt="${proj.title}"/>
@@ -63,7 +63,9 @@ function renderP3() {
 
 function goToPage3() {
   if (currentPage === 3) return;
+  if (window.resetAllPages) resetAllPages();
   currentPage = 3;
+  if (window.pushRoute) pushRoute('/production');
   if (window.updateSideNav) updateSideNav(3);
   renderP3();
   document.getElementById('p1').classList.add('slide-out');
@@ -81,6 +83,7 @@ function goToPage3() {
 function goToPage1FromP3() {
   if (currentPage !== 3) return;
   currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p3').classList.remove('slide-in');
   setTimeout(() => {

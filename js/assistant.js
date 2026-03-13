@@ -38,7 +38,7 @@ function renderP5() {
   const projects = window._P5 || P5_PROJECTS;
   const grid = document.getElementById('p5-grid');
   grid.innerHTML = projects.map(proj => `
-    <div class="p5-card" onclick="goToProjectPage('${proj.id}')">
+    <div class="p5-card" onclick="goToProjectPage('${proj.id}',5)">
       <div class="p5-card-img-wrap">
         ${proj.img
           ? `<img src="${proj.img}" alt="${proj.title}"/>
@@ -62,7 +62,9 @@ function renderP5() {
 
 function goToPage5() {
   if (currentPage === 5) return;
+  if (window.resetAllPages) resetAllPages();
   currentPage = 5;
+  if (window.pushRoute) pushRoute('/assistant-director');
   if (window.updateSideNav) updateSideNav(5);
   renderP5();
   document.getElementById('p1').classList.add('slide-out');
@@ -80,6 +82,7 @@ function goToPage5() {
 function goToPage1FromP5() {
   if (currentPage !== 5) return;
   currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p5').classList.remove('slide-in');
   setTimeout(() => {

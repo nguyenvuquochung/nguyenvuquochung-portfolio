@@ -37,7 +37,7 @@ function renderP6() {
   const projects = window._P6 || P6_PROJECTS;
   const grid = document.getElementById('p6-grid');
   grid.innerHTML = projects.map(proj => `
-    <div class="p6-card" onclick="goToProjectPage('${proj.id}')">
+    <div class="p6-card" onclick="goToProjectPage('${proj.id}',6)">
       <div class="p6-card-img-wrap">
         ${proj.img
           ? `<img src="${proj.img}" alt="${proj.title}"/>
@@ -61,7 +61,9 @@ function renderP6() {
 
 function goToPage6() {
   if (currentPage === 6) return;
+  if (window.resetAllPages) resetAllPages();
   currentPage = 6;
+  if (window.pushRoute) pushRoute('/editor');
   if (window.updateSideNav) updateSideNav(6);
   renderP6();
   document.getElementById('p1').classList.add('slide-out');
@@ -79,6 +81,7 @@ function goToPage6() {
 function goToPage1FromP6() {
   if (currentPage !== 6) return;
   currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p6').classList.remove('slide-in');
   setTimeout(() => {

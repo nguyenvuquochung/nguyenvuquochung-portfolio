@@ -17,6 +17,28 @@ document.querySelectorAll('.lang-btn,#p1-portrait-ph,#p2-portrait-fixed,label').
 let currentLang = 'en';
 let portraitSrc = null;
 let currentPage = 1;
+let isTransitioning = false;
+
+function lockNav(ms) {
+  isTransitioning = true;
+  setTimeout(() => { isTransitioning = false; }, ms || 1500);
+}
+
+// Strip all transition classes from every page (safety net for stale states)
+function resetAllPages() {
+  ['p2','p3','p4','p5','p6','p7','proj-overlay'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.remove('slide-in');
+  });
+  document.getElementById('p1').classList.remove('slide-out');
+  ['p2-portrait-fixed','p2-left','p2-right',
+   'p3-header','p3-divider','p3-grid',
+   'p4-header','p4-divider','p4-grid',
+   'p5-header','p5-divider','p5-grid',
+   'p6-header','p6-divider','p6-grid',
+   'p7-left','p7-right',
+   'proj-header','proj-divider','proj-body'
+  ].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('in'); });
+}
 
 
 /* ══ LANGUAGE ════════════════════════════════ */
@@ -31,7 +53,11 @@ function chooseLang(lang) {
     document.getElementById('p1-portrait-wrap').classList.add('play');
     document.getElementById('p1-name-block').classList.add('play');
     launchParticles();
+    document.body.classList.add('words-active');
     if (window.showSideNav) showSideNav();
+    // Navigate to initial URL path if not home
+    const initPath = location.pathname;
+    if (initPath && initPath !== '/') setTimeout(() => navigateToPath(initPath), 200);
   }, 950);
 }
 
@@ -41,7 +67,8 @@ function chooseLang(lang) {
 
 // Called when portrait is clicked on P1
 function triggerPage2() {
-  if (currentPage === 2) return;
+  if (currentPage === 2 || isTransitioning) return;
+  lockNav(1500);
   // ripple
   const r = document.getElementById('p1-ripple');
   r.classList.remove('fire'); void r.offsetWidth; r.classList.add('fire');
@@ -51,6 +78,7 @@ function triggerPage2() {
 
 // Scatter all words outward from screen center
 function scatterWords(cb) {
+  document.body.classList.remove('words-active');
   physicsRunning = false; // pause physics
   const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
 
@@ -80,21 +108,28 @@ function returnWords() {
   physicsRunning = true;
   particles.forEach(p => {
     p.scattered = false;
-    // brief CSS transition just for the return-to-position animation
-    p.el.style.transition = 'transform 0.5s cubic-bezier(.16,1,.3,1), opacity 0.5s ease';
-    p.el.style.opacity    = String(p.op);
-    p.el.style.transform  = `translate(${p.x}px,${p.y}px)`;
-    // after animation completes: strip ALL inline transition so physics owns transform
-    setTimeout(() => {
-      p.el.style.transition = '';  // let .rw CSS class rule take over (opacity .4s only)
-      p.el.style.opacity    = '';  // let CSS class --op variable take over
-    }, 550);
+    p.el.style.transform = `translate(${p.x}px,${p.y}px)`;
   });
+  // wait for page transition (0.7s) to finish before making words visible
+  setTimeout(() => {
+    document.body.classList.add('words-active');
+    particles.forEach(p => {
+      p.el.style.transition = 'transform 0.5s cubic-bezier(.16,1,.3,1), opacity 0.5s ease';
+      p.el.style.opacity    = String(p.op);
+      // after animation completes: strip ALL inline transition so physics owns transform
+      setTimeout(() => {
+        p.el.style.transition = '';
+        p.el.style.opacity    = '';
+      }, 550);
+    });
+  }, 750);
 }
 
 function goToPage2() {
+  resetAllPages();
   currentPage = 2;
   if (window.updateSideNav) updateSideNav(2);
+  pushRoute('/about');
   if (portraitSrc) {
     document.getElementById('p2-portrait-img2').src = portraitSrc;
     document.getElementById('p2-portrait-img2').style.display = 'block';
@@ -116,7 +151,9 @@ function goToPage2() {
 
 function goToPage1() {
   if (currentPage === 1) return;
+  resetAllPages();
   currentPage = 1;
+  pushRoute('/');
   if (window.updateSideNav) updateSideNav(1);
   document.getElementById('p1').classList.remove('slide-out');
   document.getElementById('p2').classList.remove('slide-in');
@@ -131,9 +168,49 @@ function goToPage1() {
 
 /* ══ PAGE 3 NAVIGATION ═══════════════════════ */
 
-function goToProjectPage(id) {
-  showToast('→ ' + id.replace(/-/g,' ').toUpperCase());
-  // Future: navigate to dedicated project page
+let _projFromPage = 0;
+
+function goToProjectPage(id, fromPage) {
+  const maps = { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
+  const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
+  const proj = (maps[fromPage] || []).find(p => p.id === id);
+  if (!proj) return;
+  _projFromPage = fromPage;
+
+  const overlay = document.getElementById('proj-overlay');
+  overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
+  document.getElementById('proj-eyebrow').textContent = proj.year + ' — ' + proj.role;
+  document.getElementById('proj-title').textContent = proj.title;
+  document.getElementById('proj-desc').textContent = proj.desc;
+
+  const imgWrap = document.getElementById('proj-img-wrap');
+  if (proj.img) {
+    imgWrap.innerHTML = `<img src="${proj.img}" alt="${proj.title}"/>`;
+  } else {
+    imgWrap.innerHTML = `<div class="proj-ph"><svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect x="4" y="10" width="40" height="28" rx="2" stroke="rgba(245,242,238,.15)" stroke-width=".8"/><circle cx="16" cy="20" r="4" stroke="rgba(245,242,238,.15)" stroke-width=".8"/><path d="M4 34 L16 22 L26 32 L34 24 L44 34" stroke="rgba(245,242,238,.15)" stroke-width=".8" fill="none"/></svg></div>`;
+  }
+
+  overlay.classList.add('slide-in');
+  pushRoute('/' + ROLE_PREFIX[fromPage] + '/' + id);
+  document.getElementById('proj-back').classList.add('vis');
+  setTimeout(() => {
+    document.getElementById('proj-header').classList.add('in');
+    document.getElementById('proj-divider').classList.add('in');
+  }, 120);
+  setTimeout(() => {
+    document.getElementById('proj-body').classList.add('in');
+  }, 340);
+}
+
+function closeProjectPage() {
+  pushRoute(PAGE_ROUTE[_projFromPage] || '/');
+  document.getElementById('proj-overlay').classList.remove('slide-in');
+  document.getElementById('proj-back').classList.remove('vis');
+  setTimeout(() => {
+    document.getElementById('proj-header').classList.remove('in');
+    document.getElementById('proj-divider').classList.remove('in');
+    document.getElementById('proj-body').classList.remove('in');
+  }, 720);
 }
 
 
@@ -274,7 +351,8 @@ function onDown(e, p) {
   p.el.classList.add('is-dragging');
   $cur.classList.remove('h'); $cur.classList.add('dg');
   p.el.onclick = () => {
-    if (!p._click) return;
+    if (!p._click || isTransitioning) return;
+    lockNav(1500);
     const nav = {
       'PRODUCTION':         () => scatterWords(() => goToPage3()),
       'DIRECTOR':           () => scatterWords(() => goToPage4()),
@@ -493,7 +571,9 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
 
   // Central dispatcher — unchanged navigation logic
   window.snavGo = function (target) {
+    if (isTransitioning) return;
     if (target === currentPage) { closeMenu(); return; }
+    lockNav(2200);
 
     if (target === 1) {
       if      (currentPage === 2) goToPage1();
@@ -537,8 +617,10 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
   };
 
   // Expose globals
-  window.updateSideNav = updateSideNav;
-  window.showSideNav   = showSideNav;
+  window.updateSideNav  = updateSideNav;
+  window.showSideNav    = showSideNav;
+  window.resetAllPages  = resetAllPages;
+  window.pushRoute      = pushRoute;
 
   // Cursor hover on all interactive nav elements
   document.querySelectorAll('.snav-item, .snav-sub, #snav-burger').forEach(el => addHC(el));
