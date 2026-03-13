@@ -13,6 +13,30 @@ function addHC(el) {
 }
 document.querySelectorAll('.lang-btn,#p1-portrait-ph,#p2-portrait-fixed,label').forEach(addHC);
 
+/* ══ ROUTING ═════════════════════════════════ */
+const ROLE_PREFIX = { 3:'production', 4:'director', 5:'assistant-director', 6:'editor' };
+const PAGE_ROUTE  = { 3:'/production', 4:'/director', 5:'/assistant-director', 6:'/editor' };
+
+function pushRoute(path) {
+  if (history.pushState) history.pushState({ path }, '', path);
+}
+
+function navigateToPath(path) {
+  const p = path.replace(/\/$/, '') || '/';
+  if (p === '/about')              { triggerPage2(); return; }
+  if (p === '/contact')            { scatterWords(() => goToPage7()); return; }
+  if (p === '/production')         { scatterWords(() => goToPage3()); return; }
+  if (p === '/director')           { scatterWords(() => goToPage4()); return; }
+  if (p === '/assistant-director') { scatterWords(() => goToPage5()); return; }
+  if (p === '/editor')             { scatterWords(() => goToPage6()); return; }
+}
+
+window.addEventListener('popstate', () => {
+  const p = location.pathname.replace(/\/$/, '') || '/';
+  if (p === '/')                   { if (currentPage !== 1) snavGo(1); }
+  else navigateToPath(p);
+});
+
 /* ══ STATE ═══════════════════════════════════ */
 let currentLang = 'en';
 let portraitSrc = null;
@@ -179,16 +203,43 @@ function goToProjectPage(id, fromPage) {
 
   const overlay = document.getElementById('proj-overlay');
   overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
-  document.getElementById('proj-eyebrow').textContent = proj.year + ' — ' + proj.role;
-  document.getElementById('proj-title').textContent = proj.title;
-  document.getElementById('proj-desc').textContent = proj.desc;
+  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + proj.role;
+  document.getElementById('proj-title').textContent    = proj.title;
+  document.getElementById('proj-en-title').textContent = proj.en || '';
 
-  const imgWrap = document.getElementById('proj-img-wrap');
-  if (proj.img) {
-    imgWrap.innerHTML = `<img src="${proj.img}" alt="${proj.title}"/>`;
+  // ABOUT PROJECT
+  document.getElementById('proj-about-text').innerHTML =
+    (proj.about && proj.about.length)
+      ? proj.about.map(p => `<p>${p}</p>`).join('')
+      : `<p>${proj.desc}</p>`;
+
+  // VIDEO LINK
+  const videoSection = document.getElementById('proj-section-video');
+  const videoWrap    = document.getElementById('proj-video-wrap');
+  if (proj.video) {
+    videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; Watch Video</a>`;
+    videoSection.style.display = '';
   } else {
-    imgWrap.innerHTML = `<div class="proj-ph"><svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect x="4" y="10" width="40" height="28" rx="2" stroke="rgba(245,242,238,.15)" stroke-width=".8"/><circle cx="16" cy="20" r="4" stroke="rgba(245,242,238,.15)" stroke-width=".8"/><path d="M4 34 L16 22 L26 32 L34 24 L44 34" stroke="rgba(245,242,238,.15)" stroke-width=".8" fill="none"/></svg></div>`;
+    videoSection.style.display = 'none';
   }
+
+  // CREDIT
+  document.getElementById('proj-credits').innerHTML =
+    (proj.credits && proj.credits.length)
+      ? proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${c.label}</span><span class="proj-credit-value">${c.value}</span></div>`).join('')
+      : '<div class="proj-no-content">—</div>';
+
+  // STILL FRAME
+  document.getElementById('proj-stills').innerHTML =
+    (proj.stills && proj.stills.length)
+      ? proj.stills.map(s => `<img src="${s}" loading="lazy" alt="Still frame"/>`).join('')
+      : '<div class="proj-no-content">No stills yet</div>';
+
+  // BEHIND THE SCENE
+  document.getElementById('proj-bts').innerHTML =
+    (proj.bts && proj.bts.length)
+      ? proj.bts.map(s => `<img src="${s}" loading="lazy" alt="Behind the scene"/>`).join('')
+      : '<div class="proj-no-content">No BTS yet</div>';
 
   overlay.classList.add('slide-in');
   pushRoute('/' + ROLE_PREFIX[fromPage] + '/' + id);
@@ -622,7 +673,13 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
   window.resetAllPages  = resetAllPages;
   window.pushRoute      = pushRoute;
 
+  // Navigate directly to a project from side nav
+  window.snavToProj = function(id, fromPage) {
+    snavClose();
+    goToProjectPage(id, fromPage);
+  };
+
   // Cursor hover on all interactive nav elements
-  document.querySelectorAll('.snav-item, .snav-sub, #snav-burger').forEach(el => addHC(el));
+  document.querySelectorAll('.snav-item, .snav-sub, .snav-proj, #snav-burger').forEach(el => addHC(el));
 })();
 

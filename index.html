@@ -250,12 +250,49 @@
     <!-- MY PROJECTS -->
     <button class="snav-item" id="snav-home" onclick="snavGo(1);snavClose()">My Projects</button>
 
-    <!-- Sub-items: role pages -->
+    <!-- Sub-items: role pages with hover-reveal project list -->
     <div class="snav-subgroup">
-      <button class="snav-sub" id="snav-production" onclick="snavGo(3);snavClose()">Production</button>
-      <button class="snav-sub" id="snav-editor"     onclick="snavGo(6);snavClose()">Editor</button>
-      <button class="snav-sub" id="snav-director"   onclick="snavGo(4);snavClose()">Director</button>
-      <button class="snav-sub" id="snav-ad"         onclick="snavGo(5);snavClose()">Assistant Director</button>
+
+      <div class="snav-role-wrap">
+        <button class="snav-sub" id="snav-production" onclick="snavGo(3);snavClose()">Production</button>
+        <div class="snav-proj-list">
+          <button class="snav-proj" onclick="snavToProj('phia-sau-nguoi-linh',3)">Phía Sau Người Lính</button>
+          <button class="snav-proj" onclick="snavToProj('canh-dong-bat-tan',3)">Cánh Đồng Bất Tận</button>
+          <button class="snav-proj" onclick="snavToProj('nguoi-o-lai',3)">Người Ở Lại</button>
+          <button class="snav-proj" onclick="snavToProj('nua-to-giay',3)">Nửa Tờ Giấy...</button>
+        </div>
+      </div>
+
+      <div class="snav-role-wrap">
+        <button class="snav-sub" id="snav-editor" onclick="snavGo(6);snavClose()">Editor</button>
+        <div class="snav-proj-list">
+          <button class="snav-proj" onclick="snavToProj('edit-lang-le',6)">Lặng Lẽ Trôi Về</button>
+          <button class="snav-proj" onclick="snavToProj('edit-dau-phay',6)">Thêm Một "Dấu Phẩy"</button>
+          <button class="snav-proj" onclick="snavToProj('edit-hanh-phuc',6)">Hạnh Phúc Của Ánh Dương</button>
+          <button class="snav-proj" onclick="snavToProj('edit-chuyen-cu',6)">Chuyện Cũ</button>
+        </div>
+      </div>
+
+      <div class="snav-role-wrap">
+        <button class="snav-sub" id="snav-director" onclick="snavGo(4);snavClose()">Director</button>
+        <div class="snav-proj-list">
+          <button class="snav-proj" onclick="snavToProj('ha-canh',4)">Hạ Cánh</button>
+          <button class="snav-proj" onclick="snavToProj('dem-cuoi',4)">Đêm Cuối</button>
+          <button class="snav-proj" onclick="snavToProj('lang-le-troi-ve',4)">Lặng Lẽ Trôi Về</button>
+          <button class="snav-proj" onclick="snavToProj('them-mot-dau-phay',4)">Thêm Một "Dấu Phẩy"</button>
+        </div>
+      </div>
+
+      <div class="snav-role-wrap">
+        <button class="snav-sub" id="snav-ad" onclick="snavGo(5);snavClose()">Assistant Director</button>
+        <div class="snav-proj-list">
+          <button class="snav-proj" onclick="snavToProj('ad-hanh-phuc',5)">Hạnh Phúc Của Ánh Dương</button>
+          <button class="snav-proj" onclick="snavToProj('ad-song-xanh',5)">Sóng Xanh</button>
+          <button class="snav-proj" onclick="snavToProj('ad-buc-tranh',5)">Bức Tranh Cuối</button>
+          <button class="snav-proj" onclick="snavToProj('ad-mot-buoi-sang',5)">Một Buổi Sáng</button>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -277,11 +314,30 @@
     <div id="proj-header">
       <div id="proj-eyebrow"></div>
       <h2 id="proj-title"></h2>
+      <div id="proj-en-title"></div>
     </div>
     <div id="proj-divider"></div>
     <div id="proj-body">
-      <div id="proj-img-wrap"></div>
-      <p id="proj-desc"></p>
+      <section class="proj-section" id="proj-section-about">
+        <div class="proj-section-label">About Project</div>
+        <div id="proj-about-text"></div>
+      </section>
+      <section class="proj-section" id="proj-section-video" style="display:none">
+        <div class="proj-section-label">Watch</div>
+        <div id="proj-video-wrap"></div>
+      </section>
+      <section class="proj-section" id="proj-section-credit">
+        <div class="proj-section-label">Credit</div>
+        <div id="proj-credits"></div>
+      </section>
+      <section class="proj-section" id="proj-section-stills">
+        <div class="proj-section-label">Still Frame</div>
+        <div id="proj-stills" class="proj-img-grid"></div>
+      </section>
+      <section class="proj-section" id="proj-section-bts">
+        <div class="proj-section-label">Behind the Scene</div>
+        <div id="proj-bts" class="proj-img-grid"></div>
+      </section>
     </div>
   </div>
 </div>
