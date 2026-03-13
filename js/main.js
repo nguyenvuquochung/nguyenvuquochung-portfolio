@@ -194,6 +194,30 @@ function goToPage1() {
 
 let _projFromPage = 0;
 
+function _resolveVideoEmbed(url) {
+  if (!url) return null;
+  let m;
+
+  // YouTube: youtube.com/watch?v=ID  or  youtu.be/ID
+  m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if (m) return 'https://www.youtube.com/embed/' + m[1] + '?rel=0';
+
+  // Vimeo: vimeo.com/ID
+  m = url.match(/vimeo\.com\/(\d+)/);
+  if (m) return 'https://player.vimeo.com/video/' + m[1];
+
+  // Google Drive: drive.google.com/file/d/FILE_ID/...
+  m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
+  if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
+
+  // Facebook video: facebook.com/.../video(s)/ID  or  watch/?v=ID
+  m = url.match(/facebook\.com\/(watch|video|.*\/videos?)/);
+  if (m) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
+
+  // No known embed pattern — caller will show a link button instead
+  return null;
+}
+
 function goToProjectPage(id, fromPage) {
   const maps = { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
   const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
@@ -217,10 +241,12 @@ function goToProjectPage(id, fromPage) {
   const videoSection = document.getElementById('proj-section-video');
   const videoWrap    = document.getElementById('proj-video-wrap');
   if (proj.video) {
-    let embedUrl = proj.video;
-    const ytMatch = proj.video.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/);
-    if (ytMatch) embedUrl = 'https://www.youtube.com/embed/' + ytMatch[1];
-    videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    const embedUrl = _resolveVideoEmbed(proj.video);
+    if (embedUrl) {
+      videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    } else {
+      videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; Watch Video</a>`;
+    }
     videoSection.style.display = '';
   } else {
     videoSection.style.display = 'none';
