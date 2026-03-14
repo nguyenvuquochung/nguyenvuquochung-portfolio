@@ -146,6 +146,38 @@
     bts:[],
     img:null,
   },
+  {
+    id:'manifest-hooligan',
+    title:'MANIFEST | HOOLIGAN FT DƯƠNG DOMIC',
+    en:'MANIFEST | HOOLIGAN FT DUONG DOMIC',
+    year:'2025',
+    role:'Production Assistant',
+    role_vi:'Trợ lí sản xuất',
+    desc:'Music video by Hooligan in collaboration with Duong Domic, directed by Vũ Nguyễn Nam Khuê.',
+    desc_vi:'Music video của Hooligan hợp tác cùng Dương Domic, được đạo diễn bởi đạo diễn Vũ Nguyễn Nam Khuê.',
+    about:[
+      'MANIFEST là music video của Hooligan hợp tác cùng Dương Domic, được đạo diễn bởi đạo diễn Vũ Nguyễn Nam Khuê.',
+    ],
+    about_en:[
+      'MANIFEST is a music video by Hooligan in collaboration with Duong Domic, directed by Vũ Nguyễn Nam Khuê.',
+    ],
+    credits:[
+      { label:'Executive Producer & Director', label_vi:'Đạo diễn & Sản xuất điều hành', value:'Vũ Nguyễn Nam Khuê' },
+      { label:'Producer',                      label_vi:'Sản xuất',                       value:'Thục Mai' },
+      { label:'Production Assistant & Catering', label_vi:'Trợ lý sản xuất & Hậu cần',   value:'Nick Ng – Quốc Hưng' },
+      { label:'Assistant Director',            label_vi:'Trợ lí đạo diễn',               value:'Phạm Nguyễn Minh Tuấn' },
+      { label:'Director of Photography',       label_vi:'Quay phim',                      value:'Tiến Zé – Củ Thanh Hoàng' },
+      { label:'Steadicam Operator',            label_vi:'Steadicam Operator',             value:'Lê Minh Thuần' },
+      { label:'Editor',                        label_vi:'Dựng phim',                      value:'Charlie Le' },
+      { label:'Colorist',                      label_vi:'Chỉnh màu',                      value:'Cieo' },
+      { label:'Visual Effect Artist',          label_vi:'VFX Artist',                     value:'Dứa' },
+      { label:'Behind the Scenes',             label_vi:'Hậu trường',                     value:'Ngân Thanh' },
+    ],
+    stills:[],
+    bts:[],
+    video:'https://www.youtube.com/watch?v=y5ES-wCrEgY',
+    img:null,
+  },
 ];
 
 
