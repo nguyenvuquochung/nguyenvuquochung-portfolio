@@ -476,7 +476,7 @@ function goToProjectPage(id, fromPage) {
   overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
   const isEn = currentLang === 'en';
 
-  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + proj.role;
+  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + (isEn ? proj.role : (proj.role_vi || proj.role));
   document.getElementById('proj-title').textContent    = isEn && proj.en ? proj.en : proj.title;
   document.getElementById('proj-en-title').textContent = '';
   document.getElementById('proj-en-title').style.display = 'none';
@@ -513,7 +513,7 @@ function goToProjectPage(id, fromPage) {
   // CREDIT
   const creditSection = document.getElementById('proj-section-credit');
   if (proj.credits && proj.credits.length) {
-    document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${c.label}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
+    document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${isEn ? c.label : (c.label_vi || c.label)}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
     creditSection.style.display = '';
   } else {
     creditSection.style.display = 'none';

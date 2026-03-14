@@ -48,9 +48,14 @@
     en:'Memories of a Soldier',
     year:'2025',
     role:'Producer',
+    role_vi:'Sản xuất',
     desc:'A pre-graduation short film by a directing student at Van Lang University, shot over 4 days in Mã Đà Forest, Đồng Nai.',
+    desc_vi:'Phim ngắn tiền tốt nghiệp của sinh viên ngành đạo diễn trường Đại học Văn Lang, được quay 4 ngày trong Rừng Mã Đà, Đồng Nai.',
     about:[
       'Phim ngắn Hồi Ức Người Lính là phim ngắn tiền tốt nghiệp của sinh viên ngành đạo diễn trường Đại học Văn Lang, được quay 4 ngày trong Rừng Mã Đà, Đồng Nai.',
+    ],
+    about_en:[
+      'Memories of a Soldier is a pre-graduation short film by a directing student at Van Lang University, shot over 4 days in Mã Đà Forest, Đồng Nai.',
     ],
     extras:[
       {
@@ -59,16 +64,16 @@
       },
     ],
     credits:[
-      { label:'Cast',                 value:'Vũ Phan Tiến Đạt, Son Lee, Lê Nguyễn Duy, Ngô Nhật Trường, Lê Manh Bảo' },
-      { label:'Assistant Director',   value:'Quỳnh Sun' },
-      { label:'Producer',             value:'Quốc Hưng' },
-      { label:'Production Assistant', value:'Huỳnh Việt Bảo Phúc' },
-      { label:'Director of Photography', value:'Hoàng Tú' },
-      { label:'Focus Puller',         value:'Cao Mỹ Hồng Vy' },
-      { label:'Set Construction',     value:'Thanh Tùng, Trần Hoàng Minh Quân' },
-      { label:'Make-up Artist',       value:'Mie Đây' },
-      { label:'Colorist',             value:'Huy Hoàng Cao' },
-      { label:'VFX',                  value:'Huy Hoàng Cao' },
+      { label:'Cast',                    label_vi:'Diễn viên',        value:'Vũ Phan Tiến Đạt, Son Lee, Lê Nguyễn Duy, Ngô Nhật Trường, Lê Manh Bảo' },
+      { label:'Assistant Director',      label_vi:'Trợ lí đạo diễn', value:'Quỳnh Sun' },
+      { label:'Producer',                label_vi:'Sản xuất',         value:'Quốc Hưng' },
+      { label:'Production Assistant',    label_vi:'Trợ lý sản xuất',  value:'Huỳnh Việt Bảo Phúc' },
+      { label:'Director of Photography', label_vi:'Quay phim',        value:'Hoàng Tú' },
+      { label:'Focus Puller',            label_vi:'Chỉnh nét',        value:'Cao Mỹ Hồng Vy' },
+      { label:'Set Construction',        label_vi:'Thi công',         value:'Thanh Tùng, Trần Hoàng Minh Quân' },
+      { label:'Make-up Artist',          label_vi:'Hóa trang',        value:'Mie Đây' },
+      { label:'Colorist',                label_vi:'Chỉnh màu',        value:'Huy Hoàng Cao' },
+      { label:'VFX',                     label_vi:'Kỹ xảo',           value:'Huy Hoàng Cao' },
     ],
     stills:[
       'assets/myproject/PRODUCTION/HUNL/C0432.00_01_55_14.Still007.png',
@@ -160,8 +165,8 @@ function renderP3() {
       </div>
       <div class="p3-card-body">
         <div class="p3-card-title">${currentLang === 'en' && proj.en ? proj.en : proj.title}</div>
-        <div class="p3-card-meta">${proj.year} — ${proj.role}</div>
-        <div class="p3-card-desc">${proj.desc}</div>
+        <div class="p3-card-meta">${proj.year} — ${currentLang === 'en' ? proj.role : (proj.role_vi || proj.role)}</div>
+        <div class="p3-card-desc">${currentLang === 'en' ? proj.desc : (proj.desc_vi || proj.desc)}</div>
       </div>
     </div>`).join('');
 }

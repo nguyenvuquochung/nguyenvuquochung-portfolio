@@ -100,8 +100,8 @@ function renderP6() {
       </div>
       <div class="p6-card-body">
         <div class="p6-card-title">${currentLang === 'en' && proj.en ? proj.en : proj.title}</div>
-        <div class="p6-card-meta">${proj.year} — ${proj.role}</div>
-        <div class="p6-card-desc">${proj.desc}</div>
+        <div class="p6-card-meta">${proj.year} — ${currentLang === 'en' ? proj.role : (proj.role_vi || proj.role)}</div>
+        <div class="p6-card-desc">${currentLang === 'en' ? proj.desc : (proj.desc_vi || proj.desc)}</div>
       </div>
     </div>`).join('');
 }
