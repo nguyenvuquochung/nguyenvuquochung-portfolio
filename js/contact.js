@@ -1,5 +1,7 @@
 ﻿function goToPage7() {
   if (currentPage === 7) return;
+  if (window.hideFloatingWords) hideFloatingWords();
+  if (window.stopHomeMusic) stopHomeMusic();
   if (window.resetAllPages) resetAllPages();
   currentPage = 7;
   if (window.pushRoute) pushRoute('/contact');
@@ -13,6 +15,12 @@
   document.getElementById('p7').classList.add('slide-in');
   document.getElementById('p7-left').scrollTop  = 0;
   document.getElementById('p7-right').scrollTop = 0;
+  if (window.positionP2Block) positionP2Block();
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) {
+    p2hint.textContent = typeof currentLang !== 'undefined' && currentLang === 'vi' ? 'bấm vào ảnh để xem trang giới thiệu' : 'click portrait to go to about';
+    p2hint.style.display = 'block';
+  }
   setTimeout(() => {
     document.getElementById('p2-portrait-fixed').classList.add('in');
   }, 120);
@@ -20,6 +28,8 @@
     document.getElementById('p7-left').classList.add('in');
     document.getElementById('p7-right').classList.add('in');
   }, 340);
+  menuMyProjectsExpanded = false;
+  if (window.updateMenuState) updateMenuState();
 }
 
 function goToPage1FromP7() {
@@ -35,7 +45,9 @@ function goToPage1FromP7() {
     document.getElementById('p7-right').classList.remove('in');
   }, 720);
   returnWords();
-  showToast('← Back to home');
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  if (window.updateMenuState) updateMenuState();
 }
 
 /* ══ CONTENT.JSON LOADER ══════════════════════

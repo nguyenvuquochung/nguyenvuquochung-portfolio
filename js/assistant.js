@@ -107,6 +107,8 @@ function renderP5() {
 
 function goToPage5() {
   if (currentPage === 5) return;
+  if (window.hideFloatingWords) hideFloatingWords();
+  if (window.stopHomeMusic) stopHomeMusic();
   if (window.resetAllPages) resetAllPages();
   currentPage = 5;
   if (window.pushRoute) pushRoute('/assistant-director');
@@ -122,6 +124,9 @@ function goToPage5() {
   setTimeout(() => {
     document.getElementById('p5-grid').classList.add('in');
   }, 340);
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  if (window.updateMenuState) updateMenuState();
 }
 
 function goToPage1FromP5() {
@@ -136,6 +141,6 @@ function goToPage1FromP5() {
     document.getElementById('p5-grid').classList.remove('in');
   }, 720);
   returnWords();
-  showToast('← Back to home');
+  if (window.updateMenuState) updateMenuState();
 }
 

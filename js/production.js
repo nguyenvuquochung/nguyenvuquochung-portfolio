@@ -109,6 +109,8 @@ function renderP3() {
 
 function goToPage3() {
   if (currentPage === 3) return;
+  if (window.hideFloatingWords) hideFloatingWords();
+  if (window.stopHomeMusic) stopHomeMusic();
   if (window.resetAllPages) resetAllPages();
   currentPage = 3;
   if (window.pushRoute) pushRoute('/production');
@@ -124,6 +126,9 @@ function goToPage3() {
   setTimeout(() => {
     document.getElementById('p3-grid').classList.add('in');
   }, 340);
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  if (window.updateMenuState) updateMenuState();
 }
 
 function goToPage1FromP3() {
@@ -138,5 +143,5 @@ function goToPage1FromP3() {
     document.getElementById('p3-grid').classList.remove('in');
   }, 720);
   returnWords();
-  showToast('← Back to home');
+  if (window.updateMenuState) updateMenuState();
 }

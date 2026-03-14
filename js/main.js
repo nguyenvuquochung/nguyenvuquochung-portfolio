@@ -3,6 +3,72 @@
 /* Reset URL to / immediately on any reload */
 if (location.pathname !== '/') history.replaceState({}, '', '/');
 
+/* ══ P1 VERTICAL POSITIONING ════════════════
+   Portrait bottom edge lands at 80vh.
+   If hint would go below 97vh, shift entire block up.
+   No minimum clamp on top — portrait may go above 0.
+════════════════════════════════════════════ */
+function positionP1Block() {
+  const portraitEl = document.getElementById('p1-portrait-wrap');
+  const hintEl     = document.getElementById('p1-hint');
+  const sceneEl    = document.getElementById('p1-scene');
+  if (!portraitEl || !hintEl || !sceneEl) return;
+
+  const vh            = window.innerHeight / 100;
+  const targetBottom  = 80 * vh;   // portrait bottom at 80vh
+  const maxHintBottom = 97 * vh;   // hint must not go below 97vh
+
+  const portraitH = portraitEl.offsetHeight;
+  const hintH     = hintEl.offsetHeight;
+  const gap       = 16; // px gap between portrait bottom and hint top
+
+  // Ideal top: portrait bottom at 80vh
+  let idealTop = targetBottom - portraitH;
+
+  // Shift up if hint would go below 97vh
+  const hintBottom = idealTop + portraitH + gap + hintH;
+  if (hintBottom > maxHintBottom) {
+    idealTop = maxHintBottom - hintH - gap - portraitH;
+  }
+
+  sceneEl.style.position  = 'absolute';
+  sceneEl.style.left      = '50%';
+  sceneEl.style.top       = idealTop + 'px';
+  sceneEl.style.transform = 'translateX(-50%)';
+}
+
+/* ══ P2/P7 VERTICAL POSITIONING ═════════════
+   #p2-portrait-fixed bottom edge lands at 80vh.
+   Hard cap: bottom must not exceed 97vh.
+   Horizontal position is preserved (CSS handles it).
+════════════════════════════════════════════ */
+function positionP2Block() {
+  const portraitEl = document.getElementById('p2-portrait-fixed');
+  if (!portraitEl) return;
+
+  const vh           = window.innerHeight / 100;
+  const targetBottom = 80 * vh;   // portrait bottom at 80vh
+  const maxBottom    = 97 * vh;   // hard cap
+
+  const portraitH = portraitEl.offsetHeight;
+
+  let idealTop = targetBottom - portraitH;
+
+  // Hard cap — portrait bottom must not exceed 97vh
+  if (idealTop + portraitH > maxBottom) {
+    idealTop = maxBottom - portraitH;
+  }
+
+  portraitEl.style.top = idealTop + 'px';
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.top = (idealTop + portraitH + 16) + 'px';
+}
+
+window.addEventListener('load',   positionP1Block);
+window.addEventListener('load',   positionP2Block);
+window.addEventListener('resize', positionP1Block);
+window.addEventListener('resize', positionP2Block);
+
 /* ══ CURSOR ══════════════════════════════════ */
 const $cur = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
@@ -26,7 +92,7 @@ function pushRoute(path) {
 
 function navigateToPath(path) {
   const p = path.replace(/\/$/, '') || '/';
-  if (p === '/about')              { triggerPage2(); return; }
+  if (p === '/about')              { handlePortraitClick(); return; }
   if (p === '/contact')            { scatterWords(() => goToPage7()); return; }
   if (p === '/production')         { scatterWords(() => goToPage3()); return; }
   if (p === '/director')           { scatterWords(() => goToPage4()); return; }
@@ -51,6 +117,7 @@ let currentLang = 'en';
 let portraitSrc = null;
 let currentPage = 1;
 let isTransitioning = false;
+let homeMusicAudio = null;
 
 function lockNav(ms) {
   isTransitioning = true;
@@ -81,14 +148,18 @@ function chooseLang(lang) {
   document.getElementById('p1-sub').textContent  = C[lang].sub;
   document.getElementById('p1-hint').textContent = C[lang].hint;
   renderP2(lang);
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.textContent = lang === 'vi' ? 'bấm vào ảnh để liên hệ' : 'click portrait to contact me';
   setTimeout(() => {
     document.getElementById('lang-screen').style.display = 'none';
     document.getElementById('p1-portrait-wrap').classList.add('play');
     document.getElementById('p1-name-block').classList.add('play');
+    positionP1Block();
     launchParticles();
     document.body.classList.add('words-active');
-    if (window.showSideNav) showSideNav();
     history.replaceState({}, '', '/');
+    const sideNavEl = document.getElementById('side-nav');
+    if (sideNavEl) sideNavEl.classList.add('vis');
   }, 950);
 }
 
@@ -96,14 +167,145 @@ function chooseLang(lang) {
 
 /* ══ PAGE TRANSITIONS ════════════════════════ */
 
-// Called when portrait is clicked on P1
-function triggerPage2() {
-  if (currentPage === 2 || isTransitioning) return;
-  lockNav(1500);
+function handlePortraitClick() {
+  if (isTransitioning) return;
+  if (stage === 1) {
+    enterStage2(true);
+    return;
+  }
+  if (stage === 2) {
+    stage = 3;
+    goToPage2();
+    return;
+  }
+  if (currentPage === 2) { goToPage7(); return; }
+  if (currentPage === 7) { goToPage2(); return; }
+}
+window.handlePortraitClick = handlePortraitClick;
+
+function goToHome() {
+  if (window.snavClose) snavClose();
+  stopHomeMusic();
+  resetAllPages();
+  currentPage = 1;
+  if (window.pushRoute) pushRoute('/');
+  // Destroy all existing particle DOM elements and clear array for a completely fresh start
+  particles.forEach(p => { if (p.el && p.el.parentNode) p.el.parentNode.removeChild(p.el); });
+  particles = [];
+  document.body.classList.remove('words-active');
+  // Re-create particles exactly as on first language selection
+  launchParticles();
+  document.body.classList.add('words-active');  // required: CSS body:not(.words-active) .rw { opacity:0 !important }
+  // Explicitly enforce Stage 1 state (launchParticles sets stage/collisionEnabled/lerpActive;
+  // physicsRunning must be set false here since loopStarted=true skips that path inside launchParticles)
+  stage = 1;
+  collisionEnabled = false;
+  lerpActive = false;
+  physicsRunning = false;
+  // Force all new particles to Stage 1: hidden at portrait center, no velocity
+  const portraitWrap = document.getElementById('p1-portrait-wrap');
+  if (portraitWrap && particles.length) {
+    const rect = portraitWrap.getBoundingClientRect();
+    const pcx  = rect.left + rect.width  / 2;
+    const pcy  = rect.top  + rect.height / 2;
+    particles.forEach(p => {
+      p.x = pcx - p.w / 2;
+      p.y = pcy - p.h / 2;
+      p.vx = 0; p.vy = 0;
+      p.settled = false;
+      p.el.style.transition = '';
+      p.el.style.opacity = '0';
+      p.el.style.transform = `translate(${p.x}px,${p.y}px)`;
+      p.el.classList.add('rw-behind');
+    });
+  }
+  // Hint is set to Stage 1 text by launchParticles; ensure display/opacity are clean
+  const hint = document.getElementById('p1-hint');
+  if (hint) { hint.style.display = ''; hint.style.opacity = ''; }
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  menuMyProjectsExpanded = false;
+  if (window.updateMenuState) updateMenuState();
+  if (window.updateSideNav) updateSideNav(1);
+}
+window.goToHome = goToHome;
+
+function generateTargets(pts) {
+  const padding = 40, buffer = 20;
+  const W = window.innerWidth, H = window.innerHeight;
+  const placed = [];
+  const cx = portraitCenterX, cy = portraitCenterY;
+  const exLeft = cx - 150, exRight = cx + 150, exTop = cy - 150, exBottom = cy + 150;
+  const shuffled = [...pts].sort(() => Math.random() - 0.5);
+  for (const p of shuffled) {
+    let placed_pos = null;
+    for (let attempt = 0; attempt < 300; attempt++) {
+      const tx = padding + Math.random() * (W - p.w - padding * 2);
+      const ty = padding + Math.random() * (H - p.h - padding * 2);
+      if (tx < exRight && tx + p.w > exLeft && ty < exBottom && ty + p.h > exTop) continue;
+      let conflict = false;
+      for (const other of placed) {
+        if (!(tx + p.w + buffer < other.x || other.x + other.w + buffer < tx ||
+              ty + p.h + buffer < other.y || other.y + other.h + buffer < ty)) {
+          conflict = true; break;
+        }
+      }
+      if (!conflict) {
+        placed_pos = { x: tx, y: ty };
+        placed.push({ x: tx, y: ty, w: p.w, h: p.h });
+        break;
+      }
+    }
+    if (!placed_pos) {
+      placed_pos = {
+        x: padding + Math.random() * (W - p.w - padding * 2),
+        y: padding + Math.random() * (H - p.h - padding * 2)
+      };
+      placed.push({ x: placed_pos.x, y: placed_pos.y, w: p.w, h: p.h });
+    }
+    p.targetX = placed_pos.x;
+    p.targetY = placed_pos.y;
+    p.settled = false;
+  }
+}
+
+function enterStage2(fromPortrait) {
+  stage = 2;
+  physicsRunning = true;
+  if (fromPortrait) playHomeMusic();
+  if (window.updateSideNav) updateSideNav(1);
+  generateTargets(particles);
+
+  // reveal words: make visible then remove Stage 1 behind-class
+  particles.forEach(p => { p.el.style.opacity = '1'; });
+  particles.forEach(p => p.el.classList.remove('rw-behind'));
+
   // ripple
   const r = document.getElementById('p1-ripple');
   r.classList.remove('fire'); void r.offsetWidth; r.classList.add('fire');
-  // scatter words, then navigate
+
+  // start lerp
+  lerpActive = true; lerpStartTime = Date.now();
+
+  // hint: fade out → update text → fade back in
+  const hint = document.getElementById('p1-hint');
+  hint.classList.add('fade-out');
+  setTimeout(() => {
+    const line1 = { en: 'click the portrait to learn about me', vi: 'bấm vào ảnh để tìm hiểu về tôi' };
+    const line2 = { en: 'click a role to see my work', vi: 'chọn một vai trò để khám phá dự án của tôi' };
+    hint.innerHTML = `<span id="hint-line1">${line1[currentLang]||line1.en}</span><span id="hint-line2">${line2[currentLang]||line2.en}</span>`;
+    hint.classList.remove('fade-out');
+  }, 400);
+}
+
+function enterStage3() {
+  stage = 3;
+  const hint = document.getElementById('p1-hint');
+  hint.classList.add('fade-out');
+  setTimeout(() => { hint.style.display = 'none'; }, 400);
+  lockNav(1500);
+  const r = document.getElementById('p1-ripple');
+  r.classList.remove('fire'); void r.offsetWidth; r.classList.add('fire');
   scatterWords(() => goToPage2());
 }
 
@@ -156,7 +358,34 @@ function returnWords() {
   }, 750);
 }
 
+function hideFloatingWords() {
+  if (particles && particles.length) {
+    particles.forEach(p => { if (p.el) p.el.style.opacity = '0'; });
+  }
+  physicsRunning = false;
+  document.body.classList.remove('words-active');
+}
+
+function playHomeMusic() {
+  stopHomeMusic();
+  homeMusicAudio = new Audio('nhachome.mp3');
+  homeMusicAudio.loop = false;
+  homeMusicAudio.play().catch(() => {});
+}
+
+function stopHomeMusic() {
+  if (!homeMusicAudio) return;
+  homeMusicAudio.pause();
+  homeMusicAudio.currentTime = 0;
+  homeMusicAudio = null;
+}
+
+window.hideFloatingWords = hideFloatingWords;
+window.stopHomeMusic = stopHomeMusic;
+
 function goToPage2() {
+  hideFloatingWords();
+  stopHomeMusic();
   resetAllPages();
   currentPage = 2;
   if (window.updateSideNav) updateSideNav(2);
@@ -171,6 +400,12 @@ function goToPage2() {
   document.getElementById('p2').classList.add('slide-in');
   document.getElementById('p2-left').scrollTop  = 0;
   document.getElementById('p2-right').scrollTop = 0;
+  positionP2Block();
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) {
+    p2hint.textContent = currentLang === 'vi' ? 'bấm vào ảnh để liên hệ' : 'click portrait to contact me';
+    p2hint.style.display = 'block';
+  }
   setTimeout(() => {
     document.getElementById('p2-portrait-fixed').classList.add('in');
   }, 120);
@@ -178,6 +413,8 @@ function goToPage2() {
     document.getElementById('p2-left').classList.add('in');
     document.getElementById('p2-right').classList.add('in');
   }, 340);
+  menuMyProjectsExpanded = false;
+  if (window.updateMenuState) updateMenuState();
 }
 
 function goToPage1() {
@@ -194,7 +431,9 @@ function goToPage1() {
     document.getElementById('p2-right').classList.remove('in');
   }, 720);
   returnWords();
-  showToast('← Back to home');
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  if (window.updateMenuState) updateMenuState();
 }
 
 /* ══ PAGE 3 NAVIGATION ═══════════════════════ */
@@ -337,6 +576,10 @@ const ROLES = [
 const COUNT = 8, VEL_SMP = 6;
 let particles = [], activeDrag = null, loopStarted = false, physicsRunning = false;
 let gMX = 0, gMY = 0;
+let stage = 1, collisionEnabled = false, lerpActive = false, lerpStartTime = 0;
+let menuMyProjectsExpanded = false;
+let portraitCenterX = 0, portraitCenterY = 0;
+const FLOAT_MIN_SPEED = 0.22;
 
 const CZ = () => ({
   x0:window.innerWidth*.19, x1:window.innerWidth*.81,
@@ -371,25 +614,35 @@ function safeSpawnNoOverlap(placed, w, h) {
 }
 
 function launchParticles() {
-  const placed = [];
+  // ── STAGE 1 reset ──
+  stage = 1; collisionEnabled = false; lerpActive = false;
+
+  // portrait center for initial cluster position
+  const wrap = document.getElementById('p1-portrait-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const pcx = rect.left + rect.width / 2;
+  const pcy = rect.top + rect.height / 2;
+  portraitCenterX = pcx; portraitCenterY = pcy;
+
   const mobileCount = window.innerWidth <= 768 ? 5 : COUNT;
   ROLES.forEach(role => {
     for (let i = 0; i < mobileCount; i++) {
       const el = document.createElement('span');
-      el.className = 'rw';
+      el.className = 'rw rw-behind';
       el.textContent = role.label;
       el.style.color = role.color;
       const op = 0.55 + Math.random() * .40;
       el.style.setProperty('--op', op);
+      el.style.opacity = '0';
       document.body.appendChild(el);
       const w = el.offsetWidth || 120, h = el.offsetHeight || 22;
-      const pos = safeSpawnNoOverlap(placed, w, h);
-      const spd = 0.22 + Math.random() * .38;
-      const ang = Math.random() * Math.PI * 2;
+      // spawn at portrait center ± 30px random offset
+      const x = pcx - w / 2 + (Math.random() - 0.5) * 60;
+      const y = pcy - h / 2 + (Math.random() - 0.5) * 60;
       const p = { el, role, op, w, h,
-        x: pos.x, y: pos.y,
-        vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
-        dragging: false, velHistory: [], _click: true, scattered: false };
+        x, y, vx: 0, vy: 0,
+        dragging: false, velHistory: [], _click: true, scattered: false,
+        settled: false, targetX: 0, targetY: 0 };
       el.addEventListener('mousedown', e => onDown(e, p));
       el.addEventListener('touchend', e => {
         if (window.innerWidth > 768) return;
@@ -407,12 +660,18 @@ function launchParticles() {
       });
       addHC(el);
       applyRW(p);
-      placed.push(p);
       particles.push(p);
     }
   });
   requestAnimationFrame(() => particles.forEach(p => p.el.classList.add('visible')));
   if (!loopStarted) { loopStarted = true; physicsRunning = true; requestAnimationFrame(loop); }
+
+  // Stage 1 hint
+  const hint = document.getElementById('p1-hint');
+  hint.style.display = '';
+  hint.classList.remove('fade-out');
+  const s1 = { en: 'click portrait to start', vi: 'bấm vào hình ảnh để bắt đầu' };
+  hint.textContent = s1[currentLang] || s1.en;
 }
 
 function spawnParticle(role) {
@@ -566,30 +825,67 @@ function loop() {
   if (physicsRunning) {
     const ww=window.innerWidth,wh=window.innerHeight,m=2;
     const minY=wh*.08+m;
+    const elapsed=lerpActive?Date.now()-lerpStartTime:0;
+    let lerpAllSettled=true;
     for(let i=0;i<particles.length;i++){
       const p=particles[i];
       if(p.dragging||p.scattered) continue;
-      p.x+=p.vx; p.y+=p.vy;
       const mxX=ww-p.w-m, mxY=wh-p.h-m;
+      if (lerpActive && !p.settled) {
+        // ── lerp toward target ──
+        const dx=p.targetX-p.x, dy=p.targetY-p.y;
+        const dist=Math.hypot(dx,dy);
+        let lvx=dx*0.025, lvy=dy*0.025;
+        let lspd=Math.hypot(lvx,lvy);
+        if (lspd<FLOAT_MIN_SPEED && dist>5) {
+          const sc=FLOAT_MIN_SPEED/(lspd||0.0001);
+          lvx*=sc; lvy*=sc; lspd=FLOAT_MIN_SPEED;
+        }
+        if (lspd<=FLOAT_MIN_SPEED*1.05 && dist<30) {
+          p.vx=lvx; p.vy=lvy; p.settled=true;
+        } else {
+          p.x+=lvx; p.y+=lvy; p.vx=lvx; p.vy=lvy; lerpAllSettled=false;
+        }
+      } else {
+        // ── normal physics ──
+        p.x+=p.vx; p.y+=p.vy;
+        const spd=Math.hypot(p.vx,p.vy);
+        if(spd>1.4)         {p.vx*=1.4/spd;p.vy*=1.4/spd;}
+        if(spd>0&&spd<0.10) {p.vx*=0.10/spd;p.vy*=0.10/spd;}
+      }
+      // edge bounce — always active
       if(p.x<=m)   {p.x=m;   p.vx= Math.abs(p.vx)*(0.8+Math.random()*.25);}
       if(p.x>=mxX) {p.x=mxX; p.vx=-Math.abs(p.vx)*(0.8+Math.random()*.25);}
       if(p.y<=minY){p.y=minY;p.vy= Math.abs(p.vy)*(0.8+Math.random()*.25);}
-      if(p.y>=mxY) {p.y=mxY; p.vy=-Math.abs(p.vy)*(0.8+Math.random()*.25);}  /* mxY now defined above */
-      const spd=Math.hypot(p.vx,p.vy);
-      if(spd>1.4)         {p.vx*=1.4/spd;p.vy*=1.4/spd;}
-      if(spd>0&&spd<0.10) {p.vx*=0.10/spd;p.vy*=0.10/spd;}
-      for(let j=i+1;j<particles.length;j++){
-        const q=particles[j];if(q.dragging||q.scattered) continue;
-        const dx=(q.x+q.w*.5)-(p.x+p.w*.5),dy=(q.y+q.h*.5)-(p.y+p.h*.5);
-        const dist=Math.hypot(dx,dy)||.001,minD=(p.w+q.w)*.4;
-        if(dist<minD){
-          const nx=dx/dist,ny=dy/dist;
-          const rel=(p.vx-q.vx)*nx+(p.vy-q.vy)*ny;
-          if(rel>0){const imp=rel*.88;p.vx-=imp*nx;p.vy-=imp*ny;q.vx+=imp*nx;q.vy+=imp*ny;}
-          const push=(minD-dist)*.52;p.x-=nx*push;p.y-=ny*push;q.x+=nx*push;q.y+=ny*push;
+      if(p.y>=mxY) {p.y=mxY; p.vy=-Math.abs(p.vy)*(0.8+Math.random()*.25);}
+      applyRW(p);
+    }
+    if (collisionEnabled) {
+      for (let i=0;i<particles.length;i++) {
+        for (let j=i+1;j<particles.length;j++) {
+          const pi=particles[i],pj=particles[j];
+          if(pi.dragging||pj.dragging||pi.scattered||pj.scattered) continue;
+          const ox=Math.min(pi.x+pi.w-pj.x, pj.x+pj.w-pi.x);
+          const oy=Math.min(pi.y+pi.h-pj.y, pj.y+pj.h-pi.y);
+          if(ox>0&&oy>0){
+            if(ox<oy){
+              const push=ox/2;
+              if(pi.x<pj.x){pi.x-=push;pj.x+=push;}else{pi.x+=push;pj.x-=push;}
+              pi.vx*=-0.6; pj.vx*=-0.6;
+            } else {
+              const push=oy/2;
+              if(pi.y<pj.y){pi.y-=push;pj.y+=push;}else{pi.y+=push;pj.y-=push;}
+              pi.vy*=-0.6; pj.vy*=-0.6;
+            }
+          }
         }
       }
-      applyRW(p);
+    }
+    if (lerpActive) {
+      if (elapsed>=3000 && !lerpAllSettled) {
+        particles.forEach(p => { p.settled=true; }); lerpAllSettled=true;
+      }
+      if (lerpAllSettled) { lerpActive=false; setTimeout(()=>{ collisionEnabled=true; }, 500); }
     }
   }
   requestAnimationFrame(loop);
@@ -730,16 +1026,31 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
     if (currentPage !== 1) nav.classList.add('vis');
   }
 
-  // Update highlight class on the panel; hide burger on page 1
+  // Update panel highlight class; always show hamburger
   function updateSideNav(page) {
     panel.className = panel.className.replace(/\bpg\d+\b/g, '').trim();
     if (pgClass[page]) panel.classList.add(pgClass[page]);
-    // Page 1 = home/physics page — hide hamburger completely
-    if (page === 1) {
-      nav.classList.remove('vis');
-      closeMenu();
+    nav.classList.add('vis');
+    if (page === 1) closeMenu();
+    if (typeof updateMenuState === 'function') updateMenuState();
+  }
+
+  function toggleMyProjects() {
+    menuMyProjectsExpanded = !menuMyProjectsExpanded;
+    updateMenuState();
+  }
+
+  function updateMenuState() {
+    const subgroup = document.getElementById('myproj-subgroup');
+    const myProjBtn = panel.querySelector('.myproj-btn');
+    if (!subgroup) return;
+    const onRolePage = currentPage === 3 || currentPage === 4 || currentPage === 5 || currentPage === 6;
+    if (onRolePage) {
+      subgroup.classList.remove('subgroup-hidden');
+      if (myProjBtn) myProjBtn.classList.add('expanded');
     } else {
-      nav.classList.add('vis');
+      subgroup.classList.toggle('subgroup-hidden', !menuMyProjectsExpanded);
+      if (myProjBtn) myProjBtn.classList.toggle('expanded', menuMyProjectsExpanded);
     }
   }
 
@@ -785,7 +1096,7 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
     if (target === 2) {
       if (currentPage !== 1) snavGo(1);
       setTimeout(() => {
-        if (currentPage === 1) triggerPage2();
+        if (currentPage === 1) handlePortraitClick();
       }, currentPage === 1 ? 0 : 750);
       return;
     }
@@ -813,10 +1124,12 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
   };
 
   // Expose globals
-  window.updateSideNav  = updateSideNav;
-  window.showSideNav    = showSideNav;
-  window.resetAllPages  = resetAllPages;
-  window.pushRoute      = pushRoute;
+  window.updateSideNav    = updateSideNav;
+  window.showSideNav      = showSideNav;
+  window.toggleMyProjects = toggleMyProjects;
+  window.updateMenuState  = updateMenuState;
+  window.resetAllPages    = resetAllPages;
+  window.pushRoute        = pushRoute;
 
   // Navigate directly to a project from side nav
   window.snavToProj = function(id, fromPage) {
@@ -825,7 +1138,7 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
   };
 
   // Cursor hover on all interactive nav elements
-  document.querySelectorAll('.snav-item, .snav-sub, .snav-proj, #snav-burger').forEach(el => addHC(el));
+  document.querySelectorAll('.snav-item, .snav-sub, .snav-proj, .myproj-btn, #snav-burger').forEach(el => addHC(el));
   document.querySelectorAll('a.p7-cval, .p7-cval[href]').forEach(el => addHC(el));
 })();
 

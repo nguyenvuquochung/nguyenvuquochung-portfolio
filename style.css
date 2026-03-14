@@ -2,7 +2,7 @@
 :root{
   --black:#050505;--white:#f5f2ee;
   --blue:#1a6fff;--red:#ff1a1a;--green:#00e676;--yellow:#ffe000;
-  --pw:clamp(234px,36vw,442px); /* shared portrait width */
+  --pw:clamp(320px,52vw,600px); /* shared portrait width */
 }
 html,body{width:100%;height:100%;background:var(--black);color:var(--white);
   font-family:'Cormorant Garamond',serif;overflow:hidden;user-select:none;}
@@ -74,9 +74,9 @@ body{cursor:none;}
    PAGE 1 — HOME
    Portrait+name: z-index 30 (above words at 5)
 ════════════════════════════════════════════ */
-#p1-scene{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  z-index:30;       /* HIGH: stays above floating words */
+#p1-scene{position:absolute;left:50%;top:0;transform:translateX(-50%);display:flex;flex-direction:column;
+  align-items:center;
+  z-index:30;       /* HIGH: stays above floating words; top is set by positionP1Block() in JS */
   pointer-events:none;}
 
 #p1-portrait-wrap{position:relative;display:flex;flex-direction:column;align-items:center;
@@ -110,19 +110,34 @@ body{cursor:none;}
 #p1-ripple.fire{animation:ripOut .75s ease-out forwards;}
 @keyframes ripOut{0%{transform:translate(-50%,-50%) scale(0);opacity:.7}100%{transform:translate(-50%,-50%) scale(5);opacity:0}}
 
-#p1-name-block{margin-top:26px;text-align:center;
+.portrait-gradient{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,rgba(5,5,5,.88));pointer-events:none;z-index:1;}
+
+#p1-name-block{position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0 32px 24px 32px;box-sizing:border-box;z-index:2;pointer-events:none;
   animation:nReveal 2.2s cubic-bezier(.16,1,.3,1) .35s both;animation-play-state:paused;}
 #p1-name-block.play{animation-play-state:running;}
 @keyframes nReveal{from{opacity:0;transform:translateY(12px);letter-spacing:.55em}to{opacity:1;transform:translateY(0);letter-spacing:.3em}}
 #p1-name-block h1{font-family:'Cormorant Garamond',serif;font-weight:300;
   font-size:clamp(19px,2.86vw,29px);letter-spacing:.3em;text-transform:uppercase;
-  color:var(--white);opacity:.92;}
+  color:var(--white);opacity:.92;
+  white-space:nowrap;
+  text-shadow:0 2px 12px rgba(0,0,0,.9),0 1px 4px rgba(0,0,0,.95);}
 #p1-name-block .sub{margin-top:9px;font-family:'Montserrat',sans-serif;font-weight:100;
-  font-size:clamp(10px,1.1vw,14px);letter-spacing:.44em;text-transform:uppercase;color:rgba(245,242,238,.58);}
-#p1-hint{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:200;
+  font-size:clamp(10px,1.1vw,14px);letter-spacing:.44em;text-transform:uppercase;color:rgba(245,242,238,.58);
+  white-space:nowrap;
+  text-shadow:0 2px 12px rgba(0,0,0,.9),0 1px 4px rgba(0,0,0,.95);}
+#p1-hint{margin-top:20px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:200;
   letter-spacing:.32em;text-transform:uppercase;color:var(--white);
-  animation:hPulse 3s 2.5s ease-in-out infinite;pointer-events:none;}
-@keyframes hPulse{0%,100%{opacity:.30}50%{opacity:.72}}
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:hintPulse 3s ease-in-out infinite;transition:opacity 0.4s ease;pointer-events:none;}
+@keyframes hintPulse{0%,100%{opacity:.15}50%{opacity:.65}}
+#p1-hint.fade-out{opacity:0 !important;animation:none;}
+#p2-hint{
+  position:fixed;left:50%;transform:translateX(-50%);
+  text-align:center;display:none;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:200;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--white);
+  white-space:nowrap;pointer-events:none;z-index:21;
+  animation:hintPulse 3s ease-in-out infinite;}
 /* floating words only visible while on page 1 */
 body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !important; }
 /* ── FLOATING WORDS — z-index:5, BELOW portrait scene (z:30) ── */
@@ -142,6 +157,8 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
   z-index:8 !important;   /* still below #p1-scene (z:30) even while dragging */
   opacity:1 !important;
   text-shadow:0 0 24px currentColor,0 0 52px currentColor;}
+/* Stage 1: words sit behind portrait via z-index */
+.rw-behind { z-index: 3 !important; pointer-events: none !important; }
 
 /* upload overlay */
 #upload-ov{display:none;position:fixed;inset:0;background:rgba(5,5,5,.92);z-index:8000;
@@ -167,12 +184,12 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
 
 /* Fixed portrait — same --pw as P1, truly centered */
 #p2-portrait-fixed{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
+  position:fixed;left:50%;top:0;
+  transform:translateX(-50%);
   z-index:20;
   width:var(--pw);
   display:flex;flex-direction:column;align-items:center;
-  cursor:none;pointer-events:none;  /* disabled until P2 is active */
+  cursor:none;pointer-events:none;  /* disabled until P2 is active; top is set by positionP2Block() */
   opacity:0;transition:opacity .6s .1s;}
 #p2-portrait-fixed.in{opacity:1;pointer-events:all;}  /* only active on P2 */
 
@@ -191,17 +208,18 @@ body:not(.words-active) .rw { opacity: 0 !important; pointer-events: none !impor
   background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.06));}
 #p2-portrait-ph2 svg{opacity:.18;margin-bottom:14px;}
 
-/* Name below portrait — matches P1 exactly */
-#p2-name-fixed{margin-top:26px;text-align:center;}
+/* Name overlay — absolute inside portrait, matches P1 */
+#p2-name-fixed{position:absolute;bottom:0;left:0;right:0;text-align:center;padding:0 32px 24px 32px;box-sizing:border-box;z-index:2;pointer-events:none;}
 #p2-name-fixed h2{
   font-family:'Cormorant Garamond',serif;font-weight:300;
   font-size:clamp(19px,2.86vw,29px);  /* identical to P1 h1 */
   letter-spacing:.3em;text-transform:uppercase;color:var(--white);opacity:.92;
-  white-space:nowrap;}
+  white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.9),0 1px 4px rgba(0,0,0,.95);}
 #p2-name-fixed .nsub{
   margin-top:9px;font-family:'Montserrat',sans-serif;font-weight:100;
   font-size:clamp(10px,1.1vw,14px);   /* identical to P1 .sub */
-  letter-spacing:.44em;text-transform:uppercase;color:rgba(245,242,238,.58);}
+  letter-spacing:.44em;text-transform:uppercase;color:rgba(245,242,238,.58);
+  white-space:nowrap;text-shadow:0 2px 12px rgba(0,0,0,.9),0 1px 4px rgba(0,0,0,.95);}
 
 /* ── Independently-scrolling columns ──
    Each column: from edge to portrait edge */
@@ -797,7 +815,7 @@ a.p7-cval:hover { color:var(--white); }
 /* Hamburger trigger: top-left, always on top */
 #side-nav {
   position: fixed;
-  top: calc(7vh + 14px);
+  top: 48px;
   left: 2.5vw;
   z-index: 8600;            /* above letterbox bars (8500) */
   pointer-events: none;
@@ -891,6 +909,7 @@ a.p7-cval:hover { color:var(--white); }
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 24px;
   padding: 0 clamp(28px, 3.5vw, 44px);
   transform: translateX(-100%);
   pointer-events: none;
@@ -910,7 +929,7 @@ a.p7-cval:hover { color:var(--white); }
   text-transform: uppercase;
   color: rgba(245,242,238,.65);
   cursor: none;
-  padding: 7px 0;
+  padding: 0;
   text-align: left;
   background: none;
   border: none;
@@ -958,15 +977,37 @@ a.p7-cval:hover { color:var(--white); }
 }
 
 /* ── Spacing between top-level items ── */
-.snav-gap { height: 14px; }
+.snav-gap { height: 0; }
 
-/* Active-page highlight colours */
-#menu-panel.pg2 #snav-info         { color: rgba(245,242,238,.9); }
-#menu-panel.pg7 #snav-contact      { color: rgba(245,242,238,.9); }
-#menu-panel.pg3 #snav-production   { color: var(--green);  opacity: 1; }
-#menu-panel.pg4 #snav-director     { color: var(--blue);   opacity: 1; }
-#menu-panel.pg5 #snav-ad           { color: var(--red);    opacity: 1; }
-#menu-panel.pg6 #snav-editor       { color: var(--yellow); opacity: 1; }
+/* Sub-group toggle */
+#myproj-subgroup.subgroup-hidden { display: none; }
+#myproj-subgroup:not(.subgroup-hidden) { display: flex; flex-direction: column; }
+.myproj-btn::after { content: ' \25BE'; }
+.myproj-btn.expanded::after { content: ' \25B4'; }
+
+/* Dim all items when on any page, then highlight the active one */
+#menu-panel.pg1 .snav-item, #menu-panel.pg1 .snav-sub, #menu-panel.pg1 .myproj-btn,
+#menu-panel.pg2 .snav-item, #menu-panel.pg2 .snav-sub, #menu-panel.pg2 .myproj-btn,
+#menu-panel.pg3 .snav-item, #menu-panel.pg3 .snav-sub, #menu-panel.pg3 .myproj-btn,
+#menu-panel.pg4 .snav-item, #menu-panel.pg4 .snav-sub, #menu-panel.pg4 .myproj-btn,
+#menu-panel.pg5 .snav-item, #menu-panel.pg5 .snav-sub, #menu-panel.pg5 .myproj-btn,
+#menu-panel.pg6 .snav-item, #menu-panel.pg6 .snav-sub, #menu-panel.pg6 .myproj-btn,
+#menu-panel.pg7 .snav-item, #menu-panel.pg7 .snav-sub, #menu-panel.pg7 .myproj-btn { opacity: 0.35; }
+
+/* Active-page highlight */
+#menu-panel.pg1 .snav-item.pg1 { opacity: 1; }
+#menu-panel.pg2 .snav-item.pg2 { opacity: 1; }
+#menu-panel.pg7 .snav-item.pg7 { opacity: 1; }
+#menu-panel.pg3 .snav-sub.pg3, #menu-panel.pg3 .myproj-btn,
+#menu-panel.pg4 .snav-sub.pg4, #menu-panel.pg4 .myproj-btn,
+#menu-panel.pg5 .snav-sub.pg5, #menu-panel.pg5 .myproj-btn,
+#menu-panel.pg6 .snav-sub.pg6, #menu-panel.pg6 .myproj-btn { opacity: 1; }
+
+/* Role page accent colours */
+#menu-panel.pg3 .snav-sub.pg3 { color: var(--green);  }
+#menu-panel.pg4 .snav-sub.pg4 { color: var(--blue);   }
+#menu-panel.pg5 .snav-sub.pg5 { color: var(--red);    }
+#menu-panel.pg6 .snav-sub.pg6 { color: var(--yellow); }
 
 /* ── Hover-reveal project sub-items ── */
 .snav-role-wrap {

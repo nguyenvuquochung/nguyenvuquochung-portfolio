@@ -108,6 +108,8 @@ function renderP6() {
 
 function goToPage6() {
   if (currentPage === 6) return;
+  if (window.hideFloatingWords) hideFloatingWords();
+  if (window.stopHomeMusic) stopHomeMusic();
   if (window.resetAllPages) resetAllPages();
   currentPage = 6;
   if (window.pushRoute) pushRoute('/editor');
@@ -123,6 +125,9 @@ function goToPage6() {
   setTimeout(() => {
     document.getElementById('p6-grid').classList.add('in');
   }, 340);
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.style.display = 'none';
+  if (window.updateMenuState) updateMenuState();
 }
 
 function goToPage1FromP6() {
@@ -137,6 +142,6 @@ function goToPage1FromP6() {
     document.getElementById('p6-grid').classList.remove('in');
   }, 720);
   returnWords();
-  showToast('← Back to home');
+  if (window.updateMenuState) updateMenuState();
 }
 
