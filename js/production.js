@@ -89,62 +89,56 @@
     bts:[],
     video:'https://www.facebook.com/share/v/184Rcgn22P/',
     img:'assets/myproject/PRODUCTION/HUNL/C0432.00_11_27_09.Still001.png',
-  },
-  {
-    id:'canh-dong-bat-tan',
-    video:null,
-    title:'Cánh Đồng Bất Tận',
-    en:'Endless Field',
-    year:'2023',
-    role:'Production Coordinator',
-    desc:'A rural drama production requiring multi-location scheduling and crew management across three provinces.',
-    about:[
-      'Cánh Đồng Bất Tận là một dự án phim ngắn được sản xuất tại nhiều địa điểm khác nhau, đòi hỏi sự phối hợp chặt chẽ giữa các đoàn phim trải dài trên ba tỉnh thành. Bộ phim là câu chuyện về người nông dân và những vùng đất bất tận.',
-    ],
-    credits:[
-      { label:'Director',            value:'—' },
-      { label:'Production Coordinator', value:'Quốc Hưng' },
-    ],
-    stills:[],
-    bts:[],
-    img:null,
-  },
-  {
-    id:'nguoi-o-lai',
-    video:null,
-    title:'Người Ở Lại',
-    en:'The One Who Stays',
-    year:'2024',
-    role:'Line Producer',
-    desc:'Independent short film — full production lifecycle from pre-production planning through post-delivery.',
-    about:[
-      'Người Ở Lại là một phim ngắn độc lập đi qua toàn bộ vòng đời sản xuất, từ giai đoạn tiền kỳ lên kế hoạch cho đến hậu kỳ hoàn thiện. Bộ phim kể câu chuyện về những người ở lại và sự hi sinh thầm lặng trong cuộc sống.',
-    ],
-    credits:[
-      { label:'Line Producer', value:'Quốc Hưng' },
-    ],
-    stills:[],
-    bts:[],
-    img:null,
+    imgStyle:'transform:scale(1.4);transform-origin:center;',
   },
   {
     id:'nua-to-giay',
-    video:null,
     title:'Nửa Tờ Giấy Gặp Bấy Nhiêu Tay',
-    en:'Half a Page Through Many Hands',
+    en:'Through Hands, Through Lives',
     year:'2025',
     role:'Producer',
-    desc:'Golden Kite Award — Certificate of Merit 2025. Produced in collaboration with director Hà Tất Thành.',
+    role_vi:'Sản xuất',
+    desc:'A student short film from Van Lang University, recipient of the Golden Kite 2025 Certificate of Merit.',
+    desc_vi:'Phim ngắn sinh viên của trường Đại học Văn Lang. Phim được nhận bằng khen Cánh Diều Vàng 2025.',
     about:[
-      'Nửa Tờ Giấy Gặp Bấy Nhiêu Tay là bộ phim ngắn đạt Bằng Khen tại Liên hoan phim Cánh Diều Vàng 2025. Bộ phim được sản xuất với đạo diễn Hà Tất Thành, khai thác hành trình của những mảnh giấy — biểu tượng cho ký ức và kết nối con người.',
+      'Nửa Tờ Giấy Gặp Bấy Nhiêu Tay là phim ngắn sinh viên của trường Đại học Văn Lang, được nhận bằng khen Cánh Diều Vàng 2025.',
+    ],
+    about_en:[
+      'Through Hands, Through Lives is a student short film from Van Lang University, recipient of the Golden Kite 2025 Certificate of Merit.',
     ],
     credits:[
-      { label:'Director', value:'Hà Tất Thành' },
-      { label:'Producer', value:'Quốc Hưng' },
+      { label:'Director',              label_vi:'Đạo diễn',            value:'Hà Tất Thành' },
+      { label:'1st Assistant Director',label_vi:'Trợ lí đạo diễn 1',  value:'Khánh Quân' },
+      { label:'Producer',              label_vi:'Sản xuất',            value:'Quốc Hưng' },
+      { label:'Line Producer',         label_vi:'Trưởng sản xuất',     value:'Ngô Hà Nam' },
+      { label:'Director of Photography',label_vi:'Quay phim',          value:'Bi Trần' },
+      { label:'Gaffer',                label_vi:'Gaffer',              value:'Minh Lê' },
+      { label:'Art Director',          label_vi:'Giám đốc nghệ thuật', value:'Luk Hồ Hải My' },
+      { label:'Starring',              label_vi:'Diễn viên',           value:'Bé Thanh Tú, Thiên Ân, Bé Đình Dương, …' },
     ],
-    stills:[],
-    bts:[],
-    img:null,
+    stills:[
+      'assets/myproject/PRODUCTION/NTGGBNT/STILL/image.png',
+      'assets/myproject/PRODUCTION/NTGGBNT/STILL/image%20(1).png',
+      'assets/myproject/PRODUCTION/NTGGBNT/STILL/image%20(2).png',
+      'assets/myproject/PRODUCTION/NTGGBNT/STILL/image%20(3).png',
+      'assets/myproject/PRODUCTION/NTGGBNT/STILL/image%20(5).png',
+    ],
+    bts:[
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/496921625_3942178465995815_136208967395697639_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/497370119_3942178809329114_8404606021192189030_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/497949933_3942178695995792_8800146685144469299_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/498018700_3942178879329107_6275065807845799911_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/498020722_3942178469329148_8696554881876861390_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/498124494_3942178792662449_5940043195794822053_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/498214796_3942178795995782_1936527726464376462_n.jpg.png',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/498301375_3942178739329121_5155952281977312088_n.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/KNP-120.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/KNP-129.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/KNP-322.jpg',
+      'assets/myproject/PRODUCTION/NTGGBNT/BTS/KNP-58.jpg',
+    ],
+    video:'https://www.facebook.com/share/v/1HdHBWqufC/',
+    img:'assets/myproject/PRODUCTION/NTGGBNT/STILL/image%20(5).png',
   },
   {
     id:'manifest-hooligan',
@@ -200,7 +194,7 @@ function renderP3() {
     <div class="p3-card" onclick="goToProjectPage('${proj.id}',3)">
       <div class="p3-card-img-wrap">
         ${proj.img
-          ? `<img src="${proj.img}" alt="${proj.title}"/>
+          ? `<img src="${proj.img}" alt="${proj.title}" style="${proj.imgStyle||''}"/>
              <div class="p3-card-img-overlay"></div>`
           : `<div class="p3-card-img-placeholder">
                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
