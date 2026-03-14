@@ -173,10 +173,21 @@
       { label:'Visual Effect Artist',          label_vi:'VFX Artist',                     value:'Dứa' },
       { label:'Behind the Scenes',             label_vi:'Hậu trường',                     value:'Ngân Thanh' },
     ],
-    stills:[],
-    bts:[],
+    stills:[
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131721.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131730.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131742.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131756.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131807.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131824.png',
+      'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131831.png',
+    ],
+    bts:[
+      'assets/myproject/PRODUCTION/MANIFEST/BTS/image.png',
+      'assets/myproject/PRODUCTION/MANIFEST/BTS/IMG_1075.jpg',
+    ],
     video:'https://www.youtube.com/watch?v=y5ES-wCrEgY',
-    img:null,
+    img:'assets/myproject/PRODUCTION/MANIFEST/STILL/Screenshot%202026-02-27%20131721.png',
   },
 ];
 
