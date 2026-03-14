@@ -458,9 +458,8 @@ function _resolveVideoEmbed(url) {
   m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
   if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
 
-  // Facebook video: facebook.com/.../video(s)/ID  or  watch/?v=ID
-  m = url.match(/facebook\.com\/(watch|video|.*\/videos?)/);
-  if (m) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
+  // Facebook video: any facebook.com URL (watch, /videos/, /share/v/, etc.)
+  if (url.includes('facebook.com')) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
 
   // No known embed pattern — caller will show a link button instead
   return null;
