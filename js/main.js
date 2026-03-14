@@ -458,8 +458,8 @@ function _resolveVideoEmbed(url) {
   m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
   if (m) return 'https://drive.google.com/file/d/' + m[1] + '/preview';
 
-  // Facebook video: any facebook.com URL (watch, /videos/, /share/v/, etc.)
-  if (url.includes('facebook.com')) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
+  // Facebook: any facebook.com URL (share/v/, watch/?v=, /videos/, etc.)
+  if (/facebook\.com/.test(url)) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
 
   // No known embed pattern — caller will show a link button instead
   return null;
@@ -474,16 +474,26 @@ function goToProjectPage(id, fromPage) {
 
   const overlay = document.getElementById('proj-overlay');
   overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
+  const isEn = currentLang === 'en';
+
   document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + proj.role;
-  document.getElementById('proj-title').textContent    = (currentLang === 'en' && proj.en) ? proj.en : proj.title;
+  document.getElementById('proj-title').textContent    = isEn && proj.en ? proj.en : proj.title;
   document.getElementById('proj-en-title').textContent = '';
   document.getElementById('proj-en-title').style.display = 'none';
 
+  // Section labels (language-aware)
+  document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project'    : 'Về Dự Án';
+  document.querySelector('#proj-section-video .proj-section-label').textContent  = isEn ? 'Watch'            : 'Xem phim';
+  document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
+  document.querySelector('#proj-section-stills .proj-section-label').textContent = isEn ? 'Still Frame'      : 'Ảnh tĩnh';
+  document.querySelector('#proj-section-bts .proj-section-label').textContent    = isEn ? 'Behind the Scene' : 'Hậu trường';
+  document.getElementById('proj-back').textContent = isEn ? '← back' : '← quay lại';
+
   // ABOUT PROJECT
-  document.getElementById('proj-about-text').innerHTML =
-    (proj.about && proj.about.length)
-      ? proj.about.map(p => `<p>${p}</p>`).join('')
-      : `<p>${proj.desc}</p>`;
+  const aboutParas = (isEn && proj.about_en && proj.about_en.length)
+    ? proj.about_en
+    : (proj.about && proj.about.length ? proj.about : [proj.desc]);
+  document.getElementById('proj-about-text').innerHTML = aboutParas.map(p => `<p>${p}</p>`).join('');
 
   // VIDEO EMBED
   const videoSection = document.getElementById('proj-section-video');
@@ -493,7 +503,7 @@ function goToProjectPage(id, fromPage) {
     if (embedUrl) {
       videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
     } else {
-      videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; Watch Video</a>`;
+      videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
     }
     videoSection.style.display = '';
   } else {
@@ -515,7 +525,7 @@ function goToProjectPage(id, fromPage) {
     if (proj.extras && proj.extras.length) {
       extrasContainer.innerHTML = proj.extras.map(ext => `
       <section class="proj-section">
-        <div class="proj-section-label">${ext.label}</div>
+        <div class="proj-section-label">${isEn && ext.label_en ? ext.label_en : ext.label}</div>
         <div class="proj-extra-content">${ext.html}</div>
       </section>`).join('');
       extrasContainer.style.display = '';
