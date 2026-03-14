@@ -99,7 +99,7 @@ function renderP4() {
         }
       </div>
       <div class="p4-card-body">
-        <div class="p4-card-title">${proj.title}</div>
+        <div class="p4-card-title">${currentLang === 'en' && proj.en ? proj.en : proj.title}</div>
         <div class="p4-card-meta">${proj.year} — ${proj.role}</div>
         <div class="p4-card-desc">${proj.desc}</div>
       </div>

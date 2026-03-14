@@ -99,7 +99,7 @@ function renderP6() {
         }
       </div>
       <div class="p6-card-body">
-        <div class="p6-card-title">${proj.title}</div>
+        <div class="p6-card-title">${currentLang === 'en' && proj.en ? proj.en : proj.title}</div>
         <div class="p6-card-meta">${proj.year} — ${proj.role}</div>
         <div class="p6-card-desc">${proj.desc}</div>
       </div>

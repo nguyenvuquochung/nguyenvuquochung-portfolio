@@ -51,7 +51,12 @@
     desc:'A pre-graduation short film by a directing student at Van Lang University, shot over 4 days in Mã Đà Forest, Đồng Nai.',
     about:[
       'Phim ngắn Hồi Ức Người Lính là phim ngắn tiền tốt nghiệp của sinh viên ngành đạo diễn trường Đại học Văn Lang, được quay 4 ngày trong Rừng Mã Đà, Đồng Nai.',
-      '<a href="https://www.instagram.com/p/DVtOo4Xk6Dp/" target="_blank" rel="noopener noreferrer" style="color:inherit;opacity:.7">▶ VFX Breakdown (Instagram)</a>',
+    ],
+    extras:[
+      {
+        label:'VFX Breakdown',
+        html:'<a href="https://www.instagram.com/p/DVtOo4Xk6Dp/" target="_blank" rel="noopener noreferrer">▶ Watch on Instagram</a>',
+      },
     ],
     credits:[
       { label:'Cast',                 value:'Vũ Phan Tiến Đạt, Son Lee, Lê Nguyễn Duy, Ngô Nhật Trường, Lê Manh Bảo' },
@@ -154,7 +159,7 @@ function renderP3() {
         }
       </div>
       <div class="p3-card-body">
-        <div class="p3-card-title">${proj.title}</div>
+        <div class="p3-card-title">${currentLang === 'en' && proj.en ? proj.en : proj.title}</div>
         <div class="p3-card-meta">${proj.year} — ${proj.role}</div>
         <div class="p3-card-desc">${proj.desc}</div>
       </div>

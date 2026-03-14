@@ -476,8 +476,9 @@ function goToProjectPage(id, fromPage) {
   const overlay = document.getElementById('proj-overlay');
   overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
   document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + proj.role;
-  document.getElementById('proj-title').textContent    = proj.title;
-  document.getElementById('proj-en-title').textContent = proj.en || '';
+  document.getElementById('proj-title').textContent    = (currentLang === 'en' && proj.en) ? proj.en : proj.title;
+  document.getElementById('proj-en-title').textContent = '';
+  document.getElementById('proj-en-title').style.display = 'none';
 
   // ABOUT PROJECT
   document.getElementById('proj-about-text').innerHTML =
@@ -501,22 +502,47 @@ function goToProjectPage(id, fromPage) {
   }
 
   // CREDIT
-  document.getElementById('proj-credits').innerHTML =
-    (proj.credits && proj.credits.length)
-      ? proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${c.label}</span><span class="proj-credit-value">${c.value}</span></div>`).join('')
-      : '<div class="proj-no-content">—</div>';
+  const creditSection = document.getElementById('proj-section-credit');
+  if (proj.credits && proj.credits.length) {
+    document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${c.label}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
+    creditSection.style.display = '';
+  } else {
+    creditSection.style.display = 'none';
+  }
+
+  // EXTRA SECTIONS (e.g. VFX Breakdown)
+  const extrasContainer = document.getElementById('proj-extras');
+  if (extrasContainer) {
+    if (proj.extras && proj.extras.length) {
+      extrasContainer.innerHTML = proj.extras.map(ext => `
+      <section class="proj-section">
+        <div class="proj-section-label">${ext.label}</div>
+        <div class="proj-extra-content">${ext.html}</div>
+      </section>`).join('');
+      extrasContainer.style.display = '';
+    } else {
+      extrasContainer.innerHTML = '';
+      extrasContainer.style.display = 'none';
+    }
+  }
 
   // STILL FRAME
-  document.getElementById('proj-stills').innerHTML =
-    (proj.stills && proj.stills.length)
-      ? proj.stills.map(s => `<img src="${s}" loading="lazy" alt="Still frame"/>`).join('')
-      : '<div class="proj-no-content">No stills yet</div>';
+  const stillsSection = document.getElementById('proj-section-stills');
+  if (proj.stills && proj.stills.length) {
+    document.getElementById('proj-stills').innerHTML = proj.stills.map(s => `<img src="${s}" loading="lazy" alt="Still frame"/>`).join('');
+    stillsSection.style.display = '';
+  } else {
+    stillsSection.style.display = 'none';
+  }
 
   // BEHIND THE SCENE
-  document.getElementById('proj-bts').innerHTML =
-    (proj.bts && proj.bts.length)
-      ? proj.bts.map(s => `<img src="${s}" loading="lazy" alt="Behind the scene"/>`).join('')
-      : '<div class="proj-no-content">No BTS yet</div>';
+  const btsSection = document.getElementById('proj-section-bts');
+  if (proj.bts && proj.bts.length) {
+    document.getElementById('proj-bts').innerHTML = proj.bts.map(s => `<img src="${s}" loading="lazy" alt="Behind the scene"/>`).join('');
+    btsSection.style.display = '';
+  } else {
+    btsSection.style.display = 'none';
+  }
 
   overlay.classList.add('slide-in');
   pushRoute('/' + ROLE_PREFIX[fromPage] + '/' + id);
