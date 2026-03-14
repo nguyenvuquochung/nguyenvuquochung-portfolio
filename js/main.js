@@ -3,6 +3,10 @@
 /* Reset URL to / immediately on any reload */
 if (location.pathname !== '/') history.replaceState({}, '', '/');
 
+/* ── isMobile helper — recalculated on resize ── */
+let isMobile = window.innerWidth <= 768;
+window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
+
 /* ══ P1 VERTICAL POSITIONING ════════════════
    Portrait bottom edge lands at 80vh.
    If hint would go below 97vh, shift entire block up.
@@ -224,7 +228,6 @@ function goToHome() {
   if (hint) { hint.style.display = ''; hint.style.opacity = ''; }
   const p2hint = document.getElementById('p2-hint');
   if (p2hint) p2hint.style.display = 'none';
-  menuMyProjectsExpanded = false;
   if (window.updateMenuState) updateMenuState();
   if (window.updateSideNav) updateSideNav(1);
 }
@@ -413,7 +416,6 @@ function goToPage2() {
     document.getElementById('p2-left').classList.add('in');
     document.getElementById('p2-right').classList.add('in');
   }, 340);
-  menuMyProjectsExpanded = false;
   if (window.updateMenuState) updateMenuState();
 }
 
@@ -577,7 +579,7 @@ const COUNT = 8, VEL_SMP = 6;
 let particles = [], activeDrag = null, loopStarted = false, physicsRunning = false;
 let gMX = 0, gMY = 0;
 let stage = 1, collisionEnabled = false, lerpActive = false, lerpStartTime = 0;
-let menuMyProjectsExpanded = false;
+let menuMyProjectsExpanded = true;
 let portraitCenterX = 0, portraitCenterY = 0;
 const FLOAT_MIN_SPEED = 0.22;
 
@@ -624,7 +626,7 @@ function launchParticles() {
   const pcy = rect.top + rect.height / 2;
   portraitCenterX = pcx; portraitCenterY = pcy;
 
-  const mobileCount = window.innerWidth <= 768 ? 5 : COUNT;
+  const mobileCount = isMobile ? 5 : COUNT;
   ROLES.forEach(role => {
     for (let i = 0; i < mobileCount; i++) {
       const el = document.createElement('span');
@@ -718,7 +720,7 @@ function applyRW(p) { p.el.style.transform = `translate(${p.x}px,${p.y}px)`; }
 /* ── drag & throw ── */
 document.addEventListener('mousemove', e => {
   gMX=e.clientX; gMY=e.clientY;
-  if (!activeDrag) return;
+  if (isMobile || !activeDrag) return;
   const p=activeDrag;
   // update logical position (physics loop will NOT overwrite because p.dragging=true)
   p.x = Math.max(0, Math.min(e.clientX - p._gx, window.innerWidth  - p.w));
@@ -731,7 +733,7 @@ document.addEventListener('mousemove', e => {
 });
 
 document.addEventListener('mouseup', () => {
-  if (!activeDrag) return;
+  if (isMobile || !activeDrag) return;
   const p = activeDrag;
   // compute throw velocity from recent history
   let tvx=0, tvy=0;
@@ -758,7 +760,7 @@ document.addEventListener('mouseup', () => {
 });
 
 document.addEventListener('touchmove', e => {
-  if (!activeDrag) return;
+  if (isMobile || !activeDrag) return;
   e.preventDefault();
   const t = e.touches[0];
   const p = activeDrag;
@@ -771,7 +773,7 @@ document.addEventListener('touchmove', e => {
 }, {passive:false});
 
 document.addEventListener('touchend', () => {
-  if (!activeDrag) return;
+  if (isMobile || !activeDrag) return;
   const p = activeDrag;
   let tvx=0, tvy=0;
   const h = p.velHistory;
@@ -794,6 +796,8 @@ document.addEventListener('touchend', () => {
 
 function onDown(e, p) {
   if (currentPage !== 1) return;
+  // On mobile: no drag — only click-to-navigate (touchend handles it)
+  if (isMobile) return;
   e.preventDefault(); e.stopPropagation();
   // strip any lingering CSS transition so drag is instant (no CSS fighting physics)
   p.el.style.transition = 'none';
@@ -818,6 +822,29 @@ function onDown(e, p) {
     else showToast('→ '+p.role.label);
   };
   setTimeout(()=>{ p._click=false; }, 150);
+}
+
+/* ── Shake to scatter — mobile Stage 2 only ── */
+if (window.DeviceMotionEvent) {
+  let lastShakeTime = 0;
+  const SHAKE_THRESHOLD = 15;
+  const SHAKE_COOLDOWN  = 1000;
+  window.addEventListener('devicemotion', (e) => {
+    if (!isMobile || stage !== 2) return;
+    const acc = e.accelerationIncludingGravity;
+    if (!acc) return;
+    const total = Math.abs(acc.x) + Math.abs(acc.y) + Math.abs(acc.z);
+    const now   = Date.now();
+    if (total > SHAKE_THRESHOLD && now - lastShakeTime > SHAKE_COOLDOWN) {
+      lastShakeTime = now;
+      particles.forEach(p => {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 4 + Math.random() * 6;
+        p.vx = Math.cos(angle) * speed;
+        p.vy = Math.sin(angle) * speed;
+      });
+    }
+  });
 }
 
 /* physics */
@@ -1044,14 +1071,8 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
     const subgroup = document.getElementById('myproj-subgroup');
     const myProjBtn = panel.querySelector('.myproj-btn');
     if (!subgroup) return;
-    const onRolePage = currentPage === 3 || currentPage === 4 || currentPage === 5 || currentPage === 6;
-    if (onRolePage) {
-      subgroup.classList.remove('subgroup-hidden');
-      if (myProjBtn) myProjBtn.classList.add('expanded');
-    } else {
-      subgroup.classList.toggle('subgroup-hidden', !menuMyProjectsExpanded);
-      if (myProjBtn) myProjBtn.classList.toggle('expanded', menuMyProjectsExpanded);
-    }
+    subgroup.classList.toggle('subgroup-hidden', !menuMyProjectsExpanded);
+    if (myProjBtn) myProjBtn.classList.toggle('expanded', menuMyProjectsExpanded);
   }
 
   // Open menu

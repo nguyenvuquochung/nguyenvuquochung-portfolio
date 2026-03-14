@@ -14,19 +14,35 @@
   .p3-card, .p4-card, .p5-card, .p6-card,
   .p7-cval, a, button { cursor: pointer; }
 
-  /* ── FLOATING WORDS — smaller on mobile ───────────────────── */
+  /* ── FLOATING WORDS — smaller on mobile (Change 4) ───────── */
   .rw {
-    font-size: 10px;
+    font-size: clamp(8px, 2.5vw, 12px) !important;
     letter-spacing: .16em;
   }
 
   /* ── LANGUAGE SCREEN — bigger tap targets ─────────────────── */
   .lang-btn { padding: 18px 30px; }
 
-  /* ── PAGE 1 — shrink portrait variable ───────────────────── */
-  :root { --pw: clamp(140px, 56vw, 220px); }
+  /* ── PAGE 1 — portrait sizing (Change 4) ────────────────── */
+  :root { --pw: min(85vw, 85vh); }
+
+  @media (orientation: portrait)  { :root { --pw: 85vw; } }
+  @media (orientation: landscape) { :root { --pw: 55vh; } }
+
   #p1-name-block h1 { font-size: clamp(16px, 5vw, 22px); letter-spacing: .18em; }
-  #p1-hint { font-size: 9px; }
+
+  /* Hint text: never wrap, scale to fit */
+  #p1-hint {
+    font-size: clamp(6px, 1.8vw, 10px);
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+  }
+  #p2-hint {
+    font-size: clamp(6px, 1.8vw, 10px);
+    white-space: nowrap;
+  }
 
   /* ── P2-PORTRAIT-FIXED — hide on mobile (columns go full-width) */
   #p2-portrait-fixed { display: none !important; }
@@ -164,6 +180,56 @@
   #toast {
     font-size: 9px;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 8vh);
+  }
+
+  /* ── MENU TOUCH TARGETS — min 44px height (Change 4) ─────── */
+  .snav-item,
+  .snav-sub,
+  .myproj-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── SCROLL — enabled on all pages (Change 5) ─────────────── */
+  html, body {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    height: auto !important;
+    min-height: 100vh;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #p1-scene {
+    pointer-events: none;
+  }
+
+  #p1-portrait-wrap,
+  #p2-portrait-fixed {
+    pointer-events: auto;
+  }
+
+  /* ── PROJECT PAGES P3–P6: single-column grid (Change 6) ──── */
+  #p3-grid,
+  #p4-grid,
+  #p5-grid,
+  #p6-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+
+  .p3-card,
+  .p4-card,
+  .p5-card,
+  .p6-card {
+    width: 100% !important;
   }
 
 } /* end @media (max-width: 768px) */
