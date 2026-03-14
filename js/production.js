@@ -60,7 +60,7 @@
     extras:[
       {
         label:'VFX Breakdown',
-        html:'<a href="https://www.instagram.com/p/DVtOo4Xk6Dp/" target="_blank" rel="noopener noreferrer">▶ Watch on Instagram</a>',
+        url:'https://www.instagram.com/p/DVtOo4Xk6Dp/',
       },
     ],
     credits:[
@@ -82,7 +82,7 @@
       'assets/myproject/PRODUCTION/HUNL/C0432.00_12_28_03.Still008.png',
     ],
     bts:[],
-    video:'https://www.facebook.com/share/v/1DYoNc66yb/',
+    video:'https://www.facebook.com/share/v/184Rcgn22P/',
     img:'assets/myproject/PRODUCTION/HUNL/C0432.00_11_27_09.Still001.png',
   },
   {

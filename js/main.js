@@ -461,7 +461,9 @@ function _resolveVideoEmbed(url) {
   // Facebook: any facebook.com URL (share/v/, watch/?v=, /videos/, etc.)
   if (/facebook\.com/.test(url)) return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(url) + '&show_text=false&width=640&autoplay=false';
 
-  // No known embed pattern — caller will show a link button instead
+  // Instagram: instagram.com/p/ID/ or instagram.com/reel/ID/
+  m = url.match(/instagram\.com\/(?:p|reel|tv)\/([\/\w-]+?)(?:\?|\/$|$)/);
+  if (m) return 'https://www.instagram.com/p/' + m[1].replace(/\//g,'') + '/embed/';
   return null;
 }
 
@@ -523,11 +525,23 @@ function goToProjectPage(id, fromPage) {
   const extrasContainer = document.getElementById('proj-extras');
   if (extrasContainer) {
     if (proj.extras && proj.extras.length) {
-      extrasContainer.innerHTML = proj.extras.map(ext => `
+      extrasContainer.innerHTML = proj.extras.map(ext => {
+        const label = isEn && ext.label_en ? ext.label_en : ext.label;
+        const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
+        let content;
+        if (embedUrl) {
+          content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+        } else if (ext.url) {
+          content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
+        } else {
+          content = ext.html || '';
+        }
+        return `
       <section class="proj-section">
-        <div class="proj-section-label">${isEn && ext.label_en ? ext.label_en : ext.label}</div>
-        <div class="proj-extra-content">${ext.html}</div>
-      </section>`).join('');
+        <div class="proj-section-label">${label}</div>
+        <div class="proj-extra-content">${content}</div>
+      </section>`;
+      }).join('');
       extrasContainer.style.display = '';
     } else {
       extrasContainer.innerHTML = '';
