@@ -550,7 +550,6 @@ function _resolveVideoEmbed(url) {
 }
 
 function goToProjectPage(id, fromPage) {
-  if (isMobile) return; // no overlay on mobile
   const maps = { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
   const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
   const proj = (maps[fromPage] || []).find(p => p.id === id);

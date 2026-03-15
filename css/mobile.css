@@ -25,15 +25,20 @@ body {
 
 /* Scroll everywhere */
 html, body {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  height: auto !important;
 }
 
 .page {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  min-height: 100vh;
-  height: auto;
+  position: relative !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  height: auto !important;
+  min-height: 100vh !important;
 }
 
 /* ── LANGUAGE SCREEN ────────────────────────────────────────── */
@@ -43,16 +48,31 @@ html, body {
 }
 
 /* ── HOME (P1) ──────────────────────────────────────────────── */
-
-/* Portrait size: small enough to leave room for floating words
-   and ensure name + subtitle never wrap or overflow */
 :root { --pw: 60vw; }
 
 @media (orientation: landscape) {
   :root { --pw: 38vh; }
 }
 
-/* Name block inside portrait */
+#p1-scene {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  padding-top: max(12px, calc(20vh - var(--pw) * 0.5));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  pointer-events: none;
+}
+
+#p1-portrait-wrap {
+  pointer-events: auto;
+  margin: 0 auto;
+  display: block;
+}
+
 #p1-name-block h1 {
   font-size: clamp(12px, 3.8vw, 20px);
   letter-spacing: .15em;
@@ -67,16 +87,16 @@ html, body {
   overflow: visible;
 }
 
-/* Hint text: fixed bottom, centered, never wraps */
+/* Hint text: fixed, 10vh from bottom, centered */
 #p1-hint {
   position: fixed;
-  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  bottom: 10vh;
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
   max-width: 92vw;
   text-align: center;
-  font-size: clamp(7px, 2vw, 10px);
+  font-size: clamp(8px, 2.4vw, 12px);
   letter-spacing: .22em;
   white-space: nowrap;
   overflow: hidden;
@@ -85,31 +105,27 @@ html, body {
   pointer-events: none;
 }
 
-/* Floating words: smaller on mobile */
+/* Floating words: slightly larger */
 .rw {
-  font-size: clamp(8px, 2.2vw, 11px) !important;
+  font-size: clamp(10px, 2.65vw, 13px) !important;
   letter-spacing: .14em;
 }
 
-/* P1 scene: allow scroll-through */
-#p1-scene { pointer-events: none; }
-#p1-portrait-wrap { pointer-events: auto; }
-
 /* ── ABOUT (P2) ─────────────────────────────────────────────── */
 
-/* Hide portrait — not shown on mobile */
+/* Hide portrait */
 #p2-portrait-fixed { display: none !important; }
 
-/* Hide p2-hint on About */
-#p7 ~ #p2-hint,
-#p2 #p2-hint { display: none !important; }
+/* Hide p2-hint */
+#p2-hint { display: none !important; }
 
 /* Single column layout */
 #p2 {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
   padding: 0;
 }
 
@@ -122,65 +138,60 @@ html, body {
 #p2-sec-about {
   order: 1;
   padding: calc(7vh + 32px) 6vw 24px;
-  text-align: left;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 #p2-sec-films {
   order: 2;
   padding: 0 6vw 24px;
-  text-align: left;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 #p2-sec-sw {
   order: 3;
   padding: 0 6vw 24px;
-  text-align: left;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 #p2-sec-exp {
   order: 4;
   padding: 0 6vw 48px;
-  text-align: left;
   opacity: 1 !important;
   pointer-events: auto !important;
 }
 
-/* Text sizing */
-.p2-lbl  { font-size: clamp(18px, 5vw, 26px); }
-.p2-about { font-size: clamp(13px, 3.8vw, 16px); line-height: 1.8; }
-
-/* Quote border: top instead of right */
-.p2-quote {
-  border-right: none;
-  border-top: 1px solid rgba(245,242,238,.15);
-  padding: 16px 0;
-  text-align: left;
+/* All text left-aligned */
+#p2-sec-about, #p2-sec-about *,
+#p2-sec-films, #p2-sec-films *,
+#p2-sec-sw,    #p2-sec-sw *,
+#p2-sec-exp,   #p2-sec-exp * {
+  text-align: left !important;
 }
 
-/* Software proficiency */
-.p2-swn, .p2-swd { text-align: left; }
+/* Text sizing */
+.p2-lbl   { font-size: clamp(18px, 5vw, 26px); }
+.p2-about { font-size: clamp(13px, 3.8vw, 16px); line-height: 1.8; }
+.p2-sw, .p2-swn, .p2-swd { text-align: left !important; }
+
+/* Quote border */
+.p2-quote {
+  border-right: none !important;
+  border-top: 1px solid rgba(245,242,238,.15);
+  padding: 16px 0;
+  text-align: left !important;
+}
 
 /* ── CONTACT (P7) ───────────────────────────────────────────── */
-
-/* Hide p2-hint on Contact */
-#p2-hint { display: none !important; }
-
 #p7 {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  padding: 0;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  height: auto !important;
 }
 
-#p7-left,
-#p7-right {
-  display: contents;
-}
+#p7-left, #p7-right { display: contents; }
 
 #p7-left.in,
 #p7-right.in {
@@ -199,25 +210,37 @@ html, body {
 }
 
 .p7-quote {
-  border-right: none;
+  border-right: none !important;
   border-top: 1px solid rgba(245,242,238,.15);
   padding: 16px 0;
   text-align: left;
 }
 
-/* Contact links: large tap targets */
 .p7-cval {
   display: block;
   padding: 12px 0;
   min-height: 44px;
   cursor: pointer;
-  pointer-events: auto;
+  pointer-events: auto !important;
   -webkit-tap-highlight-color: rgba(245,242,238,.08);
 }
 
 /* ── PROJECT PAGES P3–P6 ────────────────────────────────────── */
+#p3, #p4, #p5, #p6 {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  height: auto !important;
+}
 
-/* Page titles */
+#p3-scroll, #p4-scroll, #p5-scroll, #p6-scroll {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  height: 100vh !important;
+  pointer-events: auto !important;
+}
+
 #p3-header, #p4-header, #p5-header, #p6-header {
   padding-top: calc(7vh + 24px);
 }
@@ -230,38 +253,111 @@ html, body {
 
 /* Single column grid */
 #p3-grid, #p4-grid, #p5-grid, #p6-grid {
-  grid-template-columns: 1fr;
-  gap: 20px;
-  padding: 16px 4vw 48px;
+  grid-template-columns: 1fr !important;
+  gap: 20px !important;
+  padding: 16px 4vw 48px !important;
+  pointer-events: auto !important;
 }
 
 .p3-card, .p4-card, .p5-card, .p6-card {
-  width: 100%;
+  width: 100% !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: rgba(255,255,255,0.05);
 }
 
-/* Remove hover overlay — show image in full colour from the start */
-.p3-card-img-overlay,
-.p4-card-img-overlay,
-.p5-card-img-overlay,
-.p6-card-img-overlay {
-  display: none !important;
-}
-
-.p3-card img,
-.p4-card img,
-.p5-card img,
-.p6-card img {
+/* Cards: full colour, no hover overlay */
+.p3-card img, .p4-card img,
+.p5-card img, .p6-card img {
   filter: none !important;
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
 }
 
-/* Remove project detail overlay */
-#proj-overlay,
-#proj-scroll,
-#proj-back {
+.p3-card-img-overlay, .p4-card-img-overlay,
+.p5-card-img-overlay, .p6-card-img-overlay {
   display: none !important;
+}
+
+/* Tap feedback */
+.p3-card:active, .p4-card:active,
+.p5-card:active, .p6-card:active {
+  opacity: 0.75;
+  transition: opacity 0.1s;
+}
+
+/* ── PROJECT DETAIL OVERLAY — mobile redesign ───────────────── */
+#proj-overlay {
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+#proj-scroll {
+  display: block !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  padding: calc(7vh + 60px) 5vw calc(env(safe-area-inset-bottom, 0px) + 48px) !important;
+}
+
+/* Back button: larger touch target */
+#proj-back {
+  display: flex !important;
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top, 12px));
+  right: 4vw;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 16px;
+  font-size: 9px;
+  cursor: pointer;
+  z-index: 9000;
+  align-items: center;
+}
+
+/* Title */
+#proj-title {
+  font-size: clamp(20px, 5.5vw, 32px);
+  letter-spacing: .12em;
+  white-space: normal;
+  margin-bottom: 16px;
+}
+
+/* Credits: stack vertically */
+.proj-credit-row {
+  flex-direction: column !important;
+  gap: 4px !important;
+  margin-bottom: 12px;
+}
+
+.proj-credit-label,
+.proj-credit-value {
+  text-align: left !important;
+  width: 100% !important;
+}
+
+/* Description */
+.proj-desc,
+.proj-about p {
+  font-size: clamp(13px, 3.8vw, 16px);
+  line-height: 1.8;
+  text-align: left;
+}
+
+/* Stills / BTS image grid: 2 columns */
+.proj-img-grid {
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+}
+
+/* Section labels */
+.proj-section-label {
+  font-size: clamp(9px, 2.5vw, 12px);
+  letter-spacing: .28em;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  text-align: left;
 }
 
 /* ── SIDE NAV / MENU ────────────────────────────────────────── */
@@ -276,36 +372,33 @@ html, body {
 #menu-panel {
   width: min(82vw, 280px);
   padding-top: calc(7vh + 24px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  max-height: 100vh;
 }
 
-/* Touch targets */
-.snav-item,
-.snav-sub,
-.myproj-btn {
+.snav-item, .snav-sub, .myproj-btn {
   min-height: 44px;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.snav-proj { cursor: pointer; min-height: 36px; }
+.snav-proj {
+  cursor: pointer;
+  min-height: 36px;
+}
 
-/* Always show sub-project lists */
 .snav-proj-list {
   max-height: none !important;
   opacity: 1 !important;
 }
 
-/* Language switcher */
-#lang-switcher {
-  margin-top: 8px;
-}
+#lang-switcher { margin-top: 8px; }
 
 /* ── TOAST ──────────────────────────────────────────────────── */
-#editor-toast,
-#toast {
+#editor-toast, #toast {
   font-size: 9px;
   bottom: calc(env(safe-area-inset-bottom, 0px) + 10vh);
 }
