@@ -23,10 +23,9 @@ body {
   cursor: pointer;
 }
 
-/* Scroll everywhere */
+/* Body: no horizontal scroll, height stays auto so fixed children get touch events */
 html, body {
-  height: 100% !important;
-  overflow: hidden !important;
+  overflow-x: hidden !important;
 }
 
 .page {
