@@ -109,6 +109,7 @@
       },
     ],
     credits:[
+      { label:'Director',                label_vi:'Đạo diễn',         value:'Huy Hoàng Cao' },
       { label:'Cast',                    label_vi:'Diễn viên',        value:'Vũ Phan Tiến Đạt, Son Lee, Lê Nguyễn Duy, Ngô Nhật Trường, Lê Manh Bảo' },
       { label:'Assistant Director',      label_vi:'Trợ lí đạo diễn', value:'Quỳnh Sun' },
       { label:'Producer',                label_vi:'Sản xuất',         value:'Quốc Hưng' },
@@ -127,7 +128,7 @@
       'assets/myproject/PRODUCTION/HUNL/C0432.00_12_28_03.Still008.png',
     ],
     bts:[],
-    video:'https://www.facebook.com/share/v/184Rcgn22P/',
+    video:'https://youtu.be/uuvTDpxvdP0?si=wx8SeDIJdgfKDBJO',
     img:'assets/myproject/PRODUCTION/HUNL/C0432.00_11_27_09.Still001.png',
     imgStyle:'transform:scale(1.4);transform-origin:center;',
   },
