@@ -48,6 +48,11 @@ html, body {
 }
 
 /* ── LANGUAGE SCREEN ────────────────────────────────────────── */
+#lang-screen {
+  touch-action: auto !important;
+  pointer-events: auto !important;
+}
+
 .lang-btn {
   padding: 18px 32px;
   min-height: 56px;
