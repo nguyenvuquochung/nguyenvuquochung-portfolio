@@ -17,7 +17,7 @@
   document.getElementById('p7-right').scrollTop = 0;
   if (window.positionP2Block) positionP2Block();
   const p2hint = document.getElementById('p2-hint');
-  if (p2hint) {
+  if (p2hint && !isMobile) {
     p2hint.textContent = typeof currentLang !== 'undefined' && currentLang === 'vi' ? 'bấm vào ảnh để xem trang giới thiệu' : 'click portrait to go to about';
     p2hint.style.display = 'block';
   }

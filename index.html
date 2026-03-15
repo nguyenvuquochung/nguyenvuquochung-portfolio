@@ -245,7 +245,7 @@
   <button class="snav-item pg1" onclick="goToHome()">Home</button>
   <button class="snav-item pg2" onclick="goToPage2(); snavClose()">About</button>
   <button class="snav-item pg7" onclick="goToPage7(); snavClose()">Contact</button>
-  <button class="snav-item myproj-btn" onclick="toggleMyProjects()">My Projects</button>
+  <button class="snav-item myproj-btn" onclick="toggleMyProjects()">Projects &amp; Works</button>
   <div id="myproj-subgroup" class="snav-subgroup subgroup-hidden">
     <button class="snav-sub pg4" onclick="goToPage4(); snavClose()">Director</button>
     <button class="snav-sub pg5" onclick="goToPage5(); snavClose()">Assistant Director</button>
@@ -253,8 +253,16 @@
     <button class="snav-sub pg6" onclick="goToPage6(); snavClose()">Editor</button>
   </div>
   <div id="lang-switcher">
-    <span id="lang-btn-en" onclick="switchLangTo('en')">🇺🇸</span>
-    <span id="lang-btn-vi" onclick="switchLangTo('vi')">🇻🇳</span>
+    <img id="lang-btn-en"
+         src="https://flagcdn.com/w40/us.png"
+         alt="English"
+         onclick="switchLangTo('en')"
+         title="English" />
+    <img id="lang-btn-vi"
+         src="https://flagcdn.com/w40/vn.png"
+         alt="Tiếng Việt"
+         onclick="switchLangTo('vi')"
+         title="Tiếng Việt" />
   </div>
 </nav>
 

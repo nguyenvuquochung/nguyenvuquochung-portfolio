@@ -1,235 +1,314 @@
 /* ================================================================
-   MOBILE OVERRIDES  —  max-width: 768px
-   All overrides for touch / narrow screens go here.
+   MOBILE  —  max-width: 768px  |  rebuilt from scratch
 ================================================================ */
 @media (max-width: 768px) {
 
-  /* ── CURSOR — hide custom cursor on touch devices ─────────── */
-  body { cursor: auto; }
-  #cursor { display: none; }
+/* ── GLOBAL ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* Restore cursor: pointer on all interactive elements */
-  .lang-btn, .rw, .snav-item, .snav-sub, .snav-proj,
-  #snav-burger, #proj-back, #p2-portrait-fixed,
-  .p3-card, .p4-card, .p5-card, .p6-card,
-  .p7-cval, a, button { cursor: pointer; }
+body {
+  cursor: auto;
+  overflow-x: hidden;
+}
 
-  /* ── FLOATING WORDS — smaller on mobile (Change 4) ───────── */
-  .rw {
-    font-size: clamp(8px, 2.5vw, 12px) !important;
-    letter-spacing: .16em;
-  }
+#cursor { display: none; }
 
-  /* ── LANGUAGE SCREEN — bigger tap targets ─────────────────── */
-  .lang-btn { padding: 18px 30px; }
+/* Restore pointer on interactive elements */
+.lang-btn, .rw, .snav-item, .snav-sub, .myproj-btn,
+#snav-burger, #proj-back, a, button,
+.p3-card, .p4-card, .p5-card, .p6-card {
+  cursor: pointer;
+}
 
-  /* ── PAGE 1 — portrait sizing (Change 4) ────────────────── */
-  :root { --pw: min(85vw, 85vh); }
+/* Scroll everywhere */
+html, body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
-  @media (orientation: portrait)  { :root { --pw: 85vw; } }
-  @media (orientation: landscape) { :root { --pw: 55vh; } }
+.page {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 100vh;
+  height: auto;
+}
 
-  #p1-name-block h1 { font-size: clamp(16px, 5vw, 22px); letter-spacing: .18em; }
+/* ── LANGUAGE SCREEN ────────────────────────────────────────── */
+.lang-btn {
+  padding: 18px 32px;
+  min-height: 56px;
+}
 
-  /* Hint text: never wrap, scale to fit */
-  #p1-hint {
-    font-size: clamp(6px, 1.8vw, 10px);
-    white-space: nowrap;
-    width: 100%;
-    text-align: center;
-    overflow: hidden;
-  }
-  #p2-hint {
-    font-size: clamp(6px, 1.8vw, 10px);
-    white-space: nowrap;
-  }
+/* ── HOME (P1) ──────────────────────────────────────────────── */
 
-  /* ── P2-PORTRAIT-FIXED — hide on mobile (columns go full-width) */
-  #p2-portrait-fixed { display: none !important; }
+/* Portrait size: small enough to leave room for floating words
+   and ensure name + subtitle never wrap or overflow */
+:root { --pw: 60vw; }
 
-  /* ── PAGE 2 (ABOUT) — single column, custom section order ── */
-  /* Flatten both columns so .p2s sections become direct flex children of #p2 */
-  #p2 { display: flex; flex-direction: column; overflow-y: auto; }
-  #p2-left, #p2-right { display: contents; }
+@media (orientation: landscape) {
+  :root { --pw: 38vh; }
+}
 
-  /* Keep sections visible regardless of JS animation state on the parent element */
-  #p2-sec-about, #p2-sec-films, #p2-sec-sw, #p2-sec-exp {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-  /* Mobile order: About Me → Filmography & Awards → Software → Expertise */
-  #p2-sec-about { order: 1; padding: calc(7vh + 24px) 6vw 20px; text-align: left; }
-  #p2-sec-films { order: 2; padding: 0 6vw 20px; text-align: left; }
-  #p2-sec-sw    { order: 3; padding: 0 6vw 20px; text-align: left; }
-  #p2-sec-exp   { order: 4; padding: 0 6vw 32px; text-align: left; }
+/* Name block inside portrait */
+#p1-name-block h1 {
+  font-size: clamp(12px, 3.8vw, 20px);
+  letter-spacing: .15em;
+  white-space: nowrap;
+  overflow: visible;
+}
 
-  /* p2 text adjustments */
-  .p2-lbl { font-size: clamp(18px, 5vw, 24px); }
-  .p2-about { font-size: clamp(14px, 4vw, 17px); }
+#p1-name-block .sub {
+  font-size: clamp(7px, 2vw, 11px);
+  letter-spacing: .12em;
+  white-space: nowrap;
+  overflow: visible;
+}
 
-  /* Fix quote border for single-column */
-  .p2-quote {
-    border-right: none;
-    border-top: 1px solid rgba(245,242,238,.15);
-    text-align: left;
-    padding: 15px 0;
-  }
-  #p2-right .p2-quote {
-    border-left: none;
-  }
-  /* Software table text-align fix */
-  #p2-left .p2-swn,
-  #p2-left .p2-swd { text-align: left; }
+/* Hint text: fixed bottom, centered, never wraps */
+#p1-hint {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 92vw;
+  text-align: center;
+  font-size: clamp(7px, 2vw, 10px);
+  letter-spacing: .22em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 500;
+  pointer-events: none;
+}
 
-  /* ── PAGE 7 (CONTACT) — single scrollable column ─────────── */
-  /* Same flex+display:contents approach as #p2 — the only pattern that
-     reliably enables touch-scroll on iOS inside a position:fixed page */
-  #p7 {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-  }
-  #p7-left,
-  #p7-left.in,
-  #p7-right,
-  #p7-right.in {
-    display: contents;
-    pointer-events: all !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  #p7-left .p2s {
-    padding: calc(7vh + 24px) 6vw 20px;
-    text-align: left;
-  }
-  #p7-right .p2s {
-    padding: 0 6vw 32px;
-    text-align: left;
-  }
+/* Floating words: smaller on mobile */
+.rw {
+  font-size: clamp(8px, 2.2vw, 11px) !important;
+  letter-spacing: .14em;
+}
 
-  .p7-quote {
-    border-right: none;
-    border-top: 1px solid rgba(245,242,238,.15);
-    padding: 15px 0;
-    text-align: left;
-  }
+/* P1 scene: allow scroll-through */
+#p1-scene { pointer-events: none; }
+#p1-portrait-wrap { pointer-events: auto; }
 
-  /* Ensure contact links have a proper tap zone (min 44px) on iOS */
-  .p7-cval {
-    cursor: pointer !important;
-    pointer-events: all !important;
-    -webkit-tap-highlight-color: rgba(245,242,238,.1);
-    display: block;
-    padding: 10px 0;
-  }
+/* ── ABOUT (P2) ─────────────────────────────────────────────── */
 
-  /* ── PAGES 3-6 — page titles: allow wrapping ─────────────── */
-  #p3-title, #p4-title, #p5-title, #p6-title {
-    white-space: normal;
-    font-size: clamp(22px, 6vw, 34px);
-    letter-spacing: .18em;
-  }
+/* Hide portrait — not shown on mobile */
+#p2-portrait-fixed { display: none !important; }
 
-  /* ── PROJECT OVERLAY ──────────────────────────────────────── */
-  #proj-scroll {
-    padding: calc(7vh + 70px) 5vw calc(env(safe-area-inset-bottom, 0px) + 48px);
-  }
-  #proj-back {
-    cursor: pointer;
-    right: 4vw;
-    font-size: 9px;
-    padding: 10px 16px;
-  }
-  #proj-title {
-    font-size: clamp(22px, 6vw, 34px);
-    letter-spacing: .12em;
-  }
-  .proj-credit-row {
-    flex-direction: column;
-    gap: 3px;
-  }
-  .proj-credit-value { text-align: left; }
-  .proj-img-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
+/* Hide p2-hint on About */
+#p7 ~ #p2-hint,
+#p2 #p2-hint { display: none !important; }
 
-  /* ── SIDE NAV ─────────────────────────────────────────────── */
-  #menu-panel {
-    width: min(85vw, 300px);
-    justify-content: flex-start;
-    padding-top: calc(7vh + 20px);
-    overflow-y: auto;
-  }
+/* Single column layout */
+#p2 {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
+}
 
-  /* Always show project sub-lists on mobile — panel scrolls to reveal all */
-  .snav-proj-list {
-    max-height: none !important;
-    opacity: 1 !important;
-  }
-  .snav-sub { cursor: pointer; }
-  .snav-proj { cursor: pointer; }
+#p2-left,
+#p2-right {
+  display: contents;
+}
 
-  /* ── BURGER MENU — raised inside top letterbox bar so it never overlaps page titles ── */
-  #side-nav { top: 1.5vh; }
-  #snav-burger { cursor: pointer; }
+/* Section order and padding */
+#p2-sec-about {
+  order: 1;
+  padding: calc(7vh + 32px) 6vw 24px;
+  text-align: left;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+#p2-sec-films {
+  order: 2;
+  padding: 0 6vw 24px;
+  text-align: left;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+#p2-sec-sw {
+  order: 3;
+  padding: 0 6vw 24px;
+  text-align: left;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+#p2-sec-exp {
+  order: 4;
+  padding: 0 6vw 48px;
+  text-align: left;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
 
-  /* ── TOAST ────────────────────────────────────────────────── */
-  #toast {
-    font-size: 9px;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8vh);
-  }
+/* Text sizing */
+.p2-lbl  { font-size: clamp(18px, 5vw, 26px); }
+.p2-about { font-size: clamp(13px, 3.8vw, 16px); line-height: 1.8; }
 
-  /* ── MENU TOUCH TARGETS — min 44px height (Change 4) ─────── */
-  .snav-item,
-  .snav-sub,
-  .myproj-btn {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-  }
+/* Quote border: top instead of right */
+.p2-quote {
+  border-right: none;
+  border-top: 1px solid rgba(245,242,238,.15);
+  padding: 16px 0;
+  text-align: left;
+}
 
-  /* ── SCROLL — enabled on all pages (Change 5) ─────────────── */
-  html, body {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-  }
+/* Software proficiency */
+.p2-swn, .p2-swd { text-align: left; }
 
-  .page {
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch;
-    height: auto !important;
-    min-height: 100vh;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-  }
+/* ── CONTACT (P7) ───────────────────────────────────────────── */
 
-  #p1-scene {
-    pointer-events: none;
-  }
+/* Hide p2-hint on Contact */
+#p2-hint { display: none !important; }
 
-  #p1-portrait-wrap,
-  #p2-portrait-fixed {
-    pointer-events: auto;
-  }
+#p7 {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding: 0;
+}
 
-  /* ── PROJECT PAGES P3–P6: single-column grid (Change 6) ──── */
-  #p3-grid,
-  #p4-grid,
-  #p5-grid,
-  #p6-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-    padding: 16px !important;
-  }
+#p7-left,
+#p7-right {
+  display: contents;
+}
 
-  .p3-card,
-  .p4-card,
-  .p5-card,
-  .p6-card {
-    width: 100% !important;
-  }
+#p7-left.in,
+#p7-right.in {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+#p7-left .p2s {
+  padding: calc(7vh + 32px) 6vw 24px;
+  text-align: left;
+}
+#p7-right .p2s {
+  padding: 0 6vw 48px;
+  text-align: left;
+}
+
+.p7-quote {
+  border-right: none;
+  border-top: 1px solid rgba(245,242,238,.15);
+  padding: 16px 0;
+  text-align: left;
+}
+
+/* Contact links: large tap targets */
+.p7-cval {
+  display: block;
+  padding: 12px 0;
+  min-height: 44px;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: rgba(245,242,238,.08);
+}
+
+/* ── PROJECT PAGES P3–P6 ────────────────────────────────────── */
+
+/* Page titles */
+#p3-header, #p4-header, #p5-header, #p6-header {
+  padding-top: calc(7vh + 24px);
+}
+
+#p3-title, #p4-title, #p5-title, #p6-title {
+  font-size: clamp(20px, 5.5vw, 32px);
+  letter-spacing: .16em;
+  white-space: normal;
+}
+
+/* Single column grid */
+#p3-grid, #p4-grid, #p5-grid, #p6-grid {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 16px 4vw 48px;
+}
+
+.p3-card, .p4-card, .p5-card, .p6-card {
+  width: 100%;
+}
+
+/* Remove hover overlay — show image in full colour from the start */
+.p3-card-img-overlay,
+.p4-card-img-overlay,
+.p5-card-img-overlay,
+.p6-card-img-overlay {
+  display: none !important;
+}
+
+.p3-card img,
+.p4-card img,
+.p5-card img,
+.p6-card img {
+  filter: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Remove project detail overlay */
+#proj-overlay,
+#proj-scroll,
+#proj-back {
+  display: none !important;
+}
+
+/* ── SIDE NAV / MENU ────────────────────────────────────────── */
+#side-nav {
+  top: max(12px, env(safe-area-inset-top, 12px));
+  left: 16px;
+  z-index: 8600;
+}
+
+#snav-burger { cursor: pointer; }
+
+#menu-panel {
+  width: min(82vw, 280px);
+  padding-top: calc(7vh + 24px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch targets */
+.snav-item,
+.snav-sub,
+.myproj-btn {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.snav-proj { cursor: pointer; min-height: 36px; }
+
+/* Always show sub-project lists */
+.snav-proj-list {
+  max-height: none !important;
+  opacity: 1 !important;
+}
+
+/* Language switcher */
+#lang-switcher {
+  margin-top: 8px;
+}
+
+/* ── TOAST ──────────────────────────────────────────────────── */
+#editor-toast,
+#toast {
+  font-size: 9px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10vh);
+}
 
 } /* end @media (max-width: 768px) */
+

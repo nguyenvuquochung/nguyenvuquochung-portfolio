@@ -15,8 +15,8 @@ function renderP2(lang) {
   document.getElementById('p2-films').innerHTML = c.films.map(f=>`
     <div class="p2-film">
       <div class="p2-ftype">${f.type}</div>
-      <div class="p2-ftitle">${f.title}</div>
-      ${f.en?`<div class="p2-fen">${f.en}</div>`:''}
+      <div class="p2-ftitle">${lang === 'en' ? (f.en || f.title) : f.title}</div>
+      ${lang !== 'en' && f.en ? `<div class="p2-fen">${f.en}</div>` : ''}
       ${f.credits?`<div class="p2-fcred">${f.credits}</div>`:''}
       <ul class="p2-awards">${f.awards.map(a=>`<li>${a}</li>`).join('')}</ul>
     </div>`).join('');

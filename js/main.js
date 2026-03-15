@@ -168,10 +168,64 @@ function switchLangTo(lang) {
   else if (currentPage === 4 && window.renderP4) renderP4();
   else if (currentPage === 5 && window.renderP5) renderP5();
   else if (currentPage === 6 && window.renderP6) renderP6();
+  _applyLangUI(lang);
   updateLangSwitcher();
 }
 window.switchLangTo = switchLangTo;
 
+function _applyLangUI(lang) {
+  const isVi = lang === 'vi';
+  // Floating word particles
+  if (typeof particles !== 'undefined') {
+    particles.forEach(p => {
+      p.el.textContent = isVi ? (p.role.label_vi || p.role.label) : p.role.label;
+    });
+  }
+  // Main menu items
+  const pg1btn = document.querySelector('#menu-panel .snav-item.pg1');
+  if (pg1btn) pg1btn.textContent = isVi ? 'Trang Ch\u1ee7' : 'Home';
+  const pg2btn = document.querySelector('#menu-panel .snav-item.pg2');
+  if (pg2btn) pg2btn.textContent = isVi ? 'Gi\u1edbi Thi\u1ec7u' : 'About';
+  const pg7btn = document.querySelector('#menu-panel .snav-item.pg7');
+  if (pg7btn) pg7btn.textContent = isVi ? 'Li\u00ean H\u1ec7' : 'Contact';
+  const mypbtn = document.querySelector('#menu-panel .myproj-btn');
+  if (mypbtn) mypbtn.textContent = isVi ? 'D\u1ef0 \u00c1n V\u00e0 C\u00f4ng Vi\u1ec7c' : 'Projects \u0026 Works';
+  // Sub-menu items
+  const subMap = {
+    pg4: isVi ? '\u0110\u1ea1o Di\u1ec5n'         : 'Director',
+    pg5: isVi ? 'Tr\u1ee3 L\u00fd \u0110\u1ea1o Di\u1ec5n' : 'Assistant Director',
+    pg3: isVi ? 'S\u1ea3n Xu\u1ea5t'         : 'Production',
+    pg6: isVi ? 'D\u1ef1ng Phim'        : 'Editor',
+  };
+  Object.entries(subMap).forEach(([cls, lbl]) => {
+    const el = document.querySelector('#menu-panel .snav-sub.' + cls);
+    if (el) el.textContent = lbl;
+  });
+  // Page titles \u0026 subtitles
+  const titleMap = {
+    p3: isVi ? 'S\u1ea3n Xu\u1ea5t'         : 'Production',
+    p4: isVi ? '\u0110\u1ea1o Di\u1ec5n'         : 'Director',
+    p5: isVi ? 'Tr\u1ee3 L\u00fd \u0110\u1ea1o Di\u1ec5n' : 'Assistant Director',
+    p6: isVi ? 'D\u1ef1ng Phim'        : 'Editor',
+  };
+  Object.entries(titleMap).forEach(([id, txt]) => {
+    const t = document.getElementById(id + '-title');    if (t) t.textContent = txt;
+    const s = document.getElementById(id + '-subtitle'); if (s) s.textContent = isVi ? 'D\u1ef0 \u00c1n V\u00e0 C\u00f4ng Vi\u1ec7c' : 'Projects \u0026 Works';
+  });
+  // Contact page
+  const p7touch = document.querySelector('#p7-left .p2-lbl');
+  if (p7touch) p7touch.textContent = isVi ? 'H\u00e3y K\u1ebft N\u1ed1i' : 'Get In Touch';
+  const p7contact = document.querySelector('#p7-right .p7-lbl');
+  if (p7contact) p7contact.textContent = isVi ? 'Th\u00f4ng Tin' : 'Contact';
+  const p7quote = document.getElementById('p7-quote-text');
+  if (p7quote) p7quote.textContent = isVi
+    ? '\u201cT\u00f4i r\u1ea5t vui n\u1ebfu c\u00f3 c\u01a1 h\u1ed9i l\u00e0m vi\u1ec7c v\u1edbi b\u1ea1n. N\u1ebfu c\u1ea7n h\u1ed7 tr\u1ee3, h\u00e3y li\u00ean h\u1ec7 t\u00f4i. C\u00f2n n\u1ebfu kh\u00f4ng, ch\u00fang ta v\u1eabn c\u00f3 th\u1ec3 tr\u00f2 chuy\u1ec7n v\u00e0 l\u00e0m b\u1ea1n.\u201d'
+    : '\u201cI would be delighted to work with you. If you need my assistance, please feel free to get in touch. And if not, we can always chat and be friends.\u201d';
+  const clbls = document.querySelectorAll('.p7-clbl');
+  const viLbls = ['Điện Thoại', 'Email', 'Facebook', 'Instagram'];
+  const enLbls = ['Phone', 'Email', 'Facebook', 'Instagram'];
+  clbls.forEach((el, i) => { if (i < 4) el.textContent = isVi ? viLbls[i] : enLbls[i]; });
+}
 function chooseLang(lang) {
   currentLang = lang;
   document.getElementById('lang-screen').classList.add('out');
@@ -191,6 +245,7 @@ function chooseLang(lang) {
     const sideNavEl = document.getElementById('side-nav');
     if (sideNavEl) sideNavEl.classList.add('vis');
     updateLangSwitcher();
+    _applyLangUI(lang);
   }, 950);
 }
 
@@ -432,7 +487,7 @@ function goToPage2() {
   document.getElementById('p2-right').scrollTop = 0;
   positionP2Block();
   const p2hint = document.getElementById('p2-hint');
-  if (p2hint) {
+  if (p2hint && !isMobile) {
     p2hint.textContent = currentLang === 'vi' ? 'bấm vào ảnh để liên hệ' : 'click portrait to contact me';
     p2hint.style.display = 'block';
   }
@@ -495,6 +550,7 @@ function _resolveVideoEmbed(url) {
 }
 
 function goToProjectPage(id, fromPage) {
+  if (isMobile) return; // no overlay on mobile
   const maps = { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
   const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
   const proj = (maps[fromPage] || []).find(p => p.id === id);
@@ -646,10 +702,10 @@ function loadPortrait(e) {
 
 /* ══ FLOATING WORDS — PHYSICS ════════════════ */
 const ROLES = [
-  {label:'DIRECTOR',           color:'#1a6fff', page:'page3'},
-  {label:'ASSISTANT DIRECTOR', color:'#ff1a1a', page:'page4'},
-  {label:'PRODUCTION',         color:'#00e676', page:'page5'},
-  {label:'EDITOR',             color:'#ffe000', page:'page6'},
+  {label:'DIRECTOR',           label_vi:'ĐẠO DIỄN',           color:'#1a6fff', page:'page3'},
+  {label:'ASSISTANT DIRECTOR', label_vi:'TRỢ LÝ ĐẠO DIỄN',   color:'#ff1a1a', page:'page4'},
+  {label:'PRODUCTION',         label_vi:'SẢN XUẤT',           color:'#00e676', page:'page5'},
+  {label:'EDITOR',             label_vi:'DỰNG PHIM',          color:'#ffe000', page:'page6'},
 ];
 const COUNT = 8, VEL_SMP = 6;
 let particles = [], activeDrag = null, loopStarted = false, physicsRunning = false;
@@ -707,7 +763,7 @@ function launchParticles() {
     for (let i = 0; i < mobileCount; i++) {
       const el = document.createElement('span');
       el.className = 'rw rw-behind';
-      el.textContent = role.label;
+      el.textContent = currentLang === 'vi' ? (role.label_vi || role.label) : role.label;
       el.style.color = role.color;
       const op = 0.55 + Math.random() * .40;
       el.style.setProperty('--op', op);
@@ -755,7 +811,7 @@ function launchParticles() {
 function spawnParticle(role) {
   const el = document.createElement('span');
   el.className = 'rw';
-  el.textContent = role.label;
+  el.textContent = currentLang === 'vi' ? (role.label_vi || role.label) : role.label;
   el.style.color = role.color;
   const op = 0.55 + Math.random()*.40;
   el.style.setProperty('--op', op);
