@@ -3,6 +3,119 @@
 ================================================================ */
 @media (max-width: 768px) {
 
+/* ══ CRITICAL TOUCH FIXES — must come first ═════════════════════════════════
+   Override style.css rules that block all touch on mobile.
+════════════════════════════════════════════════════════════════ */
+
+/* style.css: body { user-select:none } blocks ALL touch on iOS Safari */
+body {
+  user-select: auto !important;
+  -webkit-user-select: auto !important;
+  touch-action: auto !important;
+}
+
+/* style.css: .page { position:fixed } — ensure scroll + pointer events */
+.page {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  pointer-events: auto !important;
+}
+
+/* style.css: #p1 { pointer-events:none } */
+#p1 {
+  pointer-events: auto !important;
+  overflow: hidden !important;
+  touch-action: auto !important;
+}
+
+/* style.css: #p2 { pointer-events:none; overflow:hidden } */
+#p2 {
+  pointer-events: auto !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}
+
+#p2-left, #p2-right {
+  pointer-events: auto !important;
+}
+
+#p2-left.in, #p2-right.in {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+}
+
+/* style.css: #p7 { pointer-events:none } */
+#p7 {
+  pointer-events: auto !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}
+
+#p7-left, #p7-right {
+  pointer-events: auto !important;
+}
+
+#p7-left.in, #p7-right.in {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+}
+
+/* style.css: P3–P6 { pointer-events:none } */
+#p3, #p4, #p5, #p6 {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+}
+
+#p3.slide-in, #p4.slide-in,
+#p5.slide-in, #p6.slide-in {
+  pointer-events: auto !important;
+}
+
+#p3-scroll, #p4-scroll, #p5-scroll, #p6-scroll {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  overflow-y: auto !important;
+}
+
+.p3-card, .p4-card, .p5-card, .p6-card {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+#proj-overlay {
+  pointer-events: none !important;
+  touch-action: auto !important;
+}
+#proj-overlay.slide-in {
+  pointer-events: auto !important;
+}
+#proj-scroll {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+#menu-panel {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  overflow-y: auto !important;
+}
+
+.snav-item, .snav-sub, .myproj-btn,
+#snav-burger, .lang-btn, a, button {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  cursor: pointer !important;
+}
+
+/* ══ END CRITICAL TOUCH FIXES ═══════════════════════════════════════════════════════════════ */
+
 /* ── GLOBAL ─────────────────────────────────────────────────── */
 body { cursor: auto; }
 #cursor { display: none; }
@@ -133,9 +246,9 @@ body { cursor: auto; }
   pointer-events: none !important;
 }
 
-/* Floating words: slightly larger */
+/* Floating words */
 .rw {
-  font-size: clamp(10px, 2.65vw, 13px) !important;
+  font-size: clamp(13px, 3.4vw, 17px) !important;
   letter-spacing: .14em;
 }
 
