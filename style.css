@@ -929,7 +929,6 @@ a.p7-cval:hover { color:var(--white); }
   justify-content: center;
   gap: 24px;
   padding: 0 clamp(28px, 3.5vw, 44px);
-  padding-bottom: clamp(60px, 8vh, 80px);
   transform: translateX(-100%);
   pointer-events: none;
   transition: transform .32s cubic-bezier(.4,0,.2,1);
@@ -1072,34 +1071,29 @@ a.p7-cval:hover { color:var(--white); }
   color: rgba(245,242,238,.75);
 }
 
-/* ── Language toggle flags ── */
-.snav-lang-row {
-  position: absolute;
-  bottom: clamp(20px, 3vh, 36px);
-  left: clamp(28px, 3.5vw, 44px);
+/* ── Language switcher flags ── */
+#lang-switcher {
   display: flex;
-  gap: 10px;
+  gap: 16px;
+  align-items: center;
   padding-top: 14px;
+  margin-top: 4px;
   border-top: 1px solid rgba(245,242,238,.10);
-  width: calc(100% - clamp(56px, 7vw, 88px));
 }
-.snav-lang-btn {
-  background: none;
-  border: none;
-  cursor: none;
-  padding: 2px 4px;
-  font-size: 22px;
+#lang-switcher span {
+  cursor: pointer;
+  font-size: 24px;
   line-height: 1;
-  filter: grayscale(1) brightness(0.6);
-  opacity: 0.55;
-  transition: filter .22s, opacity .22s;
-  border-radius: 3px;
+  filter: grayscale(100%);
+  opacity: 0.4;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+  user-select: none;
 }
-.snav-lang-btn:hover {
-  filter: grayscale(0) brightness(1);
+#lang-switcher span:hover {
+  filter: grayscale(0%);
   opacity: 1;
 }
-.snav-lang-btn.active {
-  filter: grayscale(0) brightness(1);
+#lang-switcher span.lang-active {
+  filter: grayscale(0%);
   opacity: 1;
 }

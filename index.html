@@ -252,9 +252,9 @@
     <button class="snav-sub pg3" onclick="goToPage3(); snavClose()">Production</button>
     <button class="snav-sub pg6" onclick="goToPage6(); snavClose()">Editor</button>
   </div>
-  <div class="snav-lang-row">
-    <button class="snav-lang-btn" id="lang-btn-en" onclick="switchLang('en')" title="English">🇺🇸</button>
-    <button class="snav-lang-btn" id="lang-btn-vi" onclick="switchLang('vi')" title="Tiếng Việt">🇻🇳</button>
+  <div id="lang-switcher">
+    <span id="lang-btn-en" onclick="switchLangTo('en')">🇺🇸</span>
+    <span id="lang-btn-vi" onclick="switchLangTo('vi')">🇻🇳</span>
   </div>
 </nav>
 

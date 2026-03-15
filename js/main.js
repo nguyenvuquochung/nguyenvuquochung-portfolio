@@ -146,17 +146,21 @@ function resetAllPages() {
 
 
 /* ══ LANGUAGE ════════════════════════════════ */
-function _updateLangBtns(lang) {
-  document.querySelectorAll('.snav-lang-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.getElementById('lang-btn-' + lang);
-  if (btn) btn.classList.add('active');
+function updateLangSwitcher() {
+  const en = document.getElementById('lang-btn-en');
+  const vi = document.getElementById('lang-btn-vi');
+  if (en) en.classList.toggle('lang-active', currentLang === 'en');
+  if (vi) vi.classList.toggle('lang-active', currentLang === 'vi');
 }
+window.updateLangSwitcher = updateLangSwitcher;
 
-function switchLang(lang) {
+function switchLangTo(lang) {
   if (currentLang === lang) return;
   currentLang = lang;
-  document.getElementById('p1-sub').textContent  = C[lang].sub;
-  document.getElementById('p1-hint').textContent = C[lang].hint;
+  const sub = document.getElementById('p1-sub');
+  if (sub) sub.textContent = C[lang].sub;
+  const hint = document.getElementById('p1-hint');
+  if (hint) hint.textContent = C[lang].hint;
   const p2hint = document.getElementById('p2-hint');
   if (p2hint) p2hint.textContent = lang === 'vi' ? 'bấm vào ảnh để liên hệ' : 'click portrait to contact me';
   if      (currentPage === 2 && window.renderP2) renderP2(lang);
@@ -164,8 +168,9 @@ function switchLang(lang) {
   else if (currentPage === 4 && window.renderP4) renderP4();
   else if (currentPage === 5 && window.renderP5) renderP5();
   else if (currentPage === 6 && window.renderP6) renderP6();
-  _updateLangBtns(lang);
+  updateLangSwitcher();
 }
+window.switchLangTo = switchLangTo;
 
 function chooseLang(lang) {
   currentLang = lang;
@@ -185,7 +190,7 @@ function chooseLang(lang) {
     history.replaceState({}, '', '/');
     const sideNavEl = document.getElementById('side-nav');
     if (sideNavEl) sideNavEl.classList.add('vis');
-    _updateLangBtns(lang);
+    updateLangSwitcher();
   }, 950);
 }
 
