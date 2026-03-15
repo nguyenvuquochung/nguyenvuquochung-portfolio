@@ -146,6 +146,27 @@ function resetAllPages() {
 
 
 /* ══ LANGUAGE ════════════════════════════════ */
+function _updateLangBtns(lang) {
+  document.querySelectorAll('.snav-lang-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('lang-btn-' + lang);
+  if (btn) btn.classList.add('active');
+}
+
+function switchLang(lang) {
+  if (currentLang === lang) return;
+  currentLang = lang;
+  document.getElementById('p1-sub').textContent  = C[lang].sub;
+  document.getElementById('p1-hint').textContent = C[lang].hint;
+  const p2hint = document.getElementById('p2-hint');
+  if (p2hint) p2hint.textContent = lang === 'vi' ? 'bấm vào ảnh để liên hệ' : 'click portrait to contact me';
+  if      (currentPage === 2 && window.renderP2) renderP2(lang);
+  else if (currentPage === 3 && window.renderP3) renderP3();
+  else if (currentPage === 4 && window.renderP4) renderP4();
+  else if (currentPage === 5 && window.renderP5) renderP5();
+  else if (currentPage === 6 && window.renderP6) renderP6();
+  _updateLangBtns(lang);
+}
+
 function chooseLang(lang) {
   currentLang = lang;
   document.getElementById('lang-screen').classList.add('out');
@@ -164,6 +185,7 @@ function chooseLang(lang) {
     history.replaceState({}, '', '/');
     const sideNavEl = document.getElementById('side-nav');
     if (sideNavEl) sideNavEl.classList.add('vis');
+    _updateLangBtns(lang);
   }, 950);
 }
 

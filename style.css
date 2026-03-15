@@ -1070,3 +1070,32 @@ a.p7-cval:hover { color:var(--white); }
 .snav-proj:hover {
   color: rgba(245,242,238,.75);
 }
+
+/* ── Language toggle flags ── */
+.snav-lang-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(245,242,238,.10);
+}
+.snav-lang-btn {
+  background: none;
+  border: none;
+  cursor: none;
+  padding: 2px 4px;
+  font-size: 22px;
+  line-height: 1;
+  filter: grayscale(1) brightness(0.6);
+  opacity: 0.55;
+  transition: filter .22s, opacity .22s;
+  border-radius: 3px;
+}
+.snav-lang-btn:hover {
+  filter: grayscale(0) brightness(1);
+  opacity: 1;
+}
+.snav-lang-btn.active {
+  filter: grayscale(0) brightness(1);
+  opacity: 1;
+}
