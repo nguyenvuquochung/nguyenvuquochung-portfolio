@@ -286,13 +286,16 @@ window.handlePortraitClick = handlePortraitClick;
 
 /* Attach portrait click listener as backup */
 function attachPortraitListener() {
+  // Only apply mobile fixes if isMobile is true
+  if (!isMobile) return;
+  
   const portraitImg = document.getElementById('p1-portrait-img');
   const portraitWrap = document.getElementById('p1-portrait-wrap');
   const p1Scene = document.getElementById('p1-scene');
   const p1 = document.getElementById('p1');
   
   if (portraitImg) {
-    // Force pointer-events: auto via inline style
+    // Force pointer-events: auto via inline style on mobile only
     portraitImg.style.pointerEvents = 'auto';
     portraitImg.style.touchAction = 'auto';
     
