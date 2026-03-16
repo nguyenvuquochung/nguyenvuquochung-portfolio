@@ -3,118 +3,125 @@
 ================================================================ */
 @media (max-width: 768px) {
 
-/* ══ CRITICAL TOUCH FIXES — must come first ═════════════════════════════════
-   Override style.css rules that block all touch on mobile.
-════════════════════════════════════════════════════════════════ */
+/* ══ ROOT TOUCH FIX ═══════════════════════════════════════════
+   style.css blocks touch globally via user-select:none on body
+   and pointer-events:none on pages. Override with max specificity.
+════════════════════════════════════════════════════════════ */
 
-/* style.css: body { user-select:none } blocks ALL touch on iOS Safari */
-body {
-  user-select: auto !important;
+/* Fix 1: body user-select:none kills iOS touch */
+html body {
   -webkit-user-select: auto !important;
+  user-select: auto !important;
+  -webkit-touch-callout: none;
   touch-action: auto !important;
 }
 
-/* style.css: .page { position:fixed } — ensure scroll + pointer events */
-.page {
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
+/* Fix 2: All pages need touch events */
+html body .page {
   pointer-events: auto !important;
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
-/* style.css: #p1 { pointer-events:none } */
-#p1 {
+/* Fix 3: P1 specifically has pointer-events:none in style.css */
+html body #p1 {
   pointer-events: auto !important;
+  touch-action: auto !important;
   overflow: hidden !important;
+}
+
+/* Fix 4: P2, P7 scroll */
+html body #p2,
+html body #p7 {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fix 5: P3-P6 scroll containers */
+html body #p3,
+html body #p4,
+html body #p5,
+html body #p6 {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+}
+
+html body #p3-scroll,
+html body #p4-scroll,
+html body #p5-scroll,
+html body #p6-scroll {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fix 6: Portrait must receive clicks */
+html body #p1-portrait-wrap,
+html body #p1-portrait-wrap img,
+html body #p2-portrait-fixed,
+html body #p2-portrait-fixed img {
+  pointer-events: auto !important;
   touch-action: auto !important;
-}
-
-/* style.css: #p2 { pointer-events:none; overflow:hidden } */
-#p2 {
-  pointer-events: auto !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-}
-
-#p2-left, #p2-right {
-  pointer-events: auto !important;
-}
-
-#p2-left.in, #p2-right.in {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-}
-
-/* style.css: #p7 { pointer-events:none } */
-#p7 {
-  pointer-events: auto !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-}
-
-#p7-left, #p7-right {
-  pointer-events: auto !important;
-}
-
-#p7-left.in, #p7-right.in {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-}
-
-/* style.css: P3–P6 { pointer-events:none } */
-#p3, #p4, #p5, #p6 {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-}
-
-#p3.slide-in, #p4.slide-in,
-#p5.slide-in, #p6.slide-in {
-  pointer-events: auto !important;
-}
-
-#p3-scroll, #p4-scroll, #p5-scroll, #p6-scroll {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-  -webkit-overflow-scrolling: touch !important;
-  overflow-y: auto !important;
-}
-
-.p3-card, .p4-card, .p5-card, .p6-card {
   cursor: pointer !important;
-  pointer-events: auto !important;
-  touch-action: auto !important;
 }
 
-#proj-overlay {
+/* Fix 7: P1 scene — pass-through except portrait */
+html body #p1-scene {
   pointer-events: none !important;
-  touch-action: auto !important;
-}
-#proj-overlay.slide-in {
-  pointer-events: auto !important;
-}
-#proj-scroll {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-  -webkit-overflow-scrolling: touch !important;
 }
 
-#menu-panel {
-  pointer-events: auto !important;
-  touch-action: pan-y !important;
-  -webkit-overflow-scrolling: touch !important;
-  overflow-y: auto !important;
-}
-
-.snav-item, .snav-sub, .myproj-btn,
-#snav-burger, .lang-btn, a, button {
+/* Fix 8: Project cards */
+html body .p3-card,
+html body .p4-card,
+html body .p5-card,
+html body .p6-card {
   pointer-events: auto !important;
   touch-action: auto !important;
   cursor: pointer !important;
 }
 
-/* ══ END CRITICAL TOUCH FIXES ═══════════════════════════════════════════════════════════════ */
+/* Fix 9: Menu and nav */
+html body #side-nav,
+html body #menu-panel,
+html body #menu-overlay,
+html body .snav-item,
+html body .snav-sub,
+html body .myproj-btn,
+html body #snav-burger {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+/* Fix 10: Language screen on top */
+html body #lang-screen {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  z-index: 9999 !important;
+}
+
+html body .lang-btn {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix 11: Floating words — click only, no drag */
+html body .rw {
+  touch-action: auto !important;
+}
+
+/* Fix 12: Project overlay */
+html body #proj-overlay.slide-in,
+html body #proj-scroll,
+html body #proj-back {
+  pointer-events: auto !important;
+  touch-action: pan-y !important;
+}
+
+/* ══ END ROOT TOUCH FIX ════════════════════════════════════ */
 
 /* ── GLOBAL ─────────────────────────────────────────────────── */
 body { cursor: auto; }
