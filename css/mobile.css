@@ -144,7 +144,7 @@ html body #menu-overlay {
 }
 
 html body #menu-overlay.vis {
-  pointer-events: auto !important;
+  pointer-events: none !important;
   touch-action: auto !important;
 }
 
