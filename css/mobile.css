@@ -18,9 +18,35 @@ html body {
 
 /* Fix 2: All pages need touch events */
 html body .page {
-  pointer-events: auto !important;
+  pointer-events: none !important;
   touch-action: pan-y !important;
   -webkit-overflow-scrolling: touch !important;
+}
+
+html body #p1 {
+  pointer-events: auto !important;
+}
+
+html body #p1.slide-out {
+  pointer-events: none !important;
+}
+
+html body #p2,
+html body #p3,
+html body #p4,
+html body #p5,
+html body #p6,
+html body #p7 {
+  pointer-events: none !important;
+}
+
+html body #p2.slide-in,
+html body #p3.slide-in,
+html body #p4.slide-in,
+html body #p5.slide-in,
+html body #p6.slide-in,
+html body #p7.slide-in {
+  pointer-events: auto !important;
 }
 
 /* Fix 3: P1 specifically has pointer-events:none in style.css */
@@ -30,9 +56,14 @@ html body #p1 {
   overflow: hidden !important;
 }
 
+html body #p1-portrait-wrap {
+  pointer-events: auto !important;
+  z-index: 50 !important;
+}
+
 /* Fix 4: P2, P7 scroll */
-html body #p2,
-html body #p7 {
+html body #p2.slide-in,
+html body #p7.slide-in {
   pointer-events: auto !important;
   touch-action: pan-y !important;
   overflow-y: auto !important;
@@ -40,10 +71,10 @@ html body #p7 {
 }
 
 /* Fix 5: P3-P6 scroll containers */
-html body #p3,
-html body #p4,
-html body #p5,
-html body #p6 {
+html body #p3.slide-in,
+html body #p4.slide-in,
+html body #p5.slide-in,
+html body #p6.slide-in {
   pointer-events: auto !important;
   touch-action: pan-y !important;
 }
@@ -68,9 +99,16 @@ html body #p2-portrait-fixed img {
   cursor: pointer !important;
 }
 
+html body #p1-portrait-img {
+  pointer-events: auto !important;
+  display: block !important;
+  z-index: 50 !important;
+}
+
 /* Fix 7: P1 scene — pass-through except portrait */
 html body #p1-scene {
-  pointer-events: none !important;
+  pointer-events: auto !important;
+  touch-action: auto !important;
 }
 
 /* Fix 8: Project cards */
@@ -86,11 +124,19 @@ html body .p6-card {
 /* Fix 9: Menu and nav */
 html body #side-nav,
 html body #menu-panel,
-html body #menu-overlay,
 html body .snav-item,
 html body .snav-sub,
 html body .myproj-btn,
 html body #snav-burger {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+html body #menu-overlay {
+  pointer-events: none !important;
+}
+
+html body #menu-overlay.vis {
   pointer-events: auto !important;
   touch-action: auto !important;
 }
@@ -197,7 +243,7 @@ body { cursor: auto; }
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  pointer-events: none !important;
+  pointer-events: auto !important;
   padding-top: 0 !important;
   margin: 0 !important;
 }
@@ -255,8 +301,19 @@ body { cursor: auto; }
 
 /* Floating words */
 .rw {
+  display: none !important;
   font-size: clamp(13px, 3.4vw, 17px) !important;
   letter-spacing: .14em;
+}
+
+#p1-portrait-img {
+  transition: none !important;
+  transform: none !important;
+}
+
+#p1-portrait-wrap:hover #p1-portrait-img {
+  filter: grayscale(100%) contrast(1.1) brightness(.97) !important;
+  transform: none !important;
 }
 
 /* ── ABOUT (P2) ─────────────────────────────────────────────── */

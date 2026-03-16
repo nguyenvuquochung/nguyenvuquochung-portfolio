@@ -239,8 +239,22 @@ function chooseLang(lang) {
     document.getElementById('p1-portrait-wrap').classList.add('play');
     document.getElementById('p1-name-block').classList.add('play');
     positionP1Block();
-    launchParticles();
-    document.body.classList.add('words-active');
+    if (isMobile) {
+      stage = 3;
+      collisionEnabled = false;
+      lerpActive = false;
+      physicsRunning = false;
+      document.body.classList.remove('words-active');
+      const p1hint = document.getElementById('p1-hint');
+      if (p1hint) {
+        p1hint.textContent = lang === 'vi' ? 'bấm vào ảnh để xem giới thiệu' : 'tap portrait to open about';
+        p1hint.classList.remove('fade-out');
+        p1hint.style.display = '';
+      }
+    } else {
+      launchParticles();
+      document.body.classList.add('words-active');
+    }
     history.replaceState({}, '', '/');
     const sideNavEl = document.getElementById('side-nav');
     if (sideNavEl) sideNavEl.classList.add('vis');
@@ -255,6 +269,7 @@ function chooseLang(lang) {
 
 function handlePortraitClick() {
   if (isTransitioning) return;
+  if (isMobile && currentPage === 1) { goToPage2(); return; }
   if (stage === 1) {
     enterStage2(true);
     return;
@@ -269,12 +284,47 @@ function handlePortraitClick() {
 }
 window.handlePortraitClick = handlePortraitClick;
 
+/* Attach portrait click listener as backup */
+function attachPortraitListener() {
+  const portraitImg = document.getElementById('p1-portrait-img');
+  if (portraitImg) {
+    portraitImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handlePortraitClick();
+    }, true);
+  }
+}
+window.addEventListener('load', attachPortraitListener);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', attachPortraitListener);
+} else {
+  attachPortraitListener();
+}
+
 function goToHome() {
   if (window.snavClose) snavClose();
   stopHomeMusic();
   resetAllPages();
   currentPage = 1;
   if (window.pushRoute) pushRoute('/');
+  if (isMobile) {
+    stage = 3;
+    collisionEnabled = false;
+    lerpActive = false;
+    physicsRunning = false;
+    document.body.classList.remove('words-active');
+    const hint = document.getElementById('p1-hint');
+    if (hint) {
+      hint.classList.remove('fade-out');
+      hint.style.display = '';
+      hint.textContent = currentLang === 'vi' ? 'bấm vào ảnh để xem giới thiệu' : 'tap portrait to open about';
+    }
+    const p2hint = document.getElementById('p2-hint');
+    if (p2hint) p2hint.style.display = 'none';
+    if (window.updateMenuState) updateMenuState();
+    if (window.updateSideNav) updateSideNav(1);
+    return;
+  }
   // Destroy all existing particle DOM elements and clear array for a completely fresh start
   particles.forEach(p => { if (p.el && p.el.parentNode) p.el.parentNode.removeChild(p.el); });
   particles = [];
