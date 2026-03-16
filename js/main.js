@@ -287,11 +287,31 @@ window.handlePortraitClick = handlePortraitClick;
 /* Attach portrait click listener as backup */
 function attachPortraitListener() {
   const portraitImg = document.getElementById('p1-portrait-img');
+  const portraitWrap = document.getElementById('p1-portrait-wrap');
+  const p1Scene = document.getElementById('p1-scene');
+  const p1 = document.getElementById('p1');
+  
   if (portraitImg) {
+    // Force pointer-events: auto via inline style
+    portraitImg.style.pointerEvents = 'auto';
+    portraitImg.style.touchAction = 'auto';
+    
     portraitImg.addEventListener('click', (e) => {
       e.stopPropagation();
       handlePortraitClick();
     }, true);
+  }
+  
+  if (portraitWrap) {
+    portraitWrap.style.pointerEvents = 'auto';
+  }
+  
+  if (p1Scene) {
+    p1Scene.style.pointerEvents = 'auto';
+  }
+  
+  if (p1) {
+    p1.style.pointerEvents = 'auto';
   }
 }
 window.addEventListener('load', attachPortraitListener);

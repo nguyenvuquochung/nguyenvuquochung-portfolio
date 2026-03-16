@@ -1,6 +1,22 @@
 /* ================================================================
    MOBILE  —  max-width: 768px  |  rebuilt from scratch
 ================================================================ */
+
+/* CRITICAL TOUCH FIX: Global rules that always apply to enable touch */
+#p1-portrait-img {
+  pointer-events: auto !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#p1-portrait-wrap,
+#p1-scene,
+#p1,
+.page {
+  pointer-events: auto !important;
+}
+
 @media (max-width: 768px) {
 
 /* ══ ROOT TOUCH FIX ═══════════════════════════════════════════
@@ -624,4 +640,21 @@ body { cursor: auto; }
 }
 
 } /* end @media (max-width: 768px) */
+
+/* DESKTOP: Restore pointer-events: none on outer pages (they have inline onclick handlers) */
+@media (min-width: 769px) {
+  .page {
+    pointer-events: none;
+  }
+  
+  .page * {
+    pointer-events: none;
+  }
+  
+  /* But explicitly enable portrait on desktop */
+  #p1-portrait-img,
+  #p2-portrait-fixed {
+    pointer-events: all !important;
+  }
+}
 
