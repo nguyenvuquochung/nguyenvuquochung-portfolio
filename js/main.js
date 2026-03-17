@@ -3,9 +3,8 @@
 /* Reset URL to / immediately on any reload */
 if (location.pathname !== '/') history.replaceState({}, '', '/');
 
-/* ── isMobile helper — recalculated on resize ── */
-let isMobile = window.innerWidth <= 768;
-window.addEventListener('resize', () => { isMobile = window.innerWidth <= 768; });
+/* Force desktop-only behavior: mobile mode has been removed. */
+const isMobile = false;
 
 /* ══ P1 VERTICAL POSITIONING ════════════════
    Portrait bottom edge lands at 80vh.
