@@ -141,6 +141,7 @@ function resetAllPages() {
    'p7-left','p7-right',
    'proj-header','proj-divider','proj-body'
   ].forEach(id => { const el = document.getElementById(id); if (el) el.classList.remove('in'); });
+  closeProjectLightbox();
 }
 
 
@@ -595,6 +596,93 @@ function goToPage1() {
 /* ══ PAGE 3 NAVIGATION ═══════════════════════ */
 
 let _projFromPage = 0;
+let _projGalleryCtx = {
+  sections: { stills: [], bts: [] },
+  labels: { stills: 'Still Frame', bts: 'Behind the Scene' },
+  subtitle: ''
+};
+let _projLightboxState = { sectionKey: 'stills', index: 0 };
+
+function _setProjectLightboxImage() {
+  const sec = _projLightboxState.sectionKey;
+  const list = _projGalleryCtx.sections[sec] || [];
+  if (!list.length) return;
+
+  const idx = ((_projLightboxState.index % list.length) + list.length) % list.length;
+  _projLightboxState.index = idx;
+
+  const img = document.getElementById('proj-lightbox-img');
+  const main = document.getElementById('proj-lightbox-main');
+  const sub = document.getElementById('proj-lightbox-sub');
+  const prev = document.getElementById('proj-lightbox-prev');
+  const next = document.getElementById('proj-lightbox-next');
+
+  if (img) img.src = list[idx];
+  if (main) main.textContent = _projGalleryCtx.labels[sec] || '';
+  if (sub) sub.textContent = _projGalleryCtx.subtitle;
+
+  const many = list.length > 1;
+  if (prev) prev.style.display = many ? 'flex' : 'none';
+  if (next) next.style.display = many ? 'flex' : 'none';
+}
+
+function openProjectLightbox(sectionKey, startIndex) {
+  const list = (_projGalleryCtx.sections[sectionKey] || []);
+  if (!list.length) return;
+  _projLightboxState.sectionKey = sectionKey;
+  _projLightboxState.index = Number(startIndex) || 0;
+  _setProjectLightboxImage();
+
+  const lb = document.getElementById('proj-lightbox');
+  if (!lb) return;
+  lb.classList.add('vis');
+  lb.setAttribute('aria-hidden', 'false');
+}
+
+function closeProjectLightbox() {
+  const lb = document.getElementById('proj-lightbox');
+  if (!lb) return;
+  lb.classList.remove('vis');
+  lb.setAttribute('aria-hidden', 'true');
+}
+
+function projLightboxPrev() {
+  _projLightboxState.index -= 1;
+  _setProjectLightboxImage();
+}
+
+function projLightboxNext() {
+  _projLightboxState.index += 1;
+  _setProjectLightboxImage();
+}
+
+window.closeProjectLightbox = closeProjectLightbox;
+window.projLightboxPrev = projLightboxPrev;
+window.projLightboxNext = projLightboxNext;
+
+const _projOverlay = document.getElementById('proj-overlay');
+if (_projOverlay) {
+  _projOverlay.addEventListener('click', (e) => {
+    const thumb = e.target.closest('.proj-thumb');
+    if (!thumb) return;
+    const sectionKey = thumb.getAttribute('data-gallery');
+    const startIndex = Number(thumb.getAttribute('data-index')) || 0;
+    openProjectLightbox(sectionKey, startIndex);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('proj-lightbox');
+  if (!lb || !lb.classList.contains('vis')) return;
+
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    projLightboxPrev();
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault();
+    projLightboxNext();
+  }
+});
 
 function _resolveVideoEmbed(url) {
   if (!url) return null;
@@ -631,9 +719,23 @@ function goToProjectPage(id, fromPage) {
   const overlay = document.getElementById('proj-overlay');
   overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
   const isEn = currentLang === 'en';
+  const roleText = isEn ? proj.role : (proj.role_vi || proj.role);
+  const titleText = isEn && proj.en ? proj.en : proj.title;
+  const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
+  const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
 
-  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + (isEn ? proj.role : (proj.role_vi || proj.role));
-  document.getElementById('proj-title').textContent    = isEn && proj.en ? proj.en : proj.title;
+  closeProjectLightbox();
+  _projGalleryCtx = {
+    sections: {
+      stills: Array.isArray(proj.stills) ? proj.stills : [],
+      bts: Array.isArray(proj.bts) ? proj.bts : []
+    },
+    labels: { stills: stillLabel, bts: btsLabel },
+    subtitle: (titleText + ' - ' + proj.year + ' - ' + roleText).toLowerCase()
+  };
+
+  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + roleText;
+  document.getElementById('proj-title').textContent    = titleText;
   document.getElementById('proj-en-title').textContent = '';
   document.getElementById('proj-en-title').style.display = 'none';
 
@@ -641,8 +743,8 @@ function goToProjectPage(id, fromPage) {
   document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project'    : 'Về Dự Án';
   document.querySelector('#proj-section-video .proj-section-label').textContent  = isEn ? 'Watch'            : 'Xem phim';
   document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
-  document.querySelector('#proj-section-stills .proj-section-label').textContent = isEn ? 'Still Frame'      : 'Ảnh tĩnh';
-  document.querySelector('#proj-section-bts .proj-section-label').textContent    = isEn ? 'Behind the Scene' : 'Hậu trường';
+  document.querySelector('#proj-section-stills .proj-section-label').textContent = stillLabel;
+  document.querySelector('#proj-section-bts .proj-section-label').textContent    = btsLabel;
   document.getElementById('proj-back').textContent = isEn ? '← back' : '← quay lại';
 
   // ABOUT PROJECT
@@ -706,7 +808,7 @@ function goToProjectPage(id, fromPage) {
   // STILL FRAME
   const stillsSection = document.getElementById('proj-section-stills');
   if (proj.stills && proj.stills.length) {
-    document.getElementById('proj-stills').innerHTML = proj.stills.map(s => `<img src="${s}" loading="lazy" alt="Still frame"/>`).join('');
+    document.getElementById('proj-stills').innerHTML = proj.stills.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="stills" data-index="${i}" aria-label="Open still ${i + 1}"><img src="${s}" loading="lazy" alt="Still frame"/></button>`).join('');
     stillsSection.style.display = '';
   } else {
     stillsSection.style.display = 'none';
@@ -715,7 +817,7 @@ function goToProjectPage(id, fromPage) {
   // BEHIND THE SCENE
   const btsSection = document.getElementById('proj-section-bts');
   if (proj.bts && proj.bts.length) {
-    document.getElementById('proj-bts').innerHTML = proj.bts.map(s => `<img src="${s}" loading="lazy" alt="Behind the scene"/>`).join('');
+    document.getElementById('proj-bts').innerHTML = proj.bts.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="bts" data-index="${i}" aria-label="Open BTS ${i + 1}"><img src="${s}" loading="lazy" alt="Behind the scene"/></button>`).join('');
     btsSection.style.display = '';
   } else {
     btsSection.style.display = 'none';
@@ -734,6 +836,7 @@ function goToProjectPage(id, fromPage) {
 }
 
 function closeProjectPage() {
+  closeProjectLightbox();
   pushRoute(PAGE_ROUTE[_projFromPage] || '/');
   document.getElementById('proj-overlay').classList.remove('slide-in');
   document.getElementById('proj-back').classList.remove('vis');

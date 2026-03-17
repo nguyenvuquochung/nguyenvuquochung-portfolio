@@ -308,6 +308,22 @@
       </section>
     </div>
   </div>
+
+  <div id="proj-lightbox" aria-hidden="true">
+    <div id="proj-lightbox-dim"></div>
+    <div id="proj-lightbox-head">
+      <div id="proj-lightbox-titles">
+        <div id="proj-lightbox-main"></div>
+        <div id="proj-lightbox-sub"></div>
+      </div>
+      <button id="proj-lightbox-close" type="button" onclick="closeProjectLightbox()">x</button>
+    </div>
+    <button id="proj-lightbox-prev" type="button" onclick="projLightboxPrev()">&lt;</button>
+    <div id="proj-lightbox-stage">
+      <img id="proj-lightbox-img" alt="Project image" />
+    </div>
+    <button id="proj-lightbox-next" type="button" onclick="projLightboxNext()">&gt;</button>
+  </div>
 </div>
 
 <div id="toast"></div>
