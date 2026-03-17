@@ -168,6 +168,7 @@ function switchLangTo(lang) {
   else if (currentPage === 4 && window.renderP4) renderP4();
   else if (currentPage === 5 && window.renderP5) renderP5();
   else if (currentPage === 6 && window.renderP6) renderP6();
+  _rerenderOpenProjectOverlay();
   _applyLangUI(lang);
   updateLangSwitcher();
 }
@@ -596,12 +597,131 @@ function goToPage1() {
 /* ══ PAGE 3 NAVIGATION ═══════════════════════ */
 
 let _projFromPage = 0;
+let _projCurrentId = '';
 let _projGalleryCtx = {
   sections: { stills: [], bts: [] },
   labels: { stills: 'Still Frame', bts: 'Behind the Scene' },
   subtitle: ''
 };
 let _projLightboxState = { sectionKey: 'stills', index: 0 };
+
+function _getProjectMaps() {
+  return { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
+}
+
+function _renderProjectOverlay(proj, fromPage) {
+  const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
+  const overlay = document.getElementById('proj-overlay');
+  if (!overlay || !proj) return;
+
+  overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
+  const isEn = currentLang === 'en';
+  const roleText = isEn ? proj.role : (proj.role_vi || proj.role);
+  const titleText = isEn && proj.en ? proj.en : proj.title;
+  const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
+  const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
+
+  _projGalleryCtx = {
+    sections: {
+      stills: Array.isArray(proj.stills) ? proj.stills : [],
+      bts: Array.isArray(proj.bts) ? proj.bts : []
+    },
+    labels: { stills: stillLabel, bts: btsLabel },
+    subtitle: (titleText + ' - ' + proj.year + ' - ' + roleText).toLowerCase()
+  };
+
+  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + roleText;
+  document.getElementById('proj-title').textContent    = titleText;
+  document.getElementById('proj-en-title').textContent = '';
+  document.getElementById('proj-en-title').style.display = 'none';
+
+  document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project' : 'Về Dự Án';
+  document.querySelector('#proj-section-video .proj-section-label').textContent  = isEn ? 'Watch' : 'Xem phim';
+  document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
+  document.querySelector('#proj-section-stills .proj-section-label').textContent = stillLabel;
+  document.querySelector('#proj-section-bts .proj-section-label').textContent    = btsLabel;
+  document.getElementById('proj-back').textContent = isEn ? '← back' : '← quay lại';
+
+  const aboutParas = (isEn && proj.about_en && proj.about_en.length)
+    ? proj.about_en
+    : (proj.about && proj.about.length ? proj.about : [proj.desc]);
+  document.getElementById('proj-about-text').innerHTML = aboutParas.map(p => `<p>${p}</p>`).join('');
+
+  const videoSection = document.getElementById('proj-section-video');
+  const videoWrap = document.getElementById('proj-video-wrap');
+  if (proj.video) {
+    const embedUrl = _resolveVideoEmbed(proj.video);
+    if (embedUrl) {
+      videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+    } else {
+      videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
+    }
+    videoSection.style.display = '';
+  } else {
+    videoSection.style.display = 'none';
+  }
+
+  const creditSection = document.getElementById('proj-section-credit');
+  if (proj.credits && proj.credits.length) {
+    document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${isEn ? c.label : (c.label_vi || c.label)}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
+    creditSection.style.display = '';
+  } else {
+    creditSection.style.display = 'none';
+  }
+
+  const extrasContainer = document.getElementById('proj-extras');
+  if (extrasContainer) {
+    if (proj.extras && proj.extras.length) {
+      extrasContainer.innerHTML = proj.extras.map(ext => {
+        const label = isEn && ext.label_en ? ext.label_en : ext.label;
+        const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
+        let content;
+        if (embedUrl) {
+          content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+        } else if (ext.url) {
+          content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
+        } else {
+          content = ext.html || '';
+        }
+        return `
+      <section class="proj-section">
+        <div class="proj-section-label">${label}</div>
+        <div class="proj-extra-content">${content}</div>
+      </section>`;
+      }).join('');
+      extrasContainer.style.display = '';
+    } else {
+      extrasContainer.innerHTML = '';
+      extrasContainer.style.display = 'none';
+    }
+  }
+
+  const stillsSection = document.getElementById('proj-section-stills');
+  if (proj.stills && proj.stills.length) {
+    document.getElementById('proj-stills').innerHTML = proj.stills.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="stills" data-index="${i}" aria-label="Open still ${i + 1}"><img src="${s}" loading="lazy" alt="Still frame"/></button>`).join('');
+    stillsSection.style.display = '';
+  } else {
+    stillsSection.style.display = 'none';
+  }
+
+  const btsSection = document.getElementById('proj-section-bts');
+  if (proj.bts && proj.bts.length) {
+    document.getElementById('proj-bts').innerHTML = proj.bts.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="bts" data-index="${i}" aria-label="Open BTS ${i + 1}"><img src="${s}" loading="lazy" alt="Behind the scene"/></button>`).join('');
+    btsSection.style.display = '';
+  } else {
+    btsSection.style.display = 'none';
+  }
+
+  const lb = document.getElementById('proj-lightbox');
+  if (lb && lb.classList.contains('vis')) _setProjectLightboxImage();
+}
+
+function _rerenderOpenProjectOverlay() {
+  const overlay = document.getElementById('proj-overlay');
+  if (!overlay || !overlay.classList.contains('slide-in') || !_projCurrentId || !_projFromPage) return;
+  const proj = (_getProjectMaps()[_projFromPage] || []).find(p => p.id === _projCurrentId);
+  if (proj) _renderProjectOverlay(proj, _projFromPage);
+}
 
 function _setProjectLightboxImage() {
   const sec = _projLightboxState.sectionKey;
@@ -710,119 +830,15 @@ function _resolveVideoEmbed(url) {
 }
 
 function goToProjectPage(id, fromPage) {
-  const maps = { 3: P3_PROJECTS, 4: P4_PROJECTS, 5: P5_PROJECTS, 6: P6_PROJECTS };
-  const colors = { 3: '#00e676', 4: '#1a6fff', 5: '#ff1a1a', 6: '#ffe000' };
-  const proj = (maps[fromPage] || []).find(p => p.id === id);
+  const proj = (_getProjectMaps()[fromPage] || []).find(p => p.id === id);
   if (!proj) return;
   _projFromPage = fromPage;
-
-  const overlay = document.getElementById('proj-overlay');
-  overlay.style.setProperty('--proj-color', colors[fromPage] || '#f5f2ee');
-  const isEn = currentLang === 'en';
-  const roleText = isEn ? proj.role : (proj.role_vi || proj.role);
-  const titleText = isEn && proj.en ? proj.en : proj.title;
-  const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
-  const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
+  _projCurrentId = id;
 
   closeProjectLightbox();
-  _projGalleryCtx = {
-    sections: {
-      stills: Array.isArray(proj.stills) ? proj.stills : [],
-      bts: Array.isArray(proj.bts) ? proj.bts : []
-    },
-    labels: { stills: stillLabel, bts: btsLabel },
-    subtitle: (titleText + ' - ' + proj.year + ' - ' + roleText).toLowerCase()
-  };
+  _renderProjectOverlay(proj, fromPage);
 
-  document.getElementById('proj-eyebrow').textContent  = proj.year + ' — ' + roleText;
-  document.getElementById('proj-title').textContent    = titleText;
-  document.getElementById('proj-en-title').textContent = '';
-  document.getElementById('proj-en-title').style.display = 'none';
-
-  // Section labels (language-aware)
-  document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project'    : 'Về Dự Án';
-  document.querySelector('#proj-section-video .proj-section-label').textContent  = isEn ? 'Watch'            : 'Xem phim';
-  document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
-  document.querySelector('#proj-section-stills .proj-section-label').textContent = stillLabel;
-  document.querySelector('#proj-section-bts .proj-section-label').textContent    = btsLabel;
-  document.getElementById('proj-back').textContent = isEn ? '← back' : '← quay lại';
-
-  // ABOUT PROJECT
-  const aboutParas = (isEn && proj.about_en && proj.about_en.length)
-    ? proj.about_en
-    : (proj.about && proj.about.length ? proj.about : [proj.desc]);
-  document.getElementById('proj-about-text').innerHTML = aboutParas.map(p => `<p>${p}</p>`).join('');
-
-  // VIDEO EMBED
-  const videoSection = document.getElementById('proj-section-video');
-  const videoWrap    = document.getElementById('proj-video-wrap');
-  if (proj.video) {
-    const embedUrl = _resolveVideoEmbed(proj.video);
-    if (embedUrl) {
-      videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-    } else {
-      videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
-    }
-    videoSection.style.display = '';
-  } else {
-    videoSection.style.display = 'none';
-  }
-
-  // CREDIT
-  const creditSection = document.getElementById('proj-section-credit');
-  if (proj.credits && proj.credits.length) {
-    document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${isEn ? c.label : (c.label_vi || c.label)}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
-    creditSection.style.display = '';
-  } else {
-    creditSection.style.display = 'none';
-  }
-
-  // EXTRA SECTIONS (e.g. VFX Breakdown)
-  const extrasContainer = document.getElementById('proj-extras');
-  if (extrasContainer) {
-    if (proj.extras && proj.extras.length) {
-      extrasContainer.innerHTML = proj.extras.map(ext => {
-        const label = isEn && ext.label_en ? ext.label_en : ext.label;
-        const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
-        let content;
-        if (embedUrl) {
-          content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
-        } else if (ext.url) {
-          content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
-        } else {
-          content = ext.html || '';
-        }
-        return `
-      <section class="proj-section">
-        <div class="proj-section-label">${label}</div>
-        <div class="proj-extra-content">${content}</div>
-      </section>`;
-      }).join('');
-      extrasContainer.style.display = '';
-    } else {
-      extrasContainer.innerHTML = '';
-      extrasContainer.style.display = 'none';
-    }
-  }
-
-  // STILL FRAME
-  const stillsSection = document.getElementById('proj-section-stills');
-  if (proj.stills && proj.stills.length) {
-    document.getElementById('proj-stills').innerHTML = proj.stills.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="stills" data-index="${i}" aria-label="Open still ${i + 1}"><img src="${s}" loading="lazy" alt="Still frame"/></button>`).join('');
-    stillsSection.style.display = '';
-  } else {
-    stillsSection.style.display = 'none';
-  }
-
-  // BEHIND THE SCENE
-  const btsSection = document.getElementById('proj-section-bts');
-  if (proj.bts && proj.bts.length) {
-    document.getElementById('proj-bts').innerHTML = proj.bts.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="bts" data-index="${i}" aria-label="Open BTS ${i + 1}"><img src="${s}" loading="lazy" alt="Behind the scene"/></button>`).join('');
-    btsSection.style.display = '';
-  } else {
-    btsSection.style.display = 'none';
-  }
-
+  const overlay = document.getElementById('proj-overlay');
   overlay.classList.add('slide-in');
   pushRoute('/' + ROLE_PREFIX[fromPage] + '/' + id);
   document.getElementById('proj-back').classList.add('vis');
@@ -838,6 +854,7 @@ function goToProjectPage(id, fromPage) {
 function closeProjectPage() {
   closeProjectLightbox();
   pushRoute(PAGE_ROUTE[_projFromPage] || '/');
+  _projCurrentId = '';
   document.getElementById('proj-overlay').classList.remove('slide-in');
   document.getElementById('proj-back').classList.remove('vis');
   setTimeout(() => {
