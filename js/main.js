@@ -118,9 +118,92 @@ window.addEventListener('pageshow', function (e) {
 /* ══ STATE ═══════════════════════════════════ */
 let currentLang = 'en';
 let portraitSrc = null;
+let useCustomPortrait = false;
 let currentPage = 1;
 let isTransitioning = false;
 let homeMusicAudio = null;
+
+const PORTRAIT_HOME_STAGE1 = 'assets/about/Gemini_Generated_Image_rct1oorct1oorct1.png';
+const PORTRAIT_OTHER_PAGES = 'assets/about/Gemini_Generated_Image_rct1oorct1oorct1.png';
+let portraitMorphTimer = null;
+
+function ensureHomePortraitMorphNodes() {
+  const wrap = document.getElementById('p1-portrait-wrap');
+  const baseImg = document.getElementById('p1-portrait-img');
+  if (!wrap || !baseImg) return;
+
+  if (!document.getElementById('p1-portrait-img-stage2fx')) {
+    const fx = document.createElement('img');
+    fx.id = 'p1-portrait-img-stage2fx';
+    fx.alt = '';
+    fx.setAttribute('aria-hidden', 'true');
+    fx.decoding = 'async';
+    wrap.insertBefore(fx, baseImg.nextSibling);
+  }
+
+  if (!document.getElementById('p1-portrait-morph-wash')) {
+    const wash = document.createElement('div');
+    wash.id = 'p1-portrait-morph-wash';
+    wash.setAttribute('aria-hidden', 'true');
+    wrap.insertBefore(wash, baseImg.nextSibling);
+  }
+}
+
+function playHomePortraitStageTransition() {
+  if (useCustomPortrait) return;
+
+  ensureHomePortraitMorphNodes();
+  const wrap = document.getElementById('p1-portrait-wrap');
+  const p1img = document.getElementById('p1-portrait-img');
+  const fximg = document.getElementById('p1-portrait-img-stage2fx');
+  if (!wrap || !p1img || !fximg) {
+    applyRequestedPortraits(2);
+    return;
+  }
+
+  fximg.src = PORTRAIT_OTHER_PAGES;
+  wrap.classList.remove('stage-morphing');
+  void wrap.offsetWidth;
+  wrap.classList.add('stage-morphing');
+
+  clearTimeout(portraitMorphTimer);
+  portraitMorphTimer = setTimeout(() => {
+    if (!useCustomPortrait) p1img.src = PORTRAIT_OTHER_PAGES;
+    wrap.classList.remove('stage-morphing');
+  }, 1140);
+}
+
+function applyRequestedPortraits(homeStage) {
+  if (useCustomPortrait) return;
+
+  ensureHomePortraitMorphNodes();
+  const p1img = document.getElementById('p1-portrait-img');
+  const p2img = document.getElementById('p2-portrait-img2');
+  const p1ph = document.getElementById('p1-portrait-ph');
+  const p2ph = document.getElementById('p2-portrait-ph2');
+  const p1wrap = document.getElementById('p1-portrait-wrap');
+  const fximg = document.getElementById('p1-portrait-img-stage2fx');
+  const stage = homeStage || 1;
+
+  if (p1img) {
+    p1img.src = stage === 2 ? PORTRAIT_OTHER_PAGES : PORTRAIT_HOME_STAGE1;
+    p1img.style.display = 'block';
+  }
+  if (p2img) {
+    p2img.src = PORTRAIT_OTHER_PAGES;
+    p2img.style.display = 'block';
+  }
+  if (p1ph) p1ph.style.display = 'none';
+  if (p2ph) p2ph.style.display = 'none';
+  if (p1wrap && stage === 1) p1wrap.classList.remove('stage-morphing');
+  if (fximg) fximg.style.opacity = '0';
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', applyRequestedPortraits);
+} else {
+  applyRequestedPortraits();
+}
 
 function lockNav(ms) {
   isTransitioning = true;
@@ -229,6 +312,7 @@ function _applyLangUI(lang) {
 }
 function chooseLang(lang) {
   currentLang = lang;
+  applyRequestedPortraits();
   document.getElementById('lang-screen').classList.add('out');
   document.getElementById('p1-sub').textContent  = C[lang].sub;
   document.getElementById('p1-hint').textContent = C[lang].hint;
@@ -328,6 +412,7 @@ if (document.readyState === 'loading') {
 function goToHome() {
   if (window.snavClose) snavClose();
   stopHomeMusic();
+  applyRequestedPortraits();
   resetAllPages();
   currentPage = 1;
   if (window.pushRoute) pushRoute('/');
@@ -429,6 +514,7 @@ function generateTargets(pts) {
 }
 
 function enterStage2(fromPortrait) {
+  playHomePortraitStageTransition();
   stage = 2;
   physicsRunning = true;
   if (fromPortrait) playHomeMusic();
@@ -545,6 +631,7 @@ window.stopHomeMusic = stopHomeMusic;
 function goToPage2() {
   hideFloatingWords();
   stopHomeMusic();
+  applyRequestedPortraits();
   resetAllPages();
   currentPage = 2;
   if (window.updateSideNav) updateSideNav(2);
@@ -618,6 +705,9 @@ function _renderProjectOverlay(proj, fromPage) {
   const isEn = currentLang === 'en';
   const roleText = isEn ? proj.role : (proj.role_vi || proj.role);
   const titleText = isEn && proj.en ? proj.en : proj.title;
+  const isOurSunset = proj.id === 'hoang-hon-cua-chung-ta';
+  const isBoxBilliards = proj.id === 'box-billiards-vietnam';
+  const useVideoGrid = isOurSunset || isBoxBilliards;
   const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
   const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
 
@@ -636,20 +726,69 @@ function _renderProjectOverlay(proj, fromPage) {
   document.getElementById('proj-en-title').style.display = 'none';
 
   document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project' : 'Về Dự Án';
-  document.querySelector('#proj-section-video .proj-section-label').textContent  = isEn ? 'Watch' : 'Xem phim';
+  document.querySelector('#proj-section-video .proj-section-label').textContent  = isBoxBilliards
+    ? (isEn ? 'Selected Work' : 'Các video nổi bật')
+    : (isEn ? 'Watch' : 'Xem phim');
   document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
   document.querySelector('#proj-section-stills .proj-section-label').textContent = stillLabel;
   document.querySelector('#proj-section-bts .proj-section-label').textContent    = btsLabel;
   document.getElementById('proj-back').textContent = isEn ? '← back' : '← quay lại';
+
+  const body = document.getElementById('proj-body');
+  const aboutSection = document.getElementById('proj-section-about');
+  const creditSection = document.getElementById('proj-section-credit');
+  const videoSection = document.getElementById('proj-section-video');
+  const extrasContainer = document.getElementById('proj-extras');
+  const stillsSection = document.getElementById('proj-section-stills');
+  const btsSection = document.getElementById('proj-section-bts');
 
   const aboutParas = (isEn && proj.about_en && proj.about_en.length)
     ? proj.about_en
     : (proj.about && proj.about.length ? proj.about : [proj.desc]);
   document.getElementById('proj-about-text').innerHTML = aboutParas.map(p => `<p>${p}</p>`).join('');
 
-  const videoSection = document.getElementById('proj-section-video');
   const videoWrap = document.getElementById('proj-video-wrap');
-  if (proj.video) {
+  let nonVideoExtras = [];
+  if (useVideoGrid) {
+    const videoItems = [];
+    if (proj.video) {
+      videoItems.push({
+        label: isOurSunset
+          ? (isEn ? 'Episode 1' : 'Tập 1')
+          : '',
+        url: proj.video,
+        ratio: proj.video_ratio,
+      });
+    }
+    if (proj.extras && proj.extras.length) {
+      proj.extras.forEach(ext => {
+        if (ext.url) {
+          videoItems.push({
+            label: isBoxBilliards ? '' : (isEn && ext.label_en ? ext.label_en : ext.label),
+            url: ext.url,
+            ratio: ext.ratio,
+          });
+        } else {
+          nonVideoExtras.push(ext);
+        }
+      });
+    }
+    if (videoItems.length) {
+      videoWrap.innerHTML = `<div class="proj-video-grid">${videoItems.map(item => {
+        const embedUrl = _resolveVideoEmbed(item.url);
+        const ratio = item.ratio || '16/9';
+        const content = embedUrl
+          ? `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
+          : `<a class="proj-watch-btn" href="${item.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
+        const labelHtml = item.label ? `<div class="proj-video-item-label">${item.label}</div>` : '';
+        return `<div class="proj-video-item">${labelHtml}${content}</div>`;
+      }).join('')}</div>`;
+      videoSection.style.display = '';
+    } else {
+      videoWrap.innerHTML = '';
+      videoSection.style.display = 'none';
+    }
+  } else if (proj.video) {
     const embedUrl = _resolveVideoEmbed(proj.video);
     if (embedUrl) {
       videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
@@ -658,10 +797,10 @@ function _renderProjectOverlay(proj, fromPage) {
     }
     videoSection.style.display = '';
   } else {
+    videoWrap.innerHTML = '';
     videoSection.style.display = 'none';
   }
 
-  const creditSection = document.getElementById('proj-section-credit');
   if (proj.credits && proj.credits.length) {
     document.getElementById('proj-credits').innerHTML = proj.credits.map(c => `<div class="proj-credit-row"><span class="proj-credit-label">${isEn ? c.label : (c.label_vi || c.label)}</span><span class="proj-credit-value">${c.value}</span></div>`).join('');
     creditSection.style.display = '';
@@ -669,10 +808,10 @@ function _renderProjectOverlay(proj, fromPage) {
     creditSection.style.display = 'none';
   }
 
-  const extrasContainer = document.getElementById('proj-extras');
   if (extrasContainer) {
-    if (proj.extras && proj.extras.length) {
-      extrasContainer.innerHTML = proj.extras.map(ext => {
+    const extrasList = useVideoGrid ? nonVideoExtras : (proj.extras || []);
+    if (extrasList.length) {
+      extrasContainer.innerHTML = extrasList.map(ext => {
         const label = isEn && ext.label_en ? ext.label_en : ext.label;
         const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
         let content;
@@ -696,20 +835,45 @@ function _renderProjectOverlay(proj, fromPage) {
     }
   }
 
-  const stillsSection = document.getElementById('proj-section-stills');
-  if (proj.stills && proj.stills.length) {
+  if (isOurSunset) {
+    document.getElementById('proj-stills').innerHTML = '';
+    stillsSection.style.display = 'none';
+  } else if (proj.stills && proj.stills.length) {
     document.getElementById('proj-stills').innerHTML = proj.stills.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="stills" data-index="${i}" aria-label="Open still ${i + 1}"><img src="${s}" loading="lazy" alt="Still frame"/></button>`).join('');
     stillsSection.style.display = '';
   } else {
     stillsSection.style.display = 'none';
   }
 
-  const btsSection = document.getElementById('proj-section-bts');
   if (proj.bts && proj.bts.length) {
     document.getElementById('proj-bts').innerHTML = proj.bts.map((s, i) => `<button class="proj-thumb" type="button" data-gallery="bts" data-index="${i}" aria-label="Open BTS ${i + 1}"><img src="${s}" loading="lazy" alt="Behind the scene"/></button>`).join('');
     btsSection.style.display = '';
   } else {
     btsSection.style.display = 'none';
+  }
+
+  if (body) {
+    if (isOurSunset) {
+      if (aboutSection) body.appendChild(aboutSection);
+      if (videoSection) body.appendChild(videoSection);
+      if (extrasContainer) body.appendChild(extrasContainer);
+      if (btsSection) body.appendChild(btsSection);
+      if (creditSection) body.appendChild(creditSection);
+    } else if (isBoxBilliards) {
+      if (aboutSection) body.appendChild(aboutSection);
+      if (extrasContainer) body.appendChild(extrasContainer);
+      if (videoSection) body.appendChild(videoSection);
+      if (creditSection) body.appendChild(creditSection);
+      if (stillsSection) body.appendChild(stillsSection);
+      if (btsSection) body.appendChild(btsSection);
+    } else {
+      if (aboutSection) body.appendChild(aboutSection);
+      if (videoSection) body.appendChild(videoSection);
+      if (creditSection) body.appendChild(creditSection);
+      if (extrasContainer) body.appendChild(extrasContainer);
+      if (stillsSection) body.appendChild(stillsSection);
+      if (btsSection) body.appendChild(btsSection);
+    }
   }
 
   const lb = document.getElementById('proj-lightbox');
@@ -808,6 +972,10 @@ function _resolveVideoEmbed(url) {
   if (!url) return null;
   let m;
 
+  // TikTok: tiktok.com/@user/video/VIDEO_ID
+  m = url.match(/tiktok\.com\/@[^\/]+\/video\/(\d+)/);
+  if (m) return 'https://www.tiktok.com/embed/v2/' + m[1];
+
   // YouTube: youtube.com/watch?v=ID  or  youtu.be/ID
   m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/)|youtu\.be\/)([\w-]{11})/);
   if (m) return 'https://www.youtube.com/embed/' + m[1] + '?rel=0';
@@ -878,6 +1046,7 @@ function loadPortrait(e) {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
+    useCustomPortrait = true;
     portraitSrc = ev.target.result;
     ['p1-portrait-img','p2-portrait-img2'].forEach(id => {
       const img = document.getElementById(id);
@@ -939,6 +1108,7 @@ function safeSpawnNoOverlap(placed, w, h) {
 }
 
 function launchParticles() {
+  applyRequestedPortraits(1);
   // ── STAGE 1 reset ──
   stage = 1; collisionEnabled = false; lerpActive = false;
 
@@ -1300,27 +1470,9 @@ const GITHUB_PATH  = 'content/content.json';   // ← path inside the repo
       /* Re-render About page if it is already visible */
       if (currentPage === 2) renderP2(currentLang);
 
-      /* ── 2. Portrait ───────────────────────────────────────
-         If the editor exported a base64 portrait, apply it to
-         both the P1 portrait and the P2 fixed portrait.       */
+      // Keep requested default portraits unless user uploads a custom image.
       const ct = data.contact;
-      if (ct && ct.portrait) {
-        portraitSrc = ct.portrait;
-        /* P1 portrait img */
-        const p1img = document.querySelector('#p1-portrait-wrap img');
-        if (p1img) {
-          p1img.src = ct.portrait;
-          p1img.style.display = 'block';
-        }
-        const p1ph = document.getElementById('p1-portrait-ph');
-        if (p1ph) p1ph.style.display = 'none';
-        /* P2 / P7 fixed portrait */
-        const p2img = document.querySelector('#p2-portrait-fixed img');
-        if (p2img) {
-          p2img.src = ct.portrait;
-          p2img.style.display = 'block';
-        }
-      }
+      applyRequestedPortraits();
 
       /* ── 3. Contact page (P7) ──────────────────────────── */
       if (ct) {

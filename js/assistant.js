@@ -37,6 +37,44 @@
     img:'assets/myproject/ad/hoa nở trên tàn thuốc/1.jpg',
   },
   {
+    id:'hoang-hon-cua-chung-ta',
+    video:'https://www.youtube.com/watch?v=S0OC8nRRutc&t=1s',
+    title:'HOÀNG HÔN CỦA CHÚNG TA',
+    en:'OUR SUNSET',
+    year:'2024',
+    role:'Assistant Director',
+    role_vi:'Trợ lí đạo diễn',
+    desc:'A two-episode short film, part of the Hơi Vui Vui TV series produced by TKM Production and Vibe Bros Team.',
+    desc_vi:'Phim ngắn gồm hai tập, nằm trong series Hơi Vui Vui TV được sản xuất bởi TKM Production và Vibe Bros Team.',
+    about:[
+      'Hoàng Hôn Của Chúng Ta là phim ngắn gồm hai tập, nằm trong series Hơi Vui Vui TV được sản xuất bởi TKM Production và Vibe Bros Team.',
+    ],
+    about_en:[
+      'Our Sunset is a two-episode short film, part of the Hơi Vui Vui TV series produced by TKM Production and Vibe Bros Team.',
+    ],
+    extras:[
+      {
+        label:'Tập 2',
+        label_en:'Episode 2',
+        url:'https://www.youtube.com/watch?v=C_oEzQmP55Q&t=335s',
+      },
+    ],
+    credits:[
+      { label:'Executive Producer', label_vi:'Giám đốc điều hành', value:'Quốc Bảo TKM' },
+      { label:'Project Manager', label_vi:'Quản lý dự án', value:'Dương Rii' },
+      { label:'Production Units', label_vi:'Đơn vị sản xuất', value:'TKM Production, Vibe Bros Team' },
+      { label:'Director', label_vi:'Đạo diễn', value:'Phúc Vũ' },
+      { label:'1st Assistant Director', label_vi:'Trợ lí đạo diễn 1', value:'Quốc Hưng' },
+      { label:'Director of Photography', label_vi:'Quay phim', value:'Việt Lê, Hồng Sơn Trần' },
+      { label:'Starring', label_vi:'Diễn viên', value:'Thanh Thúy, Dương Mạnh, Hải Mi, Senpai Thành, Yên Dương, …' },
+    ],
+    stills:[
+      'assets/myproject/ad/hhcct/maxresdefault.jpg',
+    ],
+    bts:[],
+    img:'assets/myproject/ad/hhcct/maxresdefault.jpg',
+  },
+  {
     id:'shipaholic',
     video:'https://www.youtube.com/watch?v=7v4_zNXeUTc',
     title:'SHIPAHOLIC',
@@ -67,11 +105,83 @@
     ],
     img:'assets/myproject/ad/shipaholic/Screenshot 2026-03-17 145902.png',
   },
+  {
+    id:'buoc-chay-khong-tieng-vo-tay',
+    video:'https://www.facebook.com/reel/938797588544489',
+    title:'BƯỚC CHẠY KHÔNG TIẾNG VỖ TAY',
+    en:'THE SILENT RUN',
+    year:'2025',
+    role:'Assistant Director',
+    role_vi:'Trợ lí đạo diễn',
+    desc:'A pre-graduation short film by students of Van Lang University.',
+    desc_vi:'Phim ngắn tiền tốt nghiệp của sinh viên trường Đại học Văn Lang.',
+    about:[
+      'Bước Chạy Không Tiếng Vỗ Tay là phim ngắn tiền tốt nghiệp của sinh viên trường Đại học Văn Lang.',
+    ],
+    about_en:[
+      'The Silent Run is a pre-graduation short film by students of Van Lang University.',
+    ],
+    credits:[
+      { label:'Assistant Director', label_vi:'Trợ lí đạo diễn', value:'Quốc Hưng' },
+      { label:'Producer', label_vi:'Sản xuất', value:'Hà Nam Ngô, Minh Anh' },
+      { label:'Line Producer', label_vi:'Trưởng sản xuất', value:'Lê Hoàng Thanh' },
+      { label:'Production Assistant', label_vi:'Trợ lý sản xuất', value:'Hoàng Lan, Ngọc Mai, An Khang' },
+      { label:'Director of Photography', label_vi:'Quay phim', value:'Trần Thanh Tùng' },
+      { label:'Camera Operator', label_vi:'Camera Operator', value:'Hoàng Tú' },
+      { label:'Art Director', label_vi:'Giám đốc nghệ thuật', value:'Nick Ng, Hoàng Hải' },
+      { label:'Props Master', label_vi:'Đạo cụ', value:'Thanh Trúc' },
+      { label:'Set Designer', label_vi:'Thiết kế bối cảnh', value:'Sơn Lê, Huỳnh Việt Bảo Phúc, Khánh Vũ' },
+      { label:'Wardrobe Coordinator', label_vi:'Phục trang', value:'Trần Hoàng Minh Quân' },
+      { label:'VFX Editor', label_vi:'Dựng & Kỹ xảo', value:'Huy Hoàng Cao' },
+      { label:'Cast', label_vi:'Diễn viên', value:'Trần Long, Nguyễn Trực, Bé Trí Thịnh' },
+    ],
+    stills:[],
+    bts:[
+      'assets/myproject/ad/bcktvt/bts/z7066891627610_35f0395f536ffa064177ca357a6d127a.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891661288_aaae3cad5dc01bae2c1d5dedcdadef56.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891689106_626f4b93e7026597543519141fac3ae0.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891710263_dbf54d04d0bdce98014d83fa9db9da8d.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891739049_91654ef8476f571c12977e120c370aa4.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891914653_d6d815cfd6d6f2b9f35e35bebba5cfbb.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891916592_2585764008be0a219624906807e6d08f.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891932690_73c36d72333a92ce636b69db3c04dc3c.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891973562_5ef39587670b1d8f94cc92c49493fb09.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891973820_3e54df07ba898ef5d34b1d6366fc0737.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891984446_8364ae591228f5aa586ba4af6297247a.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066891990681_9e4deaae4b4862e26a64fd130c9300bd.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892006958_4aeb9d90a627f9fa40318b1ffd3a29a7.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892015363_5c32f9e6a16533bba9928e74f4a6473a.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892043797_c50a84048c787072de5b011e2f609e08.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892045906_9a7f9213856a576f927d68a65677156e.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892064232_4a2a94a6fdaad747384e24c3367bd2ae.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892072208_e15b99a7bb77c39b26ae03bc8f5905e5.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892086675_e8a4238dbf65fd00d1b7ffa90b6bdad3.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892088729_e497345d7efab162b08d7e9ac5252740.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892201596_50704fe4fd9bf16622fe46c521c89259.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892241004_6d0e0b1336fd9fe53f67e754221be09d.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892251292_17d9ce9834e0e30c89a95f3a6eb6871e.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892253328_3222292df46b41098c31ca63eb3dc291.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892304266_3e574581ca1c7c54eaa181c24faad4b1.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892337906_435b10b1af49c283430f859e61087acd.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892353655_78af8597f8eab2b39f91b653234082da.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892365610_ecf02fbd5666d7f90f14773e4982a93c.jpg',
+      'assets/myproject/ad/bcktvt/bts/z7066892399472_647f08af81c364ad74a4fb6c1150aa49.jpg',
+    ],
+    img:'assets/myproject/ad/bcktvt/Still1.jpg',
+  },
 ];
 
 
 function renderP5() {
-  const projects = window._P5 || P5_PROJECTS;
+  const projects = (window._P5 || P5_PROJECTS)
+    .map((proj, idx) => ({ proj, idx }))
+    .sort((a, b) => {
+      const yearA = Number.parseInt(a.proj.year, 10) || 0;
+      const yearB = Number.parseInt(b.proj.year, 10) || 0;
+      if (yearA !== yearB) return yearB - yearA;
+      return a.idx - b.idx;
+    })
+    .map(item => item.proj);
   const grid = document.getElementById('p5-grid');
   grid.innerHTML = projects.map(proj => `
     <div class="p5-card" onclick="goToProjectPage('${proj.id}',5)">

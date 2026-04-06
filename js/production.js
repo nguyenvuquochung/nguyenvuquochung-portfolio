@@ -495,7 +495,15 @@
 
 
 function renderP3() {
-  const projects = window._P3 || P3_PROJECTS;
+  const projects = (window._P3 || P3_PROJECTS)
+    .map((proj, idx) => ({ proj, idx }))
+    .sort((a, b) => {
+      const yearA = Number.parseInt(a.proj.year, 10) || 0;
+      const yearB = Number.parseInt(b.proj.year, 10) || 0;
+      if (yearA !== yearB) return yearB - yearA;
+      return a.idx - b.idx;
+    })
+    .map(item => item.proj);
   const grid = document.getElementById('p3-grid');
   grid.innerHTML = projects.map(proj => `
     <div class="p3-card" onclick="goToProjectPage('${proj.id}',3)">

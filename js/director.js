@@ -81,7 +81,15 @@
 
 
 function renderP4() {
-  const projects = window._P4 || P4_PROJECTS;
+  const projects = (window._P4 || P4_PROJECTS)
+    .map((proj, idx) => ({ proj, idx }))
+    .sort((a, b) => {
+      const yearA = Number.parseInt(a.proj.year, 10) || 0;
+      const yearB = Number.parseInt(b.proj.year, 10) || 0;
+      if (yearA !== yearB) return yearB - yearA;
+      return a.idx - b.idx;
+    })
+    .map(item => item.proj);
   const grid = document.getElementById('p4-grid');
   grid.innerHTML = projects.map(proj => `
     <div class="p4-card" onclick="goToProjectPage('${proj.id}',4)">
