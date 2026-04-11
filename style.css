@@ -532,7 +532,7 @@ a.p7-cval:hover { color:var(--white); }
 #proj-overlay.slide-in { opacity:1; transform:translateX(0); pointer-events:all; }
 
 #proj-back {
-  position:fixed; top:calc(7vh + 14px); right:3vw; z-index:8600;
+  position:fixed; top:48px; right:3vw; z-index:8600;
   background:rgba(5,5,5,.72);
   border:1px solid rgba(245,242,238,.34);
   color:rgba(245,242,238,.9);
@@ -1382,6 +1382,10 @@ a.p7-cval:hover { color:var(--white); }
 }
 
 @media (max-width: 768px) and (hover: none) and (pointer: coarse) {
+  #cursor {
+    display: none !important;
+  }
+
   :root {
     --pw: clamp(236px, 67vw, 260px);
   }
@@ -1463,7 +1467,10 @@ a.p7-cval:hover { color:var(--white); }
 
   #p1-hint {
     margin-top: 10px;
-    max-width: 94vw;
+    font-size: clamp(14px, 3.8vw, 16px);
+    letter-spacing: .02em;
+    width: min(96vw, 390px);
+    max-width: 96vw;
   }
 
   #p1-hint span,
@@ -1479,6 +1486,15 @@ a.p7-cval:hover { color:var(--white); }
     letter-spacing: .09em;
     max-width: calc(100vw - 20px);
     text-wrap: nowrap;
+  }
+
+  #p5-title {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+    line-height: 1.08;
+    letter-spacing: .14em;
+    font-size: clamp(22px, 7.2vw, 34px);
   }
 
   /* Mobile About + Contact: hide shared portrait/header cluster + portrait hints */

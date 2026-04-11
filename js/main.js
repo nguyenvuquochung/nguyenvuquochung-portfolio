@@ -34,8 +34,8 @@ function positionP1Block() {
     idealTop = maxHintBottom - hintH - gap - portraitH;
   }
 
-  // Mobile fine-tune: move portrait + text cluster up by 150px.
-  if (window.innerWidth <= 768) idealTop -= 150;
+  // Mobile fine-tune: keep the cluster lower (about 80px down from previous mobile setup).
+  if (window.innerWidth <= 768) idealTop -= 70;
 
   sceneEl.style.position  = 'absolute';
   sceneEl.style.left      = '50%';
