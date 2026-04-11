@@ -34,6 +34,9 @@ function positionP1Block() {
     idealTop = maxHintBottom - hintH - gap - portraitH;
   }
 
+  // Mobile fine-tune: move portrait + text cluster up by 150px.
+  if (window.innerWidth <= 768) idealTop -= 150;
+
   sceneEl.style.position  = 'absolute';
   sceneEl.style.left      = '50%';
   sceneEl.style.top       = idealTop + 'px';
@@ -71,6 +74,37 @@ window.addEventListener('load',   positionP1Block);
 window.addEventListener('load',   positionP2Block);
 window.addEventListener('resize', positionP1Block);
 window.addEventListener('resize', positionP2Block);
+
+function isMobileTouchViewport() {
+  return window.matchMedia('(max-width: 768px) and (hover: none) and (pointer: coarse)').matches;
+}
+
+function syncMobileAboutOrder() {
+  const p2 = document.getElementById('p2');
+  const left = document.getElementById('p2-left');
+  const right = document.getElementById('p2-right');
+  const secAbout = document.getElementById('p2-sec-about');
+  const secFilms = document.getElementById('p2-sec-films');
+  const secExp = document.getElementById('p2-sec-exp');
+  const secSw = document.getElementById('p2-sec-sw');
+  if (!p2 || !left || !right || !secAbout || !secFilms || !secExp || !secSw) return;
+
+  if (isMobileTouchViewport()) {
+    // Mobile order: About -> Filmography -> Expertise -> Software
+    if (secAbout.parentElement !== p2) {
+      p2.append(secAbout, secFilms, secExp, secSw);
+    }
+  } else {
+    // Desktop order/structure (original): left(About, Software), right(Filmography, Expertise)
+    if (secAbout.parentElement !== left) {
+      left.append(secAbout, secSw);
+      right.append(secFilms, secExp);
+    }
+  }
+}
+
+window.addEventListener('load', syncMobileAboutOrder);
+window.addEventListener('resize', syncMobileAboutOrder);
 
 /* ══ CURSOR ══════════════════════════════════ */
 const $cur = document.getElementById('cursor');
@@ -1068,12 +1102,29 @@ const ROLES = [
   {label:'EDITOR',             label_vi:'DỰNG PHIM',          color:'#ffe000', page:'page6'},
 ];
 const COUNT = 8, VEL_SMP = 6;
+const GHOST_FLOAT_MODE_MOBILE = true;
 let particles = [], activeDrag = null, loopStarted = false, physicsRunning = false;
 let gMX = 0, gMY = 0;
 let stage = 1, collisionEnabled = false, lerpActive = false, lerpStartTime = 0;
 let menuMyProjectsExpanded = true;
 let portraitCenterX = 0, portraitCenterY = 0;
 const FLOAT_MIN_SPEED = 0.22;
+
+function isGhostFloatMode() {
+  return GHOST_FLOAT_MODE_MOBILE && window.innerWidth <= 768;
+}
+
+function handleRoleNavigation(roleLabel) {
+  if (isTransitioning || currentPage !== 1) return;
+  lockNav(1500);
+  const nav = {
+    'PRODUCTION':         () => scatterWords(() => goToPage3()),
+    'DIRECTOR':           () => scatterWords(() => goToPage4()),
+    'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
+    'EDITOR':             () => scatterWords(() => goToPage6()),
+  };
+  if (nav[roleLabel]) nav[roleLabel]();
+}
 
 const CZ = () => ({
   x0:window.innerWidth*.19, x1:window.innerWidth*.81,
@@ -1139,19 +1190,12 @@ function launchParticles() {
         dragging: false, velHistory: [], _click: true, scattered: false,
         settled: false, targetX: 0, targetY: 0 };
       el.addEventListener('mousedown', e => onDown(e, p));
+      el.addEventListener('click', () => handleRoleNavigation(p.role.label));
       el.addEventListener('touchend', e => {
         if (window.innerWidth > 768) return;
         if (currentPage !== 1 || isTransitioning) return;
         e.preventDefault(); e.stopPropagation();
-        lockNav(1500);
-        const navMap = {
-          'PRODUCTION':         () => scatterWords(() => goToPage3()),
-          'DIRECTOR':           () => scatterWords(() => goToPage4()),
-          'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
-          'EDITOR':             () => scatterWords(() => goToPage6()),
-        };
-        if (navMap[p.role.label]) navMap[p.role.label]();
-        else showToast('\u2192 ' + p.role.label);
+        handleRoleNavigation(p.role.label);
       });
       addHC(el);
       applyRW(p);
@@ -1165,7 +1209,9 @@ function launchParticles() {
   const hint = document.getElementById('p1-hint');
   hint.style.display = '';
   hint.classList.remove('fade-out');
-  const s1 = { en: 'click portrait to start', vi: 'bấm vào hình ảnh để bắt đầu' };
+  const s1 = window.innerWidth <= 768
+    ? { en: 'tap portrait to start', vi: 'chạm vào ảnh để bắt đầu' }
+    : { en: 'click portrait to start', vi: 'bấm vào hình ảnh để bắt đầu' };
   hint.textContent = s1[currentLang] || s1.en;
 }
 
@@ -1189,19 +1235,12 @@ function spawnParticle(role) {
     dragging:false, velHistory:[], _click:true, scattered:false };
 
   el.addEventListener('mousedown', e => onDown(e,p));
+  el.addEventListener('click', () => handleRoleNavigation(p.role.label));
   el.addEventListener('touchend', e => {
     if (window.innerWidth > 768) return;
     if (currentPage !== 1 || isTransitioning) return;
     e.preventDefault(); e.stopPropagation();
-    lockNav(1500);
-    const navMap = {
-      'PRODUCTION':         () => scatterWords(() => goToPage3()),
-      'DIRECTOR':           () => scatterWords(() => goToPage4()),
-      'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
-      'EDITOR':             () => scatterWords(() => goToPage6()),
-    };
-    if (navMap[p.role.label]) navMap[p.role.label]();
-    else showToast('\u2192 ' + p.role.label);
+    handleRoleNavigation(p.role.label);
   });
   addHC(el);
   requestAnimationFrame(()=>{ el.classList.add('visible'); applyRW(p); });
@@ -1289,6 +1328,7 @@ document.addEventListener('touchend', () => {
 
 function onDown(e, p) {
   if (currentPage !== 1) return;
+  if (isGhostFloatMode()) return;
   // On mobile: no drag — only click-to-navigate (touchend handles it)
   if (isMobile) return;
   e.preventDefault(); e.stopPropagation();
@@ -1302,18 +1342,6 @@ function onDown(e, p) {
   activeDrag = p;
   p.el.classList.add('is-dragging');
   $cur.classList.remove('h'); $cur.classList.add('dg');
-  p.el.onclick = () => {
-    if (!p._click || isTransitioning) return;
-    lockNav(1500);
-    const nav = {
-      'PRODUCTION':         () => scatterWords(() => goToPage3()),
-      'DIRECTOR':           () => scatterWords(() => goToPage4()),
-      'ASSISTANT DIRECTOR': () => scatterWords(() => goToPage5()),
-      'EDITOR':             () => scatterWords(() => goToPage6()),
-    };
-    if (nav[p.role.label]) nav[p.role.label]();
-    else showToast('→ '+p.role.label);
-  };
   setTimeout(()=>{ p._click=false; }, 150);
 }
 
@@ -1373,14 +1401,22 @@ function loop() {
         if(spd>1.4)         {p.vx*=1.4/spd;p.vy*=1.4/spd;}
         if(spd>0&&spd<0.10) {p.vx*=0.10/spd;p.vy*=0.10/spd;}
       }
-      // edge bounce — always active
-      if(p.x<=m)   {p.x=m;   p.vx= Math.abs(p.vx)*(0.8+Math.random()*.25);}
-      if(p.x>=mxX) {p.x=mxX; p.vx=-Math.abs(p.vx)*(0.8+Math.random()*.25);}
-      if(p.y<=minY){p.y=minY;p.vy= Math.abs(p.vy)*(0.8+Math.random()*.25);}
-      if(p.y>=mxY) {p.y=mxY; p.vy=-Math.abs(p.vy)*(0.8+Math.random()*.25);}
+      if (isGhostFloatMode()) {
+        // Ghost motion: no bounce at edges, words loop around smoothly.
+        if (p.x < -p.w) p.x = ww + 2;
+        if (p.x > ww + 2) p.x = -p.w;
+        if (p.y < minY - p.h) p.y = mxY;
+        if (p.y > mxY + p.h) p.y = minY;
+      } else {
+        // edge bounce
+        if(p.x<=m)   {p.x=m;   p.vx= Math.abs(p.vx)*(0.8+Math.random()*.25);}
+        if(p.x>=mxX) {p.x=mxX; p.vx=-Math.abs(p.vx)*(0.8+Math.random()*.25);}
+        if(p.y<=minY){p.y=minY;p.vy= Math.abs(p.vy)*(0.8+Math.random()*.25);}
+        if(p.y>=mxY) {p.y=mxY; p.vy=-Math.abs(p.vy)*(0.8+Math.random()*.25);}
+      }
       applyRW(p);
     }
-    if (collisionEnabled) {
+    if (collisionEnabled && !isGhostFloatMode()) {
       for (let i=0;i<particles.length;i++) {
         for (let j=i+1;j<particles.length;j++) {
           const pi=particles[i],pj=particles[j];
@@ -1405,7 +1441,10 @@ function loop() {
       if (elapsed>=3000 && !lerpAllSettled) {
         particles.forEach(p => { p.settled=true; }); lerpAllSettled=true;
       }
-      if (lerpAllSettled) { lerpActive=false; setTimeout(()=>{ collisionEnabled=true; }, 500); }
+      if (lerpAllSettled) {
+        lerpActive=false;
+        if (!isGhostFloatMode()) setTimeout(()=>{ collisionEnabled=true; }, 500);
+      }
     }
   }
   requestAnimationFrame(loop);
