@@ -760,9 +760,12 @@ function _renderProjectOverlay(proj, fromPage) {
   document.getElementById('proj-en-title').style.display = 'none';
 
   document.querySelector('#proj-section-about .proj-section-label').textContent  = isEn ? 'About Project' : 'Về Dự Án';
+  document.querySelector('#proj-section-logline .proj-section-label').textContent = 'Logline';
   document.querySelector('#proj-section-video .proj-section-label').textContent  = isBoxBilliards
     ? (isEn ? 'Selected Work' : 'Các video nổi bật')
-    : (isEn ? 'Watch' : 'Xem phim');
+    : (isEn
+      ? (proj.video_label_en || proj.video_label || 'Watch')
+      : (proj.video_label || 'Xem phim'));
   document.querySelector('#proj-section-credit .proj-section-label').textContent = 'Credit';
   document.querySelector('#proj-section-stills .proj-section-label').textContent = stillLabel;
   document.querySelector('#proj-section-bts .proj-section-label').textContent    = btsLabel;
@@ -770,6 +773,7 @@ function _renderProjectOverlay(proj, fromPage) {
 
   const body = document.getElementById('proj-body');
   const aboutSection = document.getElementById('proj-section-about');
+  const loglineSection = document.getElementById('proj-section-logline');
   const creditSection = document.getElementById('proj-section-credit');
   const videoSection = document.getElementById('proj-section-video');
   const extrasContainer = document.getElementById('proj-extras');
@@ -780,6 +784,15 @@ function _renderProjectOverlay(proj, fromPage) {
     ? proj.about_en
     : (proj.about && proj.about.length ? proj.about : [proj.desc]);
   document.getElementById('proj-about-text').innerHTML = aboutParas.map(p => `<p>${p}</p>`).join('');
+
+  const loglineText = isEn ? (proj.logline_en || proj.logline) : (proj.logline || proj.logline_en);
+  if (loglineText) {
+    document.getElementById('proj-logline-text').innerHTML = `<p>${loglineText}</p>`;
+    loglineSection.style.display = '';
+  } else {
+    document.getElementById('proj-logline-text').innerHTML = '';
+    loglineSection.style.display = 'none';
+  }
 
   const videoWrap = document.getElementById('proj-video-wrap');
   let nonVideoExtras = [];
@@ -848,13 +861,16 @@ function _renderProjectOverlay(proj, fromPage) {
       extrasContainer.innerHTML = extrasList.map(ext => {
         const label = isEn && ext.label_en ? ext.label_en : ext.label;
         const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
+        const htmlContent = isEn
+          ? (ext.html_en || ext.html || '')
+          : (ext.html_vi || ext.html || '');
         let content;
         if (embedUrl) {
           content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
         } else if (ext.url) {
           content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
         } else {
-          content = ext.html || '';
+          content = htmlContent;
         }
         return `
       <section class="proj-section">
@@ -889,12 +905,14 @@ function _renderProjectOverlay(proj, fromPage) {
   if (body) {
     if (isOurSunset) {
       if (aboutSection) body.appendChild(aboutSection);
+      if (loglineSection) body.appendChild(loglineSection);
       if (videoSection) body.appendChild(videoSection);
       if (extrasContainer) body.appendChild(extrasContainer);
       if (btsSection) body.appendChild(btsSection);
       if (creditSection) body.appendChild(creditSection);
     } else if (isBoxBilliards) {
       if (aboutSection) body.appendChild(aboutSection);
+      if (loglineSection) body.appendChild(loglineSection);
       if (extrasContainer) body.appendChild(extrasContainer);
       if (videoSection) body.appendChild(videoSection);
       if (creditSection) body.appendChild(creditSection);
@@ -902,6 +920,7 @@ function _renderProjectOverlay(proj, fromPage) {
       if (btsSection) body.appendChild(btsSection);
     } else {
       if (aboutSection) body.appendChild(aboutSection);
+      if (loglineSection) body.appendChild(loglineSection);
       if (videoSection) body.appendChild(videoSection);
       if (creditSection) body.appendChild(creditSection);
       if (extrasContainer) body.appendChild(extrasContainer);
@@ -955,6 +974,9 @@ function openProjectLightbox(sectionKey, startIndex) {
   if (!lb) return;
   lb.classList.add('vis');
   lb.setAttribute('aria-hidden', 'false');
+
+  const sideNav = document.getElementById('side-nav');
+  if (sideNav) sideNav.classList.add('lightbox-hidden');
 }
 
 function closeProjectLightbox() {
@@ -962,6 +984,9 @@ function closeProjectLightbox() {
   if (!lb) return;
   lb.classList.remove('vis');
   lb.setAttribute('aria-hidden', 'true');
+
+  const sideNav = document.getElementById('side-nav');
+  if (sideNav) sideNav.classList.remove('lightbox-hidden');
 }
 
 function projLightboxPrev() {
