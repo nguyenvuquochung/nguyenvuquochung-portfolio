@@ -61,7 +61,7 @@
       'assets/myproject/ad/HOAMAT/BTS/DSCF9191.JPG',
       'assets/myproject/ad/HOAMAT/BTS/DSCF9200.JPG',
     ],
-    video: 'assets/myproject/ad/HOAMAT/261306 - HOAMAT - 4k V2.mov',
+    video: 'https://youtu.be/_q2RlreAwY0',
     video_ratio: '16/9',
     video_label: 'Link xem',
     video_label_en: 'Watch here',
