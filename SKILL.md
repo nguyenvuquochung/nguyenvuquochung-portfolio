@@ -131,6 +131,8 @@ const P4_PROJECTS = [
 ];
 ```
 
+> New projects should be added at the top of the relevant role array (`js/assistant.js`, `js/director.js`, `js/production.js`, `js/editor.js`) so they appear first on that page. The display order should follow the order of insertion for recently added items, starting with the most recently added currently at the top.
+
 ### Change accent colors
 Edit `style.css`, `:root` block:
 ```css

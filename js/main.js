@@ -825,9 +825,15 @@ function _renderProjectOverlay(proj, fromPage) {
       videoWrap.innerHTML = `<div class="proj-video-grid">${videoItems.map(item => {
         const embedUrl = _resolveVideoEmbed(item.url);
         const ratio = item.ratio || '16/9';
-        const content = embedUrl
-          ? `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
-          : `<a class="proj-watch-btn" href="${item.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
+        const isLocalVideo = item.url && item.url.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
+        let content;
+        if (isLocalVideo) {
+          content = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><video controls preload="metadata" src="${item.url}"></video></div>`;
+        } else if (embedUrl) {
+          content = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+        } else {
+          content = `<a class="proj-watch-btn" href="${item.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
+        }
         const labelHtml = item.label ? `<div class="proj-video-item-label">${item.label}</div>` : '';
         return `<div class="proj-video-item">${labelHtml}${content}</div>`;
       }).join('')}</div>`;
@@ -837,8 +843,11 @@ function _renderProjectOverlay(proj, fromPage) {
       videoSection.style.display = 'none';
     }
   } else if (proj.video) {
+    const isLocal = proj.video && proj.video.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
     const embedUrl = _resolveVideoEmbed(proj.video);
-    if (embedUrl) {
+    if (isLocal) {
+      videoWrap.innerHTML = `<div class="proj-video-embed"><video controls preload="metadata" src="${proj.video}"></video></div>`;
+    } else if (embedUrl) {
       videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
     } else {
       videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
@@ -862,11 +871,14 @@ function _renderProjectOverlay(proj, fromPage) {
       extrasContainer.innerHTML = extrasList.map(ext => {
         const label = isEn && ext.label_en ? ext.label_en : ext.label;
         const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
+        const isLocal = ext.url && ext.url.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
         const htmlContent = isEn
           ? (ext.html_en || ext.html || '')
           : (ext.html_vi || ext.html || '');
         let content;
-        if (embedUrl) {
+        if (isLocal) {
+          content = `<div class="proj-video-embed"><video controls preload="metadata" src="${ext.url}"></video></div>`;
+        } else if (embedUrl) {
           content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
         } else if (ext.url) {
           content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
