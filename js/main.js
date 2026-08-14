@@ -741,7 +741,7 @@ function _renderProjectOverlay(proj, fromPage) {
   const titleText = isEn && proj.en ? proj.en : proj.title;
   const isOurSunset = proj.id === 'hoang-hon-cua-chung-ta';
   const isBoxBilliards = proj.id === 'box-billiards-vietnam';
-  const isSuperLive = proj.id === 'super-live-15-05-ha-linh' || proj.id === 'super-live-06-06-ha-linh';
+  const isSuperLive = proj.id === 'super-live-15-05-ha-linh' || proj.id === 'super-live-06-06-ha-linh' || proj.id === 'super-live-08-08-ha-linh';
   const useVideoGrid = isOurSunset || isBoxBilliards || isSuperLive;
   const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
   const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
@@ -812,7 +812,7 @@ function _renderProjectOverlay(proj, fromPage) {
       proj.extras.forEach(ext => {
         if (ext.url) {
           videoItems.push({
-            label: isBoxBilliards ? '' : (isEn && ext.label_en ? ext.label_en : ext.label),
+            label: isBoxBilliards ? '' : (isEn && ext.label_en ? ext.label_en : (ext.label || (isEn ? 'Video' : 'Video'))),
             url: ext.url,
             ratio: ext.ratio,
           });
