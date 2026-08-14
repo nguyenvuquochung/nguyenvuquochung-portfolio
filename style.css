@@ -1035,7 +1035,8 @@ a.p7-cval:hover { color:var(--white); }
 #p4-scroll { position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; padding:calc(7vh + 100px) 5vw calc(7vh + 40px); }
 #p4-scroll::-webkit-scrollbar { width:2px; }
 #p4-scroll::-webkit-scrollbar-thumb { background:rgba(26,111,255,.15); border-radius:1px; }
-#p4-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(clamp(220px,28vw,340px),1fr)); gap:clamp(16px,2.5vw,32px); opacity:0; transform:translateY(22px); transition:opacity .85s .45s,transform .85s .45s; }
+#p4-grid { display:grid; grid-template-columns:1fr; gap:clamp(16px,2.5vw,32px); opacity:0; transform:translateY(22px); transition:opacity .85s .45s,transform .85s .45s; }
+#p4-grid > div { width:100%; }
 #p4-grid.in { opacity:1; transform:translateY(0); }
 #p4-divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,rgba(26,111,255,.25),transparent); margin:clamp(16px,2vh,24px) 0; opacity:0; transition:opacity .6s .35s; }
 #p4-divider.in { opacity:1; }

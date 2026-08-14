@@ -206,12 +206,146 @@
   },
 ];
 
+const P4_CREATIVE_PROJECTS = [
+  {
+    id:'shipaholic',
+    video:'https://www.youtube.com/watch?v=7v4_zNXeUTc',
+    title:'SHIPAHOLIC',
+    en:'SHIPAHOLIC',
+    year:'2025',
+    role:'Assistant Director, Editor',
+    role_vi:'Trợ lí đạo diễn, Dựng phim',
+    desc:'A creative class project by RMIT students to promote the board game "Shipaholic".',
+    desc_vi:'TVC là dự án học thuật của sinh viên trường RMIT, quảng bá cho trò chơi board game "Shipaholic".',
+    about:[
+      'Shipaholic là TVC thuộc dự án học thuật của sinh viên trường RMIT, được thực hiện để quảng bá cho trò chơi board game "Shipaholic".',
+    ],
+    about_en:[
+      'Shipaholic is a creative class project by RMIT students, produced to promote the board game "Shipaholic".',
+    ],
+    credits:[],
+    stills:[],
+    bts:[
+      'assets/myproject/ad/shipaholic/still/image (1).png',
+      'assets/myproject/ad/shipaholic/still/image (2).png',
+      'assets/myproject/ad/shipaholic/still/image.png',
+      'assets/myproject/ad/shipaholic/still/IMG_0512.JPG.jpg',
+      'assets/myproject/ad/shipaholic/still/IMG_0570.JPG.jpg',
+      'assets/myproject/ad/shipaholic/still/IMG_0585.JPG.jpg',
+      'assets/myproject/ad/shipaholic/still/IMG_3455.JPG.jpg',
+      'assets/myproject/ad/shipaholic/still/IMG_3527.jpeg',
+      'assets/myproject/ad/shipaholic/still/IMG_3539.jpeg',
+    ],
+    img:'assets/myproject/ad/shipaholic/Screenshot 2026-03-17 145902.png',
+  },
+  {
+    displayOrder: 4,
+    id:'lat-mat-8-casting-ngo-hue-linh',
+    video:'https://www.tiktok.com/@_ngohuelinh_/video/7422659424839290120?is_from_webapp=1&sender_device=pc',
+    title:'CASTING LẬT MẶT 8 - TIKTOKER NGÔ HUỆ LINH',
+    en:'LẬT MẶT 8 CASTING - TIKTOKER NGÔ HUỆ LINH',
+    year:'2024',
+    role:'Director, Editor',
+    role_vi:'Đạo diễn, Dựng phim',
+    desc:'A short acting video for TikToker Ngô Huệ Linh (475.2K followers) to enter the casting call for Lật Mặt 8: Vòng Tay Nắng.',
+    desc_vi:'Video diễn xuất ngắn cho TikToker Ngô Huệ Linh (475.2K followers) tham gia cuộc thi casting dự án phim Lật Mặt 8: Vòng Tay Nắng.',
+    about:[
+      'Video diễn xuất ngắn cho TikToker Ngô Huệ Linh (475.2K followers) tham gia cuộc thi casting dự án phim Lật Mặt 8: Vòng Tay Nắng. Sau clip casting online, Huệ Linh đã đậu vòng casting trực tiếp của dự án phim.',
+    ],
+    about_en:[
+      'A short acting video for TikToker Ngô Huệ Linh (475.2K followers) to enter the casting call for Lật Mặt 8: Vòng Tay Nắng. Following the online casting clip, Huệ Linh successfully advanced to the in-person casting round.',
+    ],
+    credits:[
+      { label:'Director', label_vi:'Đạo diễn', value:'Nguyễn Vũ Quốc Hưng' },
+      { label:'Director of Photography', label_vi:'Quay phim', value:'Huy Hoàng Cao' },
+      { label:'Camera Operator', label_vi:'Camera Operator', value:'Trần Thanh Tùng' },
+      { label:'Assistant Director', label_vi:'Trợ lí đạo diễn', value:'Kim Mỹ' },
+      { label:'Producer', label_vi:'Sản xuất', value:'Nguyễn Đức Hoan' },
+      { label:'Cast', label_vi:'Diễn viên', value:'Ngô Huệ Linh' },
+    ],
+    stills:[],
+    bts:[],
+    img:'assets/myproject/editor/nhl/Screenshot 2026-03-17 233151.png',
+  },
+  {
+    displayOrder: 5,
+    id:'the-chocolate-war-short-film',
+    video:'https://youtu.be/gSa66FPe7wA?si=4YI28pNaePNRJ0Hc',
+    title:'CUỘC CHIẾN SOCOLA - PHIM NGẮN',
+    en:'THE CHOCOLATE WAR - SHORT FILM',
+    year:'2024',
+    role:'Director, Editor',
+    role_vi:'Đạo diễn, Dựng phim',
+    desc:'A comedy action short film, produced as a class project by students of Van Lang University.',
+    desc_vi:'Phim ngắn hành động hài hước nằm trong dự án môn học của sinh viên trường Đại học Văn Lang.',
+    about:[
+      'Cuộc Chiến Socola là phim ngắn hành động hài hước nằm trong dự án môn học của sinh viên trường Đại học Văn Lang.',
+    ],
+    about_en:[
+      'The Chocolate War is a comedy action short film, produced as a class project by students of Van Lang University.',
+    ],
+    credits:[
+      { label:'Director', label_vi:'Đạo diễn', value:'Nguyễn Vũ Quốc Hưng, Huy Hoàng Cao' },
+      { label:'Director of Photography', label_vi:'Quay phim', value:'Huy Hoàng Cao' },
+      { label:'Editor', label_vi:'Dựng phim', value:'Nguyễn Vũ Quốc Hưng, Huy Hoàng Cao' },
+    ],
+    stills:[],
+    bts:[],
+    img:'assets/myproject/editor/Screenshot 2026-03-20 235418.png',
+  },
+  {
+    displayOrder: 7,
+    id:'higher-official-music-video',
+    video:'https://www.facebook.com/watch/?v=377736194461636',
+    title:'HIGHER (KILLH FT. DZIT) - MUSIC VIDEO',
+    en:'HIGHER (KILLH FT. DZIT) - OFFICIAL MUSIC VIDEO',
+    year:'2022',
+    role:'Director, Editor, Composer',
+    role_vi:'Đạo diễn, Dựng phim, Nhạc sĩ',
+    desc:'Higher is a music video part of the Mơ Một Mùa Mơ project by the class of 2022 students at Lê Quý Đôn High School, District 3, Ho Chi Minh City.',
+    desc_vi:'MV Higher nằm trong dự án Mơ Một Mùa Mơ của học sinh lớp 12 khóa 19-22 trường THPT Lê Quý Đôn, Quận 3, TP.HCM.',
+    about:[
+      'Higher là music video nằm trong dự án Mơ Một Mùa Mơ của học sinh lớp 12 khóa 19-22 trường THPT Lê Quý Đôn, Quận 3, TP.HCM.',
+    ],
+    about_en:[
+      'Higher is a music video part of the Mơ Một Mùa Mơ project by the class of 2022 students at Lê Quý Đôn High School, District 3, Ho Chi Minh City.',
+    ],
+    credits:[],
+    stills:[],
+    bts:[],
+    img:'assets/myproject/editor/Screenshot 2026-03-20 235632.png',
+  },
+  {
+    displayOrder: 9,
+    id:'go-museum-online-animation-video',
+    video:'https://www.facebook.com/share/v/18RmBqqMAN/',
+    title:'GO MUSEUM ONLINE - ANIMATION VIDEO',
+    en:'GO MUSEUM ONLINE - ANIMATION VIDEO',
+    year:'2021',
+    role:'Editor',
+    role_vi:'Dựng phim',
+    desc:'An animation video produced as part of the Go Museum Online project by the History Department of Lê Quý Đôn High School, District 3, Ho Chi Minh City.',
+    desc_vi:'Animation video nằm trong dự án Go Museum Online của tổ Lịch Sử trường THPT Lê Quý Đôn, Quận 3, TP.HCM.',
+    about:[
+      'Go Museum Online là animation video nằm trong dự án của tổ Lịch Sử trường THPT Lê Quý Đôn, Quận 3, TP.HCM.',
+    ],
+    about_en:[
+      'Go Museum Online is an animation video produced as part of a project by the History Department of Lê Quý Đôn High School, District 3, Ho Chi Minh City.',
+    ],
+    credits:[],
+    stills:[],
+    bts:[],
+    img:'assets/myproject/editor/Screenshot 2026-03-20 235809.png',
+  },
+];
 
 function renderP4() {
-  const projects = window._P4 || P4_PROJECTS;
+  const filmProjects = window._P4 || P4_PROJECTS;
+  const creativeProjects = P4_CREATIVE_PROJECTS;
   const grid = document.getElementById('p4-grid');
-  grid.innerHTML = projects.map(proj => `
-    <div class="p4-card" onclick="goToProjectPage('${proj.id}',4)">
+
+  const renderCard = (proj, fromPage) => `
+    <div class="p4-card" onclick="goToProjectPage('${proj.id}',${fromPage})" style="min-width:0;width:100%;">
       <div class="p4-card-img-wrap">
         ${proj.img
           ? `<img src="${proj.img}" alt="${proj.title}"/>
@@ -230,7 +364,25 @@ function renderP4() {
         <div class="p4-card-meta">${proj.year} — ${currentLang === 'en' ? proj.role : (proj.role_vi || proj.role)}</div>
         <div class="p4-card-desc">${currentLang === 'en' ? proj.desc : (proj.desc_vi || proj.desc)}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+
+  const filmHtml = filmProjects.map(proj => renderCard(proj, 4)).join('');
+  const creativeHtml = creativeProjects.map(proj => renderCard(proj, proj.id === 'shipaholic' ? 5 : 6)).join('');
+
+  const sectionHeaderStyle = 'display:block;width:100%;color:var(--p4-accent, var(--blue, #1a6fff));font-weight:700;font-size:clamp(20px,1.7vw,26px);text-transform:uppercase;letter-spacing:.15em;line-height:1.2;padding-bottom:12px;border-bottom:1px solid rgba(26,111,255,.35);margin:0 0 12px;';
+  const sectionRowStyle = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:clamp(14px,1.3vw,22px);align-items:stretch;';
+
+  grid.innerHTML = `
+    <div style="width:100%;">
+      <div style="${sectionHeaderStyle}; margin-top:0;">${currentLang === 'en' ? 'FILM' : 'PHIM'}</div>
+      <div style="${sectionRowStyle}">${filmHtml}</div>
+    </div>
+    <div style="width:100%;height:1px;background:rgba(26,111,255,.25);margin:26px 0 0;"></div>
+    <div style="width:100%;">
+      <div style="${sectionHeaderStyle}; margin-top:32px;">${currentLang === 'en' ? 'CREATIVE' : 'SÁNG TẠO'}</div>
+      <div style="${sectionRowStyle}">${creativeHtml}</div>
+    </div>
+  `;
 }
 
 function goToPage4() {
