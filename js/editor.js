@@ -224,7 +224,7 @@
   {
     displayOrder: 9,
     id:'go-museum-online-animation-video',
-    video:'https://www.facebook.com/share/v/18RmBqqMAN/',
+    video:'https://youtu.be/tSNgS_TTWM8',
     title:'GO MUSEUM ONLINE - ANIMATION VIDEO',
     en:'GO MUSEUM ONLINE - ANIMATION VIDEO',
     year:'2021',

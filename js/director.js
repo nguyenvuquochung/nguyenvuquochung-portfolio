@@ -318,7 +318,7 @@ const P4_CREATIVE_PROJECTS = [
   {
     displayOrder: 9,
     id:'go-museum-online-animation-video',
-    video:'https://www.facebook.com/share/v/18RmBqqMAN/',
+    video:'https://youtu.be/tSNgS_TTWM8',
     title:'GO MUSEUM ONLINE - ANIMATION VIDEO',
     en:'GO MUSEUM ONLINE - ANIMATION VIDEO',
     year:'2021',
@@ -335,7 +335,7 @@ const P4_CREATIVE_PROJECTS = [
     credits:[],
     stills:[],
     bts:[],
-    img:'assets/myproject/editor/Screenshot 2026-03-20 235809.png',
+    img:'assets/myproject/editor/Screenshot 2026-03-20 235916.png',
   },
 ];
 
