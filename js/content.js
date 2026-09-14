@@ -3,7 +3,7 @@ const C = {
   en:{
     sub:'Freelance Filmaker\nHo Chi Minh City', hint:'',
     nsub:'Freelance Filmaker\nHo Chi Minh City',
-    resFile:'assets/CV_ENG.pdf', resTxt:'Download Resume',
+    resFile:'https://drive.google.com/file/d/1HpNEQwawgoH5yNBAsrUF4C73n_pdzRTQ/view?usp=drive_link', resTxt:'Download Resume',
     lblAbout:'About Me', lblFilms:'Filmography & Awards',
     lblSw:'Software Proficiency', lblExp:'Expertise',
     about:[
@@ -54,7 +54,7 @@ const C = {
   vi:{
     sub:'Nhà làm phim tự do\nTP. Hồ Chí Minh', hint:'',
     nsub:'Nhà làm phim tự do\nTP. Hồ Chí Minh',
-    resFile:'assets/CV_VIE.pdf', resTxt:'Tải CV',
+    resFile:'https://drive.google.com/file/d/1Op1teggQFm46UnaQgI-W4g-BMI9vb-7e/view?usp=drive_link', resTxt:'Tải CV',
     lblAbout:'Giới thiệu', lblFilms:'Danh mục phim & Giải thưởng',
     lblSw:'Năng lực phần mềm', lblExp:'Kỹ năng chuyên môn',
     about:[
