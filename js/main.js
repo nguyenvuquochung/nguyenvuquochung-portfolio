@@ -742,7 +742,7 @@ function _renderProjectOverlay(proj, fromPage) {
   const isOurSunset = proj.id === 'hoang-hon-cua-chung-ta';
   const isBoxBilliards = proj.id === 'box-billiards-vietnam';
   const isSuperLive = proj.id === 'super-live-15-05-ha-linh' || proj.id === 'super-live-06-06-ha-linh' || proj.id === 'super-live-08-08-ha-linh';
-  const useVideoGrid = isOurSunset || isBoxBilliards || isSuperLive;
+  const useVideoGrid = isOurSunset || isBoxBilliards || isSuperLive || proj.id === 'datbike-social-videos';
   const stillLabel = isEn ? 'Still Frame' : 'Ảnh tĩnh';
   const btsLabel = isEn ? 'Behind the Scene' : 'Hậu trường';
 
@@ -845,10 +845,11 @@ function _renderProjectOverlay(proj, fromPage) {
   } else if (proj.video) {
     const isLocal = proj.video && proj.video.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
     const embedUrl = _resolveVideoEmbed(proj.video);
+    const ratio = proj.video_ratio || '16/9';
     if (isLocal) {
-      videoWrap.innerHTML = `<div class="proj-video-embed"><video controls preload="metadata" src="${proj.video}"></video></div>`;
+      videoWrap.innerHTML = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><video controls preload="metadata" src="${proj.video}"></video></div>`;
     } else if (embedUrl) {
-      videoWrap.innerHTML = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+      videoWrap.innerHTML = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
     } else {
       videoWrap.innerHTML = `<a class="proj-watch-btn" href="${proj.video}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch Video' : 'Xem phim'}</a>`;
     }
@@ -872,14 +873,15 @@ function _renderProjectOverlay(proj, fromPage) {
         const label = isEn && ext.label_en ? ext.label_en : ext.label;
         const embedUrl = ext.url ? _resolveVideoEmbed(ext.url) : null;
         const isLocal = ext.url && ext.url.match(/\.(mp4|mov|webm|ogg)(\?.*)?$/i);
+        const ratio = ext.ratio || '16/9';
         const htmlContent = isEn
           ? (ext.html_en || ext.html || '')
           : (ext.html_vi || ext.html || '');
         let content;
         if (isLocal) {
-          content = `<div class="proj-video-embed"><video controls preload="metadata" src="${ext.url}"></video></div>`;
+          content = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><video controls preload="metadata" src="${ext.url}"></video></div>`;
         } else if (embedUrl) {
-          content = `<div class="proj-video-embed"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+          content = `<div class="proj-video-embed" style="aspect-ratio:${ratio}"><iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
         } else if (ext.url) {
           content = `<a class="proj-watch-btn" href="${ext.url}" target="_blank" rel="noopener noreferrer">&#9654; ${isEn ? 'Watch' : 'Xem'}</a>`;
         } else {

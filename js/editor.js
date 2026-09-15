@@ -1,5 +1,89 @@
 ﻿const P6_PROJECTS = [
   {
+    displayOrder: 1,
+    id:'datbike-social-videos',
+    video:'https://drive.google.com/file/d/1O7esvcg8Soh1I80fjZoKx7FeuMyhIQUQ/view?usp=drive_link',
+    video_label:'Link xem',
+    video_label_en:'Watch here',
+    title:'DATBIKE – SOCIAL VIDEOS',
+    en:'DATBIKE – SOCIAL VIDEOS',
+    year:'2026',
+    role:'Director, Editor',
+    role_vi:'Đạo diễn, Dựng phim',
+    desc:'A series of social videos designed to quickly and visually communicate the 3 key USPs of the DatBike Quantum S & ERA products.',
+    desc_vi:'Series Social Video tập trung truyền tải nhanh và trực quan 03 USP nổi bật của sản phẩm DatBike Quantum S & ERA.',
+    about:[
+      'Series Social Video tập trung truyền tải nhanh và trực quan 03 USP nổi bật của sản phẩm DatBike Quantum S & ERA.',
+    ],
+    about_en:[
+      'A series of social videos designed to quickly and visually communicate the 3 key USPs of the DatBike Quantum S & ERA products.',
+    ],
+    video_ratio:'9/16',
+    credits:[
+      { label:'Client', label_vi:'Khách hàng', value:'DatBike' },
+      { label:'Agency', label_vi:'Agency', value:'Dentsu Redder' },
+      { label:'Production House', label_vi:'Đơn vị sản xuất', value:'WOWW' },
+      { label:'Producer', label_vi:'Sản xuất', value:'Quỳnh Mai' },
+      { label:'Production Assistant', label_vi:'Trợ lý sản xuất', value:'Gia Nghi, Tường Vy' },
+      { label:'Director', label_vi:'Đạo diễn', value:'Quốc Hưng' },
+      { label:'Assistant Director', label_vi:'Trợ lí đạo diễn', value:'Meo Meo' },
+      { label:'Director of Photography', label_vi:'Quay phim', value:'Huy Hoàng Cao' },
+      { label:'Camera Operator', label_vi:'Camera Operator', value:'Hoàng Tú' },
+      { label:'Assistant Camera', label_vi:'Trợ lý camera', value:'Nhật Anh, Thế Anh, Thanh Tùng' },
+      { label:'Gaffer', label_vi:'Gaffer', value:'Cao Aly' },
+      { label:'Grip', label_vi:'Grip', value:'Hữu Nghĩa, Lìu Xì Phụng' },
+      { label:'Offline Editor', label_vi:'Dựng phim (Offline)', value:'Quốc Hưng, Huy Hoàng Cao' },
+      { label:'Online Editor', label_vi:'Dựng phim (Online)', value:'Huy Hoàng Cao' },
+    ],
+    extras:[
+      {
+        label:'Watch here',
+        label_en:'Watch here',
+        url:'https://drive.google.com/file/d/1qjdL1ZnSob1MvpRynsj05ApXzZYyI7Co/view?usp=drive_link',
+        ratio:'9/16',
+      },
+      {
+        label:'Watch here',
+        label_en:'Watch here',
+        url:'https://drive.google.com/file/d/1ngqECgd-s2eazPFSZPri2Zk5epOA6BCZ/view?usp=drive_link',
+        ratio:'9/16',
+      },
+      {
+        label:'Creative Treatment',
+        label_en:'Creative Treatment',
+        html:`
+          <div class="proj-treatment-grid">
+            <img src="assets/myproject/director/treatment/1.jpg" alt="Creative Treatment 1" loading="lazy" />
+            <img src="assets/myproject/director/treatment/2.jpg" alt="Creative Treatment 2" loading="lazy" />
+            <img src="assets/myproject/director/treatment/3.jpg" alt="Creative Treatment 3" loading="lazy" />
+            <img src="assets/myproject/director/treatment/4.jpg" alt="Creative Treatment 4" loading="lazy" />
+            <img src="assets/myproject/director/treatment/5.jpg" alt="Creative Treatment 5" loading="lazy" />
+            <img src="assets/myproject/director/treatment/6.jpg" alt="Creative Treatment 6" loading="lazy" />
+            <img src="assets/myproject/director/treatment/7.jpg" alt="Creative Treatment 7" loading="lazy" />
+            <img src="assets/myproject/director/treatment/8.jpg" alt="Creative Treatment 8" loading="lazy" />
+            <img src="assets/myproject/director/treatment/9.jpg" alt="Creative Treatment 9" loading="lazy" />
+            <img src="assets/myproject/director/treatment/11.jpg" alt="Creative Treatment 11" loading="lazy" />
+            <img src="assets/myproject/director/treatment/13.jpg" alt="Creative Treatment 13" loading="lazy" />
+            <img src="assets/myproject/director/treatment/14.jpg" alt="Creative Treatment 14" loading="lazy" />
+            <img src="assets/myproject/director/treatment/15.jpg" alt="Creative Treatment 15" loading="lazy" />
+            <img src="assets/myproject/director/treatment/16.jpg" alt="Creative Treatment 16" loading="lazy" />
+            <img src="assets/myproject/director/treatment/17.jpg" alt="Creative Treatment 17" loading="lazy" />
+            <img src="assets/myproject/director/treatment/19.jpg" alt="Creative Treatment 19" loading="lazy" />
+            <img src="assets/myproject/director/treatment/21.jpg" alt="Creative Treatment 21" loading="lazy" />
+            <img src="assets/myproject/director/treatment/22.jpg" alt="Creative Treatment 22" loading="lazy" />
+            <img src="assets/myproject/director/treatment/23.jpg" alt="Creative Treatment 23" loading="lazy" />
+            <img src="assets/myproject/director/treatment/24.jpg" alt="Creative Treatment 24" loading="lazy" />
+            <img src="assets/myproject/director/treatment/26.jpg" alt="Creative Treatment 26" loading="lazy" />
+            <img src="assets/myproject/director/treatment/28.jpg" alt="Creative Treatment 28" loading="lazy" />
+          </div>
+        `,
+      },
+    ],
+    stills:[],
+    bts:[],
+    img:'assets/myproject/director/woww.jpg',
+  },
+  {
     displayOrder: 4,
     id:'lat-mat-8-casting-ngo-hue-linh',
     video:'https://www.tiktok.com/@_ngohuelinh_/video/7422659424839290120?is_from_webapp=1&sender_device=pc',

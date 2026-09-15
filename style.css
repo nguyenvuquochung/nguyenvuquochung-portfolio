@@ -826,7 +826,7 @@ a.p7-cval:hover { color:var(--white); }
 }
 .proj-video-grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
   gap:16px;
   margin-top:4px;
 }
@@ -845,6 +845,22 @@ a.p7-cval:hover { color:var(--white); }
     gap:12px;
   }
 }
+.proj-treatment-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  gap:10px;
+  margin-top:8px;
+}
+
+.proj-treatment-grid img {
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:6px;
+  border:1px solid rgba(245,242,238,.18);
+  background:#111;
+}
+
 .proj-link-list {
   display:grid;
   gap:10px;
